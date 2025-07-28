@@ -1,0 +1,69 @@
+# ========================
+# 기본 Eclipse + Java Ignore
+# ========================
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders/
+.externalToolBuilders/
+*.launch
+*.pydevproject
+.cproject
+.autotools
+.factorypath
+.buildpath
+.target
+.tern-project
+.texlipse
+.springBeans
+.apt_generated/
+.apt_generated_test/
+.cache-main
+.scala_dependencies
+.worksheet
+.sts4-cache/
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# ========================
+# 프로젝트 전용 Ignore
+# ========================
+# 빌드 디렉토리
+*/target/
+*/build/
+
+# 설정 파일 (환경에 따라 무시)
+*.properties
+
+# 로컬 서버 설정
+Servers/
+Servers/*
+
+# ========================
+# 무시 여부 검토 대상
+# ========================
+
+# Maven Wrapper (일반적으로 포함시키는 것이 좋음)
+# Moabayo/mvnw
+# Moabayo/mvnw.cmd
+
+# 테스트 코드 (지금은 무시하고 싶다면 아래 주석 제거)
+*/src/test/
