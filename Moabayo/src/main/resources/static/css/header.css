@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+/* Header */
+.site-header {
+	position: relative;
+	height: 80px;
+	background-color: #FFF9DB;
+	border-bottom: 1px solid #FFD54F;
+}
+
+/* 가운데 정렬된 로고 + 메뉴 */
+.center-section {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	align-items: center;
+}
+
+.logo-img {
+	height: 40px;
+	margin-right: 20px;
+}
+
+.nav-bar a {
+	margin-left: 20px;
+	text-decoration: none;
+	color: #333;
+	font-weight: bold;
+}
+
+/* 오른쪽 로그인/회원가입 */
+.right-section {
+	position: absolute;
+	right: 30px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.auth-link {
+	margin-left: 15px;
+	color: #333;
+	text-decoration: none;
+}
