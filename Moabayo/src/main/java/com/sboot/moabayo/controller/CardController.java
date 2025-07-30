@@ -13,13 +13,13 @@ public class CardController {
 	public String showCardList(Model model) {
 //	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
-	    return "cardList"; // cardList.html 렌더링
+	    return "card/cardList"; // cardList.html 렌더링
 	}
 	
 	@GetMapping("/recommendcards")
 	public String showRecommendList(Model model) {
 //	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
-	    return "card-recommendation"; // cardList.html 렌더링
+	    return "card/card-recommendation"; // cardList.html 렌더링
 	}
 }
