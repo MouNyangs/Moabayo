@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>추천 카드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    p.intro {
+      text-align: center;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+
+    .card-recommendations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .card-item {
+      width: 300px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .card-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card-content {
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .view-button {
+      display: block;
+      margin: 2rem auto 0;
+      padding: 0.8rem 1.5rem;
+      background-color: #5C4D7D;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .view-button:hover {
+      background-color: #473b5e;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>추천 카드</h1>
+  <p class="intro">당신의 소비 패턴에 맞는 카드들을 추천해드려요!</p>
+
+  <div class="card-recommendations">
+
+    <!-- 카드 1 -->
+    <div class="card-item">
+      <div class="card-img" style="background-image: url('/img/summercat.png');"></div>
+      <div class="card-content">
+        <div class="card-title">여름 피서 적립 카드</div>
+        <div class="card-desc">빙수, 카페, 워터파크 최대 10% 캐시백! 여름을 즐기는 당신에게 추천!</div>
+      </div>
+    </div>
+
+    <!-- 카드 2 -->
+    <div class="card-item">
+      <div class="card-img" style="background-image: url('/img/spacecat-card.png');"></div>
+      <div class="card-content">
+        <div class="card-title">우주여행 마일리지 카드</div>
+        <div class="card-desc">항공 마일리지와 쇼핑 리워드를 동시에! 특별한 혜택을 우주처럼.</div>
+      </div>
+    </div>
+
+    <!-- 카드 3 -->
+    <div class="card-item">
+      <div class="card-img" style="background-image: url('/img/holloweencat.png');"></div>
+      <div class="card-content">
+        <div class="card-title">할로윈 시즌 혜택 카드</div>
+        <div class="card-desc">할로윈 한정 캐릭터 굿즈, 편의점/디저트 할인! 귀엽고 실속 있는 선택.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="view-button" onclick="location.href='/cards/detail'">자세히 보기</button>
+
+</body>
+</html>
+ 
