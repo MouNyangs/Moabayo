@@ -11,7 +11,6 @@ CREATE TABLE user (
     auto_login INT,
     email VARCHAR(255),
     hash_code VARCHAR(255),
-    login_id VARCHAR(255),
     mydata_access_token VARCHAR(255),
     name VARCHAR(255),
     password VARCHAR(255),
