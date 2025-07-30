@@ -11,8 +11,14 @@ public class MainController {
 	public String gologinpage(Model model) {
 		return "login/login";
 	}
+	
 	@GetMapping("registerpage")
 	public String goregisterpage(Model model) {
 		return "login/register";
+	}
+	
+	@GetMapping("informationprocesspage")
+	public String goinformationprocesspage (Model model) {
+		return "information/InformationProcess";
 	}
 }
