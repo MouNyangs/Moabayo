@@ -1,50 +1,31 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 set BASE_PATH=E:\moabayo
 
-rem 1. Eureka 서버 실행
-pushd Moabayo_Eureka_Server
-start "" cmd /c "mvnw.cmd spring-boot:run"
-popd
-call :waitForPort 8012
-echo done > %BASE_PATH%\step1.done
+:: 서버 실행 함수 정의
+:runServer
+set DIR=%1
+set NAME=%2
+set PORT=%3
 
-rem 2. Bank 서버 실행
-pushd Moabayo_Client_Bank
-start "" cmd /c "mvnw.cmd spring-boot:run"
+pushd %DIR%
+echo [INFO] %NAME% 서버 실행 중...
+start /b cmd /c "mvnw.cmd spring-boot:run"
 popd
-call :waitForPort 8813
-echo done > %BASE_PATH%\step2.done
 
-rem 3. Card 서버 실행
-pushd Moabayo_Client_Card
-start "" cmd /c "mvnw.cmd spring-boot:run"
-popd
-call :waitForPort 8814
-echo done > %BASE_PATH%\step3.done
+call :waitForPort %PORT%
+echo done > %BASE_PATH%\step_%PORT%.done
+exit /b
 
-rem 4. LoginService 서버 실행
-pushd Moabayo_Client_LoginService
-start "" cmd /c "mvnw.cmd spring-boot:run"
-popd
-call :waitForPort 8811
-echo done > %BASE_PATH%\step4.done
+:: 각 서버 병렬 실행
+call :runServer Moabayo_Eureka_Server Eureka 8012
+call :runServer Moabayo_Client_Bank Bank 8813
+call :runServer Moabayo_Client_Card Card 8814
+call :runServer Moabayo_Client_LoginService LoginService 8811
+call :runServer Moabayo_Client_Admin Admin 8815
+call :runServer Moabayo_Client_Main Main 8812
 
-rem 5. Admin 서버 실행
-pushd Moabayo_Client_Admin
-start "" cmd /c "mvnw.cmd spring-boot:run"
-popd
-call :waitForPort 8815
-echo done > %BASE_PATH%\step5.done
-
-rem 6. Main 서버 실행
-pushd Moabayo_Client_Main
-start "" cmd /c "mvnw.cmd spring-boot:run"
-popd
-call :waitForPort 8812
-echo done > %BASE_PATH%\step6.done
-
-echo 모든 서비스 실행 완료
+echo 모든 서버가 실행되었습니다. 이 창을 닫으면 서버들도 종료됩니다.
 pause
 exit /b
 
