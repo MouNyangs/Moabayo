@@ -10,14 +10,14 @@ import java.net.URI;
 @Component
 public class InitBrowser {
 
-	@PostConstruct
-	public void init() {
-		String url = "http://localhost:8080";
-		System.setProperty("java.awt.headless", "false");
-		try {
-			Desktop.getDesktop().browse(URI.create(url));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@PostConstruct
+//	public void init() {
+//		String url = "http://localhost:8080";
+//		System.setProperty("java.awt.headless", "false");
+//		try {
+//			Desktop.getDesktop().browse(URI.create(url));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }
