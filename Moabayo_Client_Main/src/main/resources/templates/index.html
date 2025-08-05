@@ -12,36 +12,51 @@
 <script defer src="js/common.js"></script>
 </head>
 <body>
-	<!-- Header 삽입 -->
-	<div id="header"></div>
-
-	<section class="hero">
-		<img src="images/cat.png" alt="동전 든 고양이" class="hero-img" />
-		<h1>오늘도 귀엽게 모으냥~</h1>
-		<button class="cta-btn">계좌 & 카드 등록</button>
-		<button class="cta-btn">저축 시작하기</button>
-	</section>
-
-	<!-- 추천 저축 상품 -->
-	<section class="product-section">
-		<h2>지금 인기 있는 저축 상품</h2>
-		<div class="product-cards">
-			<div class="product-card">
-				<h3>단기 저축 플랜</h3>
-				<p>6개월 · 연 3.2%</p>
-			</div>
-			<div class="product-card">
-				<h3>고양이 장학적금</h3>
-				<p>1년 · 연 4.0%</p>
-			</div>
-			<div class="product-card">
-				<h3>자동 저금통</h3>
-				<p>자투리 자동저장</p>
-			</div>
+	
+	<!-- 로딩 화면 로딩창 필요하면 이거 -->
+	<div id="loading-screen">
+		<img src="/images/moenyang.gif" alt="로딩중" width="150" />
+		<p>귀엽게 준비 중입니다...</p>
+		<div class="progress-container">
+			<div class="progress-bar" id="progress-bar"></div>
 		</div>
-	</section>
+		<p id="progress-text">0%</p>
+	</div>
+	<!-- 로딩 화면 끝 -->
+	
+	<!-- ✅ 실제 콘텐츠 (초기에 숨김 처리) -->
+	<div id="main-content" style="display: none;">
+		<!-- Header 삽입 -->
+		<div id="header"></div>
 
-	<!-- Footer 삽입 -->
-	<div id="footer"></div>
+		<section class="hero">
+			<img src="images/cat.png" alt="동전 든 고양이" class="hero-img" />
+			<h1>오늘도 귀엽게 모으냥~</h1>
+			<button class="cta-btn">계좌 & 카드 등록</button>
+			<button class="cta-btn">저축 시작하기</button>
+		</section>
+
+		<!-- 추천 저축 상품 -->
+		<section class="product-section">
+			<h2>지금 인기 있는 저축 상품</h2>
+			<div class="product-cards">
+				<div class="product-card">
+					<h3>단기 저축 플랜</h3>
+					<p>6개월 · 연 3.2%</p>
+				</div>
+				<div class="product-card">
+					<h3>고양이 장학적금</h3>
+					<p>1년 · 연 4.0%</p>
+				</div>
+				<div class="product-card">
+					<h3>자동 저금통</h3>
+					<p>자투리 자동저장</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer 삽입 -->
+		<div id="footer"></div>
+	</div>
 </body>
 </html>
