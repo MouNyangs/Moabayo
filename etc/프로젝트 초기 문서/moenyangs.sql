@@ -103,3 +103,29 @@ CREATE TABLE admin (
     create_date TIMESTAMP(6),
     FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
+
+-- 계좌 테이블 (account_table)
+CREATE TABLE account_table (
+    trade_id VARCHAR2(50) PRIMARY KEY,      -- 거래고유번호, PK
+    trade_date DATE NOT NULL,              -- 거래일자 (계좌 기준)
+    bank_name VARCHAR2(100) NOT NULL,      -- 개설기관명
+    account_balance NUMBER(15, 2) NOT NULL -- 계좌 잔액
+);
+
+-- 거래내역 테이블 (transaction_table)
+CREATE TABLE transaction_table (
+    transaction_id NUMBER PRIMARY KEY, -- 거래내역 고유번호 (PK)
+    trade_id VARCHAR2(50) NOT NULL,                     -- 계좌 테이블의 거래고유번호 (FK)
+    trade_detail_date DATE NOT NULL,                    -- 거래내역 날짜
+    trade_time TIME NOT NULL,                           -- 거래시간
+    transaction_type VARCHAR2(10) NOT NULL,             -- 입출금구분 (예: 입금, 출금)
+    trade_type VARCHAR2(50) NOT NULL,                    -- 거래구분 (예: 이체, 카드결제 등)
+    bankbook_note VARCHAR2(255),                         -- 통장인자내용
+    trade_amount NUMBER(15, 2) NOT NULL,               -- 거래금액
+    balance_after_trade NUMBER(15, 2) NOT NULL,        -- 거래 후 잔액
+    CONSTRAINT fk_account_trade
+        FOREIGN KEY (trade_id)
+        REFERENCES account_table(trade_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
