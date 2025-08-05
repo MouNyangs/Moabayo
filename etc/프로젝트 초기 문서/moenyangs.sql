@@ -1,81 +1,81 @@
-
 -- Table: user
-CREATE TABLE user (
-    id BIGINT(20) PRIMARY KEY,
-    create_date DATETIME(6),
-    modify_date DATETIME(6),
-    account_num VARCHAR(255),
-    address VARCHAR(255),
-    address_detail VARCHAR(255),
-    zip_code VARCHAR(255),
-    auto_login INT,
-    email VARCHAR(255),
-    hash_code VARCHAR(255),
-    mydata_access_token VARCHAR(255),
-    name VARCHAR(255),
-    password VARCHAR(255),
-    phone VARCHAR(255),
-    refresh_token VARCHAR(255),
-    simple_password VARCHAR(255),
-    is_admin BOOLEAN DEFAULT FALSE
+CREATE TABLE "user" (
+    id NUMBER(20) PRIMARY KEY,
+    create_date TIMESTAMP(6),
+    modify_date TIMESTAMP(6),
+    account_num VARCHAR2(255),
+    address VARCHAR2(255),
+    address_detail VARCHAR2(255),
+    zip_code VARCHAR2(255),
+    auto_login NUMBER(1),
+    email VARCHAR2(255),
+    hash_code VARCHAR2(255),
+    mydata_access_token VARCHAR2(255),
+    name VARCHAR2(255),
+    login_id VARCHAR2(255),
+    password VARCHAR2(255),
+    phone VARCHAR2(255),
+    refresh_token VARCHAR2(255),
+    simple_password VARCHAR2(255),
+    is_admin NUMBER(1) DEFAULT 0
 );
 
 -- Table: transaction
 CREATE TABLE transaction (
-    id BIGINT(20) PRIMARY KEY,
-    approved_amount BIGINT(20),
-    approved_num VARCHAR(255),
-    card_history_id BIGINT(20),
-    card_id BIGINT(20),
-    card_type VARCHAR(255),
-    category VARCHAR(255),
-    date_time DATETIME(6),
-    shop_name VARCHAR(255),
-    shop_number VARCHAR(255),
-    user_id BIGINT(20),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    id NUMBER(20) PRIMARY KEY,
+    approved_amount NUMBER(20),
+    approved_num VARCHAR2(255),
+    card_history_id NUMBER(20),
+    card_id NUMBER(20),
+    card_type VARCHAR2(255),
+    category VARCHAR2(255),
+    date_time TIMESTAMP(6),
+    shop_name VARCHAR2(255),
+    shop_number VARCHAR2(255),
+    user_id NUMBER(20),
+    FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
 -- Table: nyang_coin
 CREATE TABLE nyang_coin (
-    id BIGINT(20) PRIMARY KEY,
-    create_date DATETIME(6),
-    modify_date DATETIME(6),
-    end_date DATETIME(6),
-    money BIGINT(20),
-    user_id BIGINT(20),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    id NUMBER(20) PRIMARY KEY,
+    create_date TIMESTAMP(6),
+    modify_date TIMESTAMP(6),
+    end_date TIMESTAMP(6),
+    money NUMBER(20),
+    user_id NUMBER(20),
+    FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
 -- Table: habit
 CREATE TABLE habit (
-    id BIGINT(20) PRIMARY KEY,
-    create_date DATETIME(6),
-    modify_date DATETIME(6),
-    end_date DATETIME(6),
-    habit_name VARCHAR(255),
-    saving BIGINT(20),
-    state INT,
-    target_money BIGINT(20),
-    title VARCHAR(255),
-    user_id BIGINT(20),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    id NUMBER(20) PRIMARY KEY,
+    create_date TIMESTAMP(6),
+    modify_date TIMESTAMP(6),
+    end_date TIMESTAMP(6),
+    habit_name VARCHAR2(255),
+    saving NUMBER(20),
+    state NUMBER,
+    target_money NUMBER(20),
+    title VARCHAR2(255),
+    user_id NUMBER(20),
+    FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
 -- Table: habit_log
 CREATE TABLE habit_log (
-    id BIGINT(20) PRIMARY KEY,
-    create_date DATETIME(6),
-    save_day DATETIME(6),
-    save_money BIGINT(20),
-    habit_id BIGINT(20),
+    id NUMBER(20) PRIMARY KEY,
+    create_date TIMESTAMP(6),
+    save_day TIMESTAMP(6),
+    save_money NUMBER(20),
+    habit_id NUMBER(20),
     FOREIGN KEY (habit_id) REFERENCES habit(id)
 );
 
 -- Table: habit_habit_log
 CREATE TABLE habit_habit_log (
-    habit_id BIGINT(20),
-    habit_log_id BIGINT(20),
+    habit_id NUMBER(20),
+    habit_log_id NUMBER(20),
     PRIMARY KEY (habit_id, habit_log_id),
     FOREIGN KEY (habit_id) REFERENCES habit(id),
     FOREIGN KEY (habit_log_id) REFERENCES habit_log(id)
@@ -83,24 +83,23 @@ CREATE TABLE habit_habit_log (
 
 -- Table: coin_history
 CREATE TABLE coin_history (
-    id BIGINT(20) PRIMARY KEY,
-    create_date DATETIME(6),
-    modify_date DATETIME(6),
-    total_amt BIGINT(20),
-    trans_amt BIGINT(20),
-    trans_type VARCHAR(255),
-    tikkle_id BIGINT(20),
-    FOREIGN KEY (tikkle_id) REFERENCES tikkle(id)
+    id NUMBER(20) PRIMARY KEY,
+    create_date TIMESTAMP(6),
+    modify_date TIMESTAMP(6),
+    total_amt NUMBER(20),
+    trans_amt NUMBER(20),
+    trans_type VARCHAR2(255),
+    nyang_id NUMBER(20),
+    FOREIGN KEY (nyang_id) REFERENCES nyang_coin(id)
 );
 
--- Add is_admin column to user table
-ALTER TABLE user ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;
+-- 수정된 부분: 이미 user 테이블에 is_admin이 포함됨으로, 이 ALTER 문은 제거함
 
 -- Table: admin
 CREATE TABLE admin (
-    id BIGINT(20) PRIMARY KEY,
-    user_id BIGINT(20) UNIQUE,
-    role VARCHAR(50),
-    create_date DATETIME(6),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    id NUMBER(20) PRIMARY KEY,
+    user_id NUMBER(20) UNIQUE,
+    role VARCHAR2(50),
+    create_date TIMESTAMP(6),
+    FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
