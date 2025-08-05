@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class MoabayoApplication {
+public class MoabayoClientBankApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MoabayoApplication.class, args);
+		SpringApplication.run(MoabayoClientBankApplication.class, args);
 	}
 
 }
