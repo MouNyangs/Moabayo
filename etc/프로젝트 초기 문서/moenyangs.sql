@@ -105,7 +105,7 @@ CREATE TABLE admin (
 );
 
 -- 계좌 테이블 (account_table)
-CREATE TABLE account_table (
+CREATE TABLE Mydata_account (
     trade_id VARCHAR2(50) PRIMARY KEY,      -- 거래고유번호, PK
     trade_date DATE NOT NULL,              -- 거래일자 (계좌 기준)
     bank_name VARCHAR2(100) NOT NULL,      -- 개설기관명
@@ -113,7 +113,7 @@ CREATE TABLE account_table (
 );
 
 -- 거래내역 테이블 (transaction_table)
-CREATE TABLE transaction_table (
+CREATE TABLE Mydata_transaction (
     transaction_id NUMBER PRIMARY KEY, -- 거래내역 고유번호 (PK)
     trade_id VARCHAR2(50) NOT NULL,                     -- 계좌 테이블의 거래고유번호 (FK)
     trade_detail_date DATE NOT NULL,                    -- 거래내역 날짜
