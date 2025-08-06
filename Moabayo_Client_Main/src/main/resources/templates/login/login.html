@@ -49,7 +49,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const pw = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://localhost:8811/login", { // ← LoginService 주소
+        const response = await fetch("http://localhost:8811/user/validate", { // ← LoginService 주소
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
