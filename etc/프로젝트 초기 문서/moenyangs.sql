@@ -127,5 +127,4 @@ CREATE TABLE Mydata_transaction (
         FOREIGN KEY (trade_id)
         REFERENCES account_table(trade_id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
