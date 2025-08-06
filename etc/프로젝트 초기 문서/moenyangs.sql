@@ -19,22 +19,6 @@ CREATE TABLE "user" (
     is_admin NUMBER(1) DEFAULT 0
 );
 
--- Table: transaction
-CREATE TABLE transaction (
-    id NUMBER(20) PRIMARY KEY,
-    approved_amount NUMBER(20),
-    approved_num VARCHAR2(255),
-    card_history_id NUMBER(20),
-    card_id NUMBER(20),
-    card_type VARCHAR2(255),
-    category VARCHAR2(255),
-    date_time TIMESTAMP(6),
-    shop_name VARCHAR2(255),
-    shop_number VARCHAR2(255),
-    user_id NUMBER(20),
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
-);
-
 -- Table: nyang_coin
 CREATE TABLE nyang_coin (
     id NUMBER(20) PRIMARY KEY,
@@ -76,6 +60,22 @@ CREATE TABLE habit_habit_log (
     PRIMARY KEY (habit_id, habit_log_id),
     FOREIGN KEY (habit_id) REFERENCES habit(id),
     FOREIGN KEY (habit_log_id) REFERENCES habit_log(id)
+);
+
+-- Table: transaction
+CREATE TABLE transaction (
+    id NUMBER(20) PRIMARY KEY,
+    approved_amount NUMBER(20),
+    approved_num VARCHAR2(255),
+    card_history_id NUMBER(20),
+    card_id NUMBER(20),
+    card_type VARCHAR2(255),
+    category VARCHAR2(255),
+    date_time TIMESTAMP(6),
+    shop_name VARCHAR2(255),
+    shop_number VARCHAR2(255),
+    user_id NUMBER(20),
+    FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
 -- Table: coin_history
