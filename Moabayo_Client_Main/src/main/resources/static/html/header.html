@@ -6,21 +6,42 @@
 </head>
 <body>
 	<header class="site-header">
-		<div class="center-section">
-			<a href="mainpage">
-				<img src="images/cat.png" alt="로고" class="logo-img">
+		<!-- 왼쪽: 로고 -->
+		<div class="left-section">
+			<a href="mainpage"> <img src="images/cat.png" alt="로고" class="logo-img">
 			</a>
+		</div>
+
+		<!-- 가운데: 메뉴 -->
+		<div class="center-section">
 			<nav class="nav-bar">
-				<a href="mainpage">홈</a>
-				<a href="recommendcards">저축상품</a>
-				<a href="transactions">계좌조회</a>
-				<a href="#">고객센터</a>
+				<a href="mainpage">홈</a> <a href="recommendcards">저축상품</a> <a href="transactions">계좌조회</a> <a href="#">고객센터</a>
 			</nav>
 		</div>
-		<div class="right-section">
-			<a href="loginpage" class="auth-link">로그인</a>
-			<a href="registerpage" class="auth-link">회원가입</a>
+
+		<!-- 오른쪽: 로그인/회원가입 or 유저이름/로그아웃 -->
+		<div class="right-section" id="authSection">
+			<a href="loginpage" class="auth-link">로그인</a> <a href="registerpage" class="auth-link">회원가입</a>
 		</div>
 	</header>
+	<script>
+document.addEventListener("DOMContentLoaded", () => {
+	const userName = localStorage.getItem("userName");
+	const authSection = document.getElementById("authSection");
+
+	if (userName && authSection) {
+		authSection.innerHTML = `
+        <span class="welcome-message">${userName} 님</span>
+        <a href="#" class="auth-link" onclick="logout()">로그아웃</a>
+      `;
+	}
+});
+
+function logout() {
+	localStorage.clear();
+	alert("로그아웃 되었습니다.");
+	location.href = "mainpage";
+}
+</script>
 </body>
 </html>

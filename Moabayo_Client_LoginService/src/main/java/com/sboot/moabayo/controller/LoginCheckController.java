@@ -18,7 +18,7 @@ public class LoginCheckController {
 	public UserInfoVO validate(@RequestBody LoginFormVO form) {
 		// 예시 하드코딩
 		if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
-			return new UserInfoVO("admin", "ADMIN");
+			return new UserInfoVO("admin", "관리자", "ADMIN");
 		}
 		return null;
 	}
