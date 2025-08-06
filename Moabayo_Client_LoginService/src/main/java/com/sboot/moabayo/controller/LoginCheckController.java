@@ -1,5 +1,6 @@
 package com.sboot.moabayo.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +13,13 @@ import com.sboot.moabayo.vo.UserInfoVO;
 @RequestMapping("/user")
 public class LoginCheckController {
 
-    @PostMapping("/validate")
-    public UserInfoVO validate(@RequestBody LoginFormVO form) {
-        // 예시 하드코딩
-        if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
-            return new UserInfoVO("admin", "ADMIN");
-        }
-        return null;
-    }
+	@CrossOrigin(origins = "http://localhost:8812")
+	@PostMapping("/validate")
+	public UserInfoVO validate(@RequestBody LoginFormVO form) {
+		// 예시 하드코딩
+		if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
+			return new UserInfoVO("admin", "ADMIN");
+		}
+		return null;
+	}
 }

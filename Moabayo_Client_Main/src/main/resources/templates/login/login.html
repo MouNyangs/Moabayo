@@ -62,7 +62,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             localStorage.setItem("role", user.role);
 
             alert("로그인 성공! 환영합니다 " + user.name + "님");
-            location.href = "/home"; // 로그인 성공 후 이동할 페이지
+            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
 
         } else {
             alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
