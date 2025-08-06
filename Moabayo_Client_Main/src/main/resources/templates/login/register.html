@@ -1,130 +1,133 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>모으냥즈 회원가입</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- 카카오 주소 API -->
-  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #fffaf3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+<meta charset="UTF-8">
+<title>모으냥즈 회원가입</title>
+<link rel="icon" href="images/cat.ico" type="image/x-icon" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- 카카오 주소 API -->
+<script
+	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="css/footer.css" />
+<style>
+body {
+	font-family: 'Noto Sans KR', sans-serif;
+	background-color: #fffaf3;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
 
-    .signup-container {
-      background: #ffffff;
-      border: 3px solid #ffd9ec;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 420px;
-      padding: 30px 40px;
-    }
+.signup-container {
+	background: #ffffff;
+	border: 3px solid #ffd9ec;
+	border-radius: 20px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	width: 420px;
+	padding: 30px 40px;
+}
 
-    .signup-container h2 {
-      text-align: center;
-      color: #ff69b4;
-      margin-bottom: 30px;
-    }
+.signup-container h2 {
+	text-align: center;
+	color: #ff69b4;
+	margin-bottom: 30px;
+}
 
-    label {
-      font-weight: bold;
-      color: #333;
-      display: block;
-      margin-top: 15px;
-    }
+label {
+	font-weight: bold;
+	color: #333;
+	display: block;
+	margin-top: 15px;
+}
 
-    input[type="text"],
-    input[type="password"],
-    input[type="tel"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ffd9ec;
-      border-radius: 10px;
-      margin-top: 5px;
-      font-size: 14px;
-    }
+input[type="text"], input[type="password"], input[type="tel"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ffd9ec;
+	border-radius: 10px;
+	margin-top: 5px;
+	font-size: 14px;
+}
 
-    #address-box {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
+#address-box {
+	display: flex;
+	gap: 10px;
+	margin-top: 5px;
+}
 
-    #searchAddress {
-      background-color: #ffb6c1;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      cursor: pointer;
-    }
+#searchAddress {
+	background-color: #ffb6c1;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px;
+	cursor: pointer;
+}
 
-    #searchAddress:hover {
-      background-color: #ff8fa3;
-    }
+#searchAddress:hover {
+	background-color: #ff8fa3;
+}
 
-    .submit-btn {
-      width: 100%;
-      background-color: #ff69b4;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 30px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.submit-btn {
+	width: 100%;
+	background-color: #ff69b4;
+	color: white;
+	border: none;
+	border-radius: 12px;
+	padding: 12px;
+	margin-top: 30px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
 
-    .submit-btn:hover {
-      background-color: #ff4d94;
-    }
-  </style>
+.submit-btn:hover {
+	background-color: #ff4d94;
+}
+</style>
 </head>
 <body>
 
-  <div class="signup-container">
-    <h2>🐾 모으냥즈 회원가입 🐾</h2>
-    <form id="signupForm">
-      <label for="name">이름</label>
-      <input type="text" id="name" name="name" required>
+	<div class="signup-container">
+		<h2>🐾 모으냥즈 회원가입 🐾</h2>
+		<form id="signupForm">
+			<label for="name">이름</label> <input type="text" id="name" name="name"
+				required> <label for="userid">아이디</label> <input type="text"
+				id="userid" name="userid" required> <label for="password">패스워드</label>
+			<input type="password" id="password" name="password" required>
 
-      <label for="userid">아이디</label>
-      <input type="text" id="userid" name="userid" required>
+			<label for="phone">핸드폰 번호</label> <input type="tel" id="phone"
+				name="phone" placeholder="010-1234-5678" required> <label>주소</label>
+			<div id="address-box">
+				<input type="text" id="address" name="address" readonly
+					placeholder="주소를 검색하세요">
+				<button type="button" id="searchAddress">검색</button>
+			</div>
 
-      <label for="password">패스워드</label>
-      <input type="password" id="password" name="password" required>
+			<input type="text" id="detailAddress" name="detailAddress"
+				placeholder="상세주소 입력">
 
-      <label for="phone">핸드폰 번호</label>
-      <input type="tel" id="phone" name="phone" placeholder="010-1234-5678" required>
-
-      <label>주소</label>
-      <div id="address-box">
-        <input type="text" id="address" name="address" readonly placeholder="주소를 검색하세요">
-        <button type="button" id="searchAddress">검색</button>
-      </div>
-
-      <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소 입력">
-
-      <button type="submit" class="submit-btn">가입하기</button>
-    </form>
-  </div>
-
-  <script>
-    document.getElementById("searchAddress").addEventListener("click", function(){
-      new daum.Postcode({
-        oncomplete: function(data) {
-          var fullAddr = data.address;
-          document.getElementById("address").value = fullAddr;
-        }
-      }).open();
-    });
-  </script>
+			<button type="submit" class="submit-btn">가입하기</button>
+		</form>
+	</div>
+	<!-- Footer 삽입 -->
+	<div id="footer"></div>
+	<script>
+		document
+				.getElementById("searchAddress")
+				.addEventListener(
+						"click",
+						function() {
+							new daum.Postcode(
+									{
+										oncomplete : function(data) {
+											var fullAddr = data.address;
+											document.getElementById("address").value = fullAddr;
+										}
+									}).open();
+						});
+	</script>
 
 </body>
 </html>

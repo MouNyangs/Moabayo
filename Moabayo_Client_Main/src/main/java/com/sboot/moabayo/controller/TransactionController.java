@@ -8,7 +8,7 @@ import ch.qos.logback.core.model.Model;
 @Controller
 public class TransactionController {
 
-	@GetMapping("/transactions")
+	@GetMapping("transactions")
 	public String transactions (Model model) {
 		return "/transactions/transaction";
 	}

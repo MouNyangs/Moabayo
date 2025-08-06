@@ -9,14 +9,14 @@ import ch.qos.logback.core.model.Model;
 public class CardController {
 
 	
-	@GetMapping("/cards")
+	@GetMapping("cards")
 	public String showCardList(Model model) {
 //	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
 	    return "card/cardList"; // cardList.html 렌더링
 	}
 	
-	@GetMapping("/recommendcards")
+	@GetMapping("recommendcards")
 	public String showRecommendList(Model model) {
 //	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
