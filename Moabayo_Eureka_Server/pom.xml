@@ -32,6 +32,12 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
+	<!--openfeign 추가 dependency-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -70,6 +76,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
