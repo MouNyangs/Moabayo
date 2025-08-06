@@ -117,7 +117,7 @@ CREATE TABLE Mydata_transaction (
     transaction_id NUMBER PRIMARY KEY, -- 거래내역 고유번호 (PK)
     trade_id VARCHAR2(50) NOT NULL,                     -- 계좌 테이블의 거래고유번호 (FK)
     trade_detail_date DATE NOT NULL,                    -- 거래내역 날짜
-    trade_time TIME NOT NULL,                           -- 거래시간
+    trade_time TIMESTAMP(6) NOT NULL,                           -- 거래시간
     transaction_type VARCHAR2(10) NOT NULL,             -- 입출금구분 (예: 입금, 출금)
     trade_type VARCHAR2(50) NOT NULL,                    -- 거래구분 (예: 이체, 카드결제 등)
     bankbook_note VARCHAR2(255),                         -- 통장인자내용
