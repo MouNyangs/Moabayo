@@ -10,10 +10,36 @@ window.addEventListener("DOMContentLoaded", () => {
 			const authSection = document.getElementById("authSection");
 
 			if (userName && authSection) {
+				console.log("로그인됨 페이지임");
 				authSection.innerHTML = `
-	        <span class="welcome-message">${userName} 님</span>
-	        <a href="#" class="auth-link" onclick="logout()">로그아웃</a>
-	      `;
+				<!-- ref link: https://getbootstrap.com/docs/5.3/components/dropdowns/#menu-items -->
+				<div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						로그인됨
+					</button>
+					<ul class="dropdown-menu">
+						<li><button class="dropdown-item" type="button">내 정보</button></li>
+						<li><button class="dropdown-item" type="button">설정</button></li>
+						<li><button class="dropdown-item" type="button">도움말</button></li>
+					</ul>
+				</div>
+				<span class="welcome-message">${userName} 님</span>
+				<a href="#" class="auth-link" onclick="logout()">로그아웃</a>
+			`;
+			} else {
+				console.log("로그인안됨 페이지임");
+				authSection.innerHTML = `
+				<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						로그인안됨
+					</button>
+					<ul class="dropdown-menu">
+						<li><button class="dropdown-item" type="button">로그인</button></li>
+						<li><button class="dropdown-item" type="button">회원가입</button></li>
+						<li><button class="dropdown-item" type="button">도움말</button></li>
+					</ul>
+				</div>
+				`;
 			}
 		});
 

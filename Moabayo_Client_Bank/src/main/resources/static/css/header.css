@@ -1,0 +1,62 @@
+@charset "UTF-8";
+
+/* Header 전체 */
+.site-header {
+	position: relative;
+	height: 80px;
+	background-color: #FFF9DB;
+	border-bottom: 1px solid #FFD54F;
+}
+
+/* 왼쪽 로고 */
+.left-section {
+	position: absolute;
+	left: 50px; /* 왼쪽 여백 더 줌 */
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+}
+
+.logo-img {
+	height: 40px;
+	margin-top: 5px; /* 위쪽 여백 추가로 상단에 붙는 느낌 제거 */
+}
+
+/* 가운데 메뉴 */
+.center-section {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	align-items: center;
+}
+
+.nav-bar a {
+	margin-left: 20px;
+	text-decoration: none;
+	color: #333;
+	font-weight: bold;
+}
+
+/* 오른쪽 로그인/회원가입 */
+.right-section {
+	position: absolute;
+	right: 30px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+}
+
+.auth-link {
+	margin-left: 15px;
+	color: #333;
+	text-decoration: none;
+}
+
+.welcome-message {
+	margin-right: 10px;
+	font-weight: bold;
+}
