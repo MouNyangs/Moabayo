@@ -6,11 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainController {
-
+	
+	@GetMapping("mainpage")
+	public String gomainpage() {
+		return "main/mainpage";
+	}
+	
 	@GetMapping("loginpage")
 	public String gologinpage(Model model) {
 		return "login/login";
 	}
+
 	@GetMapping("registerpage")
 	public String goregisterpage(Model model) {
 		return "login/register";

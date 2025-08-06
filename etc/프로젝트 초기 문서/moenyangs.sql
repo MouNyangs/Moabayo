@@ -1,8 +1,7 @@
 -- Table: user
 CREATE TABLE "user" (
     id NUMBER(20) PRIMARY KEY,
-    create_date TIMESTAMP(6),
-    modify_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     account_num VARCHAR2(255),
     address VARCHAR2(255),
     address_detail VARCHAR2(255),
@@ -39,8 +38,7 @@ CREATE TABLE transaction (
 -- Table: nyang_coin
 CREATE TABLE nyang_coin (
     id NUMBER(20) PRIMARY KEY,
-    create_date TIMESTAMP(6),
-    modify_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     end_date TIMESTAMP(6),
     money NUMBER(20),
     user_id NUMBER(20),
@@ -50,8 +48,7 @@ CREATE TABLE nyang_coin (
 -- Table: habit
 CREATE TABLE habit (
     id NUMBER(20) PRIMARY KEY,
-    create_date TIMESTAMP(6),
-    modify_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     end_date TIMESTAMP(6),
     habit_name VARCHAR2(255),
     saving NUMBER(20),
@@ -65,7 +62,7 @@ CREATE TABLE habit (
 -- Table: habit_log
 CREATE TABLE habit_log (
     id NUMBER(20) PRIMARY KEY,
-    create_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     save_day TIMESTAMP(6),
     save_money NUMBER(20),
     habit_id NUMBER(20),
@@ -84,8 +81,7 @@ CREATE TABLE habit_habit_log (
 -- Table: coin_history
 CREATE TABLE coin_history (
     id NUMBER(20) PRIMARY KEY,
-    create_date TIMESTAMP(6),
-    modify_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     total_amt NUMBER(20),
     trans_amt NUMBER(20),
     trans_type VARCHAR2(255),
@@ -100,7 +96,7 @@ CREATE TABLE admin (
     id NUMBER(20) PRIMARY KEY,
     user_id NUMBER(20) UNIQUE,
     role VARCHAR2(50),
-    create_date TIMESTAMP(6),
+    date TIMESTAMP(6),
     FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
