@@ -16,7 +16,7 @@ window.addEventListener("load", function() {
 	setTimeout(() => {
 		document.getElementById("loading-screen").style.display = "none";
 		document.getElementById("main-content").style.display = "block";
-	}, 2000); // 2초 후에 메인 콘텐츠 보여줌
+	}, 3500); // 2초 후에 메인 콘텐츠 보여줌
 });
 
 document.addEventListener("DOMContentLoaded", () => {
