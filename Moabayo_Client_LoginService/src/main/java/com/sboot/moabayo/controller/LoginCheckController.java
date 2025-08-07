@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sboot.moabayo.jwt.JwtGenerate;
 import com.sboot.moabayo.vo.LoginFormVO;
 import com.sboot.moabayo.vo.UserInfoVO;
 
