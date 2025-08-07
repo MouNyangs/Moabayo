@@ -10,10 +10,10 @@ DROP TABLE nyang_coin;
 DROP TABLE user_card;
 DROP TABLE admin;
 DROP TABLE card;
-DROP TABLE "user";
+DROP TABLE users;
 
 -- 사용자 테이블
-CREATE TABLE "user" (
+CREATE TABLE users (
     id NUMBER(20) PRIMARY KEY,
     create_date DATE,  -- 계정 생성일
     account_num VARCHAR2(255),
@@ -30,22 +30,54 @@ CREATE TABLE "user" (
     is_admin NUMBER(1) DEFAULT 0
 );
 
--- 카드 목록 테이블
-CREATE TABLE card (
-    id NUMBER(20) PRIMARY KEY,
-    card_name VARCHAR2(255) NOT NULL,  -- 카드 이름
-    benefits VARCHAR2(1000),           -- 카드 혜택
-    card_img VARCHAR2(500),            -- 카드 이미지 URL
-    brand VARCHAR2(100)                -- 카드 브랜드
+-- 은행 예적금대출상품 목록 테이블
+CREATE TABLE BANK_PRODUCT (
+    ID              NUMBER PRIMARY KEY,                      -- 내부 사용 id
+    NAME            VARCHAR2(100) NOT NULL,                 -- 상품명
+    IMG             VARCHAR2(255),                          -- 이미지 경로 (추후 개발)
+    DESCRIPTION     VARCHAR2(1000),                         -- 상세설명
+    CATEGORY        VARCHAR2(100),                          -- 소비습관 관련 카테고리
+    BENEFITS        VARCHAR2(1000),                         -- 혜택 설명
+    INTEREST        NUMBER(5,2),                            -- 이율(%) 예: 3.75%
+    TYPE            VARCHAR2(50) 
+    --CHECK (TYPE IN ('예금', '입출금', '적금', '대출'))  -- 상품 유형
 );
 
--- 사용자 보유 카드 테이블
-CREATE TABLE user_card (
-    user_id NUMBER(20),
-    card_id NUMBER(20),
-    PRIMARY KEY (user_id, card_id),
-    FOREIGN KEY (user_id) REFERENCES "user"(id),
-    FOREIGN KEY (card_id) REFERENCES card(id)
+-- 유저가 보유한 계좌 목록 테이블
+CREATE TABLE USER_ACCOUNT (
+    USER_ID         NUMBER NOT NULL,                      -- 유저 ID
+    ACCOUNT_ID      NUMBER NOT NULL,                      -- 계좌 ID (내부 식별용)
+    ACCOUNT_NUMBER  VARCHAR2(30) UNIQUE NOT NULL,         -- 계좌번호
+    ACCOUNT_NAME    VARCHAR2(100),                        -- 사용자가 지정한 별명
+
+    PRIMARY KEY (USER_ID, ACCOUNT_ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
+    FOREIGN KEY (ACCOUNT_ID) REFERENCES BANK_PRODUCT(ID)
+);
+
+-- 카드 상품 목록 테이블
+CREATE TABLE CARD_PRODUCT (
+    ID              NUMBER PRIMARY KEY,                       -- 내부 사용 id
+    IMG             VARCHAR2(255),                            -- 카드 이미지
+    NAME            VARCHAR2(100) NOT NULL,                   -- 카드 이름
+    BRAND           VARCHAR2(50),
+        -- CHECK (BRAND IN ('비자', '마스터카드', '아메리칸익스프레스')),  -- 결제 브랜드
+    DESCRIPTION     VARCHAR2(1000),                           -- 상세설명
+    CATEGORY        VARCHAR2(100),                            -- 소비습관 관련 카테고리
+    BENEFITS        VARCHAR2(1000),                           -- 혜택 설명
+    INTEREST        NUMBER(5,2),                              -- 이율(%)
+    TYPE            VARCHAR2(50) 
+        -- CHECK (TYPE IN ('할인카드', '적립카드', '체크카드', '트럼프카드')) -- 카드 타입
+);
+
+-- 유저가 보유한 카드 목록 테이블
+CREATE TABLE USER_CARD (
+    USER_ID         NUMBER NOT NULL,                      -- 유저 ID
+    CARD_ID         NUMBER NOT NULL,                      -- 카드 ID
+
+    PRIMARY KEY (USER_ID, CARD_ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
+    FOREIGN KEY (CARD_ID) REFERENCES CARD_PRODUCT(ID)
 );
 
 -- 냥코인 보유 테이블
@@ -54,40 +86,42 @@ CREATE TABLE nyang_coin (
     create_date DATE,  -- 발행일
     money NUMBER(20),
     user_id NUMBER(20),
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- 습관 테이블
-CREATE TABLE habit (
-    id NUMBER(20) PRIMARY KEY,
-    create_date DATE,  -- 생성일
-    habit_name VARCHAR2(255),
-    saving NUMBER(20),       -- 절약액
-    state NUMBER,            -- 상태(진행중 등)
-    target_money NUMBER(20), -- 목표 금액
-    title VARCHAR2(255),
-    user_id NUMBER(20),
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
-);
 
--- 습관 로그 테이블
-CREATE TABLE habit_log (
-    id NUMBER(20) PRIMARY KEY,
-    create_date DATE,  -- 로그 기록일
-    save_day DATE,     -- 절약한 날짜
-    save_money NUMBER(20),
-    habit_id NUMBER(20),
-    FOREIGN KEY (habit_id) REFERENCES habit(id)
-);
+-- 아직 지원씨로부터 머신러닝 DB 구조가 오지 않아 작업 보류됨
+-- -- 습관 테이블
+-- CREATE TABLE habit (
+--     id NUMBER(20) PRIMARY KEY,
+--     create_date DATE,  -- 생성일
+--     habit_name VARCHAR2(255),
+--     saving NUMBER(20),       -- 절약액
+--     state NUMBER,            -- 상태(진행중 등)
+--     target_money NUMBER(20), -- 목표 금액
+--     title VARCHAR2(255),
+--     user_id NUMBER(20),
+--     FOREIGN KEY (user_id) REFERENCES users(id)
+-- );
 
--- 습관 - 습관 로그 연결 테이블
-CREATE TABLE habit_habit_log (
-    habit_id NUMBER(20),
-    habit_log_id NUMBER(20),
-    PRIMARY KEY (habit_id, habit_log_id),
-    FOREIGN KEY (habit_id) REFERENCES habit(id),
-    FOREIGN KEY (habit_log_id) REFERENCES habit_log(id)
-);
+-- -- 습관 로그 테이블
+-- CREATE TABLE habit_log (
+--     id NUMBER(20) PRIMARY KEY,
+--     create_date DATE,  -- 로그 기록일
+--     save_day DATE,     -- 절약한 날짜
+--     save_money NUMBER(20),
+--     habit_id NUMBER(20),
+--     FOREIGN KEY (habit_id) REFERENCES habit(id)
+-- );
+
+-- -- 습관 - 습관 로그 연결 테이블
+-- CREATE TABLE habit_habit_log (
+--     habit_id NUMBER(20),
+--     habit_log_id NUMBER(20),
+--     PRIMARY KEY (habit_id, habit_log_id),
+--     FOREIGN KEY (habit_id) REFERENCES habit(id),
+--     FOREIGN KEY (habit_log_id) REFERENCES habit_log(id)
+-- );
 
 -- 카드 거래 내역 테이블
 CREATE TABLE transaction (
@@ -102,7 +136,7 @@ CREATE TABLE transaction (
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
     user_id NUMBER(20),
-    FOREIGN KEY (user_id) REFERENCES "user"(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (card_id) REFERENCES card(id)
 );
 
@@ -123,42 +157,46 @@ CREATE TABLE admin (
     user_id NUMBER(20) UNIQUE,
     role VARCHAR2(50),       -- 관리자 역할 (ex: OWNER, STAFF)
     create_date DATE,        -- 생성일
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- 마이데이터 계좌 테이블
-CREATE TABLE Mydata_account (
-    trade_id VARCHAR2(50) PRIMARY KEY,          -- 거래 고유 ID
-    trade_date DATE NOT NULL,                   -- 계좌 거래일
-    bank_name VARCHAR2(100) NOT NULL,           -- 은행명
-    account_balance NUMBER(15, 2) NOT NULL      -- 계좌 잔액
-);
+-- 아직 지원씨로부터 머신러닝 DB 구조가 오지 않아 작업 보류됨
+-- -- 마이데이터 계좌 테이블
+-- CREATE TABLE Mydata_account (
+--     trade_id VARCHAR2(50) PRIMARY KEY,          -- 거래 고유 ID
+--     trade_date DATE NOT NULL,                   -- 계좌 거래일
+--     bank_name VARCHAR2(100) NOT NULL,           -- 은행명
+--     account_balance NUMBER(15, 2) NOT NULL      -- 계좌 잔액
+-- );
 
--- 마이데이터 거래 내역 테이블
-CREATE TABLE Mydata_transaction (
-    transaction_id NUMBER PRIMARY KEY,
-    trade_id VARCHAR2(50) NOT NULL,                  -- 계좌 식별자
-    trade_detail_date DATE NOT NULL,                 -- 거래 상세 날짜
-    trade_time DATE NOT NULL,                        -- 거래 시간
-    transaction_type VARCHAR2(10) NOT NULL,          -- 입출금 타입
-    trade_type VARCHAR2(50) NOT NULL,                -- 거래 유형
-    bankbook_note VARCHAR2(255),                     -- 거래 메모
-    trade_amount NUMBER(15, 2) NOT NULL,             -- 거래 금액
-    balance_after_trade NUMBER(15, 2) NOT NULL,      -- 거래 후 잔액
-    CONSTRAINT fk_account_trade
-        FOREIGN KEY (trade_id)
-        REFERENCES Mydata_account(trade_id)
-        ON DELETE CASCADE
-);
+-- -- 마이데이터 거래 내역 테이블
+-- CREATE TABLE Mydata_transaction (
+--     transaction_id NUMBER PRIMARY KEY,
+--     trade_id VARCHAR2(50) NOT NULL,                  -- 계좌 식별자
+--     trade_detail_date DATE NOT NULL,                 -- 거래 상세 날짜
+--     trade_time DATE NOT NULL,                        -- 거래 시간
+--     transaction_type VARCHAR2(10) NOT NULL,          -- 입출금 타입
+--     trade_type VARCHAR2(50) NOT NULL,                -- 거래 유형
+--     bankbook_note VARCHAR2(255),                     -- 거래 메모
+--     trade_amount NUMBER(15, 2) NOT NULL,             -- 거래 금액
+--     balance_after_trade NUMBER(15, 2) NOT NULL,      -- 거래 후 잔액
+--     CONSTRAINT fk_account_trade
+--         FOREIGN KEY (trade_id)
+--         REFERENCES Mydata_account(trade_id)
+--         ON DELETE CASCADE
+-- );
+
+
+
 
 -- ========================
--- 사용자 테이블 ("user")
+-- 사용자 테이블 (users)
 -- ========================
-INSERT INTO "user" VALUES (1, SYSDATE, 'ACC001', 'Seoul', '101-ho', '10001', 'alice@example.com', 'Alice', 'alice01', 'pass123', '010-1111-1111', 'token1', '1234', 0);
-INSERT INTO "user" VALUES (2, SYSDATE, 'ACC002', 'Busan', '202-ho', '20002', 'bob@example.com', 'Bob', 'bob02', 'pass234', '010-2222-2222', 'token2', '2345', 0);
-INSERT INTO "user" VALUES (3, SYSDATE, 'ACC003', 'Incheon', '303-ho', '30003', 'carol@example.com', 'Carol', 'carol03', 'pass345', '010-3333-3333', 'token3', '3456', 1);
-INSERT INTO "user" VALUES (4, SYSDATE, 'ACC004', 'Daegu', '404-ho', '40004', 'dave@example.com', 'Dave', 'dave04', 'pass456', '010-4444-4444', 'token4', '4567', 0);
-INSERT INTO "user" VALUES (5, SYSDATE, 'ACC005', 'Gwangju', '505-ho', '50005', 'eve@example.com', 'Eve', 'eve05', 'pass567', '010-5555-5555', 'token5', '5678', 1);
+INSERT INTO users VALUES (1, SYSDATE, 'ACC001', 'Seoul', '101-ho', '10001', 'alice@example.com', 'Alice', 'alice01', 'pass123', '010-1111-1111', 'token1', '1234', 0);
+INSERT INTO users VALUES (2, SYSDATE, 'ACC002', 'Busan', '202-ho', '20002', 'bob@example.com', 'Bob', 'bob02', 'pass234', '010-2222-2222', 'token2', '2345', 0);
+INSERT INTO users VALUES (3, SYSDATE, 'ACC003', 'Incheon', '303-ho', '30003', 'carol@example.com', 'Carol', 'carol03', 'pass345', '010-3333-3333', 'token3', '3456', 1);
+INSERT INTO users VALUES (4, SYSDATE, 'ACC004', 'Daegu', '404-ho', '40004', 'dave@example.com', 'Dave', 'dave04', 'pass456', '010-4444-4444', 'token4', '4567', 0);
+INSERT INTO users VALUES (5, SYSDATE, 'ACC005', 'Gwangju', '505-ho', '50005', 'eve@example.com', 'Eve', 'eve05', 'pass567', '010-5555-5555', 'token5', '5678', 1);
 
 -- ========================
 -- 카드 테이블 (card)
@@ -260,7 +298,7 @@ INSERT INTO Mydata_transaction VALUES (4, 'TR004', SYSDATE, SYSDATE, 'W', '이�
 INSERT INTO Mydata_transaction VALUES (5, 'TR005', SYSDATE, SYSDATE, 'D', '쇼핑', '인터넷 쇼핑 결제', 200000, 500000);
 
 
-SELECT * FROM "user";
+SELECT * FROM users;
 SELECT * FROM card;
 SELECT * FROM user_card;
 SELECT * FROM nyang_coin;
