@@ -1,24 +1,30 @@
 package com.sboot.moabayo.controller;
 
-import com.sboot.moabayo.feign.MoabayoClientMain;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sboot.moabayo.feign.LoginFeignClient;
 import com.sboot.moabayo.vo.LoginFormVO;
+import com.sboot.moabayo.vo.UserInfoVO;
 import com.sboot.moabayo.vo.UserVO;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class TokenMainController {
 
-    private final MoabayoClientMain moabayoClientMain;
+    private final LoginFeignClient moabayoClientMain;
 
-    @PostMapping("/proxy-login") 
-    public ResponseEntity<UserVO> login(@RequestBody LoginFormVO form, HttpServletResponse response) {
-        ResponseEntity<UserVO> feignResponse = moabayoClientMain.checkUser(form);
-        UserVO user = feignResponse.getBody();
+    @PostMapping("/token") 
+    public ResponseEntity<UserInfoVO> login(@RequestBody LoginFormVO form, HttpServletResponse response) {
+        ResponseEntity<UserInfoVO> feignResponse = moabayoClientMain.checkUser(form);
+        UserInfoVO user = feignResponse.getBody();
         String token = feignResponse.getHeaders().getFirst("Authorization");
         System.out.println(token);
         
