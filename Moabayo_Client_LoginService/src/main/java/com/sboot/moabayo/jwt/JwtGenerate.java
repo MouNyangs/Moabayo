@@ -1,4 +1,4 @@
-package com.sboot.moabayo.controller;
+package com.sboot.moabayo.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
