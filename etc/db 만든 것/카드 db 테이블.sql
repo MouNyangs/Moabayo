@@ -13,7 +13,6 @@ CREATE TABLE gender_stats (
     ym DATE,                                        -- 기준 년월 (예: 202508)
     block_cd VARCHAR2(20),                          -- 고객 주소 블록 코드
     gender VARCHAR2(10),                            -- 성별 (남, 여)
-    age VARCHAR2(20),                               -- 연령대 (예: 20대, 30대)
     amt_corr NUMBER,                                -- 카드 이용 금액 합계
     usect_corr NUMBER                               -- 카드 이용 건수 합계
 );
