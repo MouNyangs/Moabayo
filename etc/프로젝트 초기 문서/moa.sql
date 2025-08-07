@@ -1,18 +1,21 @@
 -- 자식 테이블 먼저 삭제
-DROP TABLE habit_habit_log CASCADE CONSTRAINTS;
-DROP TABLE habit_log CASCADE CONSTRAINTS;
-DROP TABLE habit CASCADE CONSTRAINTS;
-DROP TABLE coin_history CASCADE CONSTRAINTS;
-DROP TABLE nyang_coin CASCADE CONSTRAINTS;
-DROP TABLE transaction CASCADE CONSTRAINTS;
-DROP TABLE admin CASCADE CONSTRAINTS;
-DROP TABLE Mydata_transaction CASCADE CONSTRAINTS;
-DROP TABLE Mydata_account CASCADE CONSTRAINTS;
-DROP TABLE "user" CASCADE CONSTRAINTS;
+DROP TABLE Mydata_transaction;
+DROP TABLE Mydata_account;
+DROP TABLE coin_history;
+DROP TABLE transaction;
+DROP TABLE habit_habit_log;
+DROP TABLE habit_log;
+DROP TABLE habit;
+DROP TABLE nyang_coin;
+DROP TABLE user_card;
+DROP TABLE admin;
+DROP TABLE card;
+DROP TABLE "user";
 
+-- 사용자 테이블
 CREATE TABLE "user" (
     id NUMBER(20) PRIMARY KEY,
-    create_date DATE,
+    create_date DATE,  -- 계정 생성일
     account_num VARCHAR2(255),
     address VARCHAR2(255),
     address_detail VARCHAR2(255),
@@ -27,35 +30,57 @@ CREATE TABLE "user" (
     is_admin NUMBER(1) DEFAULT 0
 );
 
+-- 카드 목록 테이블
+CREATE TABLE card (
+    id NUMBER(20) PRIMARY KEY,
+    card_name VARCHAR2(255) NOT NULL,  -- 카드 이름
+    benefits VARCHAR2(1000),           -- 카드 혜택
+    card_img VARCHAR2(500),            -- 카드 이미지 URL
+    brand VARCHAR2(100)                -- 카드 브랜드
+);
+
+-- 사용자 보유 카드 테이블
+CREATE TABLE user_card (
+    user_id NUMBER(20),
+    card_id NUMBER(20),
+    PRIMARY KEY (user_id, card_id),
+    FOREIGN KEY (user_id) REFERENCES "user"(id),
+    FOREIGN KEY (card_id) REFERENCES card(id)
+);
+
+-- 냥코인 보유 테이블
 CREATE TABLE nyang_coin (
     id NUMBER(20) PRIMARY KEY,
-    create_date DATE,
+    create_date DATE,  -- 발행일
     money NUMBER(20),
     user_id NUMBER(20),
     FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
+-- 습관 테이블
 CREATE TABLE habit (
     id NUMBER(20) PRIMARY KEY,
-    create_date DATE,
+    create_date DATE,  -- 생성일
     habit_name VARCHAR2(255),
-    saving NUMBER(20),
-    state NUMBER,
-    target_money NUMBER(20),
+    saving NUMBER(20),       -- 절약액
+    state NUMBER,            -- 상태(진행중 등)
+    target_money NUMBER(20), -- 목표 금액
     title VARCHAR2(255),
     user_id NUMBER(20),
     FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
+-- 습관 로그 테이블
 CREATE TABLE habit_log (
     id NUMBER(20) PRIMARY KEY,
-    create_date DATE,
-    save_day DATE,
+    create_date DATE,  -- 로그 기록일
+    save_day DATE,     -- 절약한 날짜
     save_money NUMBER(20),
     habit_id NUMBER(20),
     FOREIGN KEY (habit_id) REFERENCES habit(id)
 );
 
+-- 습관 - 습관 로그 연결 테이블
 CREATE TABLE habit_habit_log (
     habit_id NUMBER(20),
     habit_log_id NUMBER(20),
@@ -64,148 +89,186 @@ CREATE TABLE habit_habit_log (
     FOREIGN KEY (habit_log_id) REFERENCES habit_log(id)
 );
 
+-- 카드 거래 내역 테이블
 CREATE TABLE transaction (
     id NUMBER(20) PRIMARY KEY,
-    approved_amount NUMBER(20),
-    approved_num VARCHAR2(255),
+    approved_amount NUMBER(20),  -- 승인금액
+    approved_num VARCHAR2(255),  -- 승인번호
     card_history_id NUMBER(20),
     card_id NUMBER(20),
     card_type VARCHAR2(255),
     category VARCHAR2(255),
-    date_time DATE,
+    date_time DATE,              -- 거래일시
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
     user_id NUMBER(20),
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
+    FOREIGN KEY (user_id) REFERENCES "user"(id),
+    FOREIGN KEY (card_id) REFERENCES card(id)
 );
 
+-- 냥코인 거래 내역 테이블
 CREATE TABLE coin_history (
     id NUMBER(20) PRIMARY KEY,
-    create_date DATE,
-    total_amt NUMBER(20),
-    trans_amt NUMBER(20),
-    trans_type VARCHAR2(255),
+    create_date DATE,         -- 거래 일자
+    total_amt NUMBER(20),     -- 전체 잔액
+    trans_amt NUMBER(20),     -- 거래 금액
+    trans_type VARCHAR2(255), -- 거래 타입 (충전, 사용 등)
     nyang_id NUMBER(20),
     FOREIGN KEY (nyang_id) REFERENCES nyang_coin(id)
 );
 
+-- 관리자 정보 테이블
 CREATE TABLE admin (
     id NUMBER(20) PRIMARY KEY,
     user_id NUMBER(20) UNIQUE,
-    role VARCHAR2(50),
-    create_date DATE,
+    role VARCHAR2(50),       -- 관리자 역할 (ex: OWNER, STAFF)
+    create_date DATE,        -- 생성일
     FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
+-- 마이데이터 계좌 테이블
 CREATE TABLE Mydata_account (
-    trade_id VARCHAR2(50) PRIMARY KEY,
-    trade_date DATE NOT NULL,
-    bank_name VARCHAR2(100) NOT NULL,
-    account_balance NUMBER(15, 2) NOT NULL
+    trade_id VARCHAR2(50) PRIMARY KEY,          -- 거래 고유 ID
+    trade_date DATE NOT NULL,                   -- 계좌 거래일
+    bank_name VARCHAR2(100) NOT NULL,           -- 은행명
+    account_balance NUMBER(15, 2) NOT NULL      -- 계좌 잔액
 );
 
+-- 마이데이터 거래 내역 테이블
 CREATE TABLE Mydata_transaction (
     transaction_id NUMBER PRIMARY KEY,
-    trade_id VARCHAR2(50) NOT NULL,
-    trade_detail_date DATE NOT NULL,
-    trade_time DATE NOT NULL,
-    transaction_type VARCHAR2(10) NOT NULL,
-    trade_type VARCHAR2(50) NOT NULL,
-    bankbook_note VARCHAR2(255),
-    trade_amount NUMBER(15, 2) NOT NULL,
-    balance_after_trade NUMBER(15, 2) NOT NULL,
+    trade_id VARCHAR2(50) NOT NULL,                  -- 계좌 식별자
+    trade_detail_date DATE NOT NULL,                 -- 거래 상세 날짜
+    trade_time DATE NOT NULL,                        -- 거래 시간
+    transaction_type VARCHAR2(10) NOT NULL,          -- 입출금 타입
+    trade_type VARCHAR2(50) NOT NULL,                -- 거래 유형
+    bankbook_note VARCHAR2(255),                     -- 거래 메모
+    trade_amount NUMBER(15, 2) NOT NULL,             -- 거래 금액
+    balance_after_trade NUMBER(15, 2) NOT NULL,      -- 거래 후 잔액
     CONSTRAINT fk_account_trade
         FOREIGN KEY (trade_id)
         REFERENCES Mydata_account(trade_id)
         ON DELETE CASCADE
 );
 
--- 사용자 테이블: user
-INSERT INTO "user" VALUES (1, SYSDATE, '10000001', 'Seoul', 'Apt 101', '01000', 'u1@example.com', 'Alice', 'alice', 'pass1', '010-0001', 'ref1', '1234', 0);
-INSERT INTO "user" VALUES (2, SYSDATE, '10000002', 'Busan', 'Apt 202', '02000', 'u2@example.com', 'Bob', 'bob', 'pass2', '010-0002', 'ref2', '2345', 0);
-INSERT INTO "user" VALUES (3, SYSDATE, '10000003', 'Daegu', 'Apt 303', '03000', 'u3@example.com', 'Charlie', 'charlie', 'pass3', '010-0003', 'ref3', '3456', 1);
-INSERT INTO "user" VALUES (4, SYSDATE, '10000004', 'Incheon', 'Apt 404', '04000', 'u4@example.com', 'David', 'david', 'pass4', '010-0004', 'ref4', '4567', 0);
-INSERT INTO "user" VALUES (5, SYSDATE, '10000005', 'Gwangju', 'Apt 505', '05000', 'u5@example.com', 'Eve', 'eve', 'pass5', '010-0005', 'ref5', '5678', 0);
+-- ========================
+-- 사용자 테이블 ("user")
+-- ========================
+INSERT INTO "user" VALUES (1, SYSDATE, 'ACC001', 'Seoul', '101-ho', '10001', 'alice@example.com', 'Alice', 'alice01', 'pass123', '010-1111-1111', 'token1', '1234', 0);
+INSERT INTO "user" VALUES (2, SYSDATE, 'ACC002', 'Busan', '202-ho', '20002', 'bob@example.com', 'Bob', 'bob02', 'pass234', '010-2222-2222', 'token2', '2345', 0);
+INSERT INTO "user" VALUES (3, SYSDATE, 'ACC003', 'Incheon', '303-ho', '30003', 'carol@example.com', 'Carol', 'carol03', 'pass345', '010-3333-3333', 'token3', '3456', 1);
+INSERT INTO "user" VALUES (4, SYSDATE, 'ACC004', 'Daegu', '404-ho', '40004', 'dave@example.com', 'Dave', 'dave04', 'pass456', '010-4444-4444', 'token4', '4567', 0);
+INSERT INTO "user" VALUES (5, SYSDATE, 'ACC005', 'Gwangju', '505-ho', '50005', 'eve@example.com', 'Eve', 'eve05', 'pass567', '010-5555-5555', 'token5', '5678', 1);
 
--- 고양이 코인 테이블: nyang_coin
+-- ========================
+-- 카드 테이블 (card)
+-- ========================
+INSERT INTO card VALUES (1, 'KB 국민카드', '쇼핑 5% 할인', 'img/kb.png', 'KB');
+INSERT INTO card VALUES (2, '신한 카드', '영화 50% 할인', 'img/shinhan.png', 'Shinhan');
+INSERT INTO card VALUES (3, '삼성카드', '항공 마일리지 적립', 'img/samsung.png', 'Samsung');
+INSERT INTO card VALUES (4, '하나카드', '해외결제 수수료 면제', 'img/hana.png', 'Hana');
+INSERT INTO card VALUES (5, '현대카드', '음식점 10% 할인', 'img/hyundai.png', 'Hyundai');
+
+-- ========================
+-- 유저 카드 연결 테이블 (user_card)
+-- ========================
+INSERT INTO user_card VALUES (1, 1);
+INSERT INTO user_card VALUES (2, 2);
+INSERT INTO user_card VALUES (3, 3);
+INSERT INTO user_card VALUES (4, 4);
+INSERT INTO user_card VALUES (5, 5);
+
+-- ========================
+-- 냥코인 테이블 (nyang_coin)
+-- ========================
 INSERT INTO nyang_coin VALUES (1, SYSDATE, 1000, 1);
-INSERT INTO nyang_coin VALUES (2, SYSDATE, 2000, 2);
-INSERT INTO nyang_coin VALUES (3, SYSDATE, 3000, 3);
-INSERT INTO nyang_coin VALUES (4, SYSDATE, 4000, 4);
-INSERT INTO nyang_coin VALUES (5, SYSDATE, 5000, 5);
+INSERT INTO nyang_coin VALUES (2, SYSDATE, 1500, 2);
+INSERT INTO nyang_coin VALUES (3, SYSDATE, 2000, 3);
+INSERT INTO nyang_coin VALUES (4, SYSDATE, 2500, 4);
+INSERT INTO nyang_coin VALUES (5, SYSDATE, 3000, 5);
 
--- 습관 테이블: habit
-INSERT INTO habit VALUES (1, SYSDATE, 'Drink Water', 50, 1, 500, 'Hydrate', 1);
-INSERT INTO habit VALUES (2, SYSDATE, 'Walk', 100, 1, 1000, 'Steps', 2);
-INSERT INTO habit VALUES (3, SYSDATE, 'Read Book', 150, 0, 1500, 'Reading', 3);
-INSERT INTO habit VALUES (4, SYSDATE, 'Yoga', 200, 1, 2000, 'Fitness', 4);
-INSERT INTO habit VALUES (5, SYSDATE, 'Meditate', 250, 0, 2500, 'Mind', 5);
+-- ========================
+-- 습관 테이블 (habit)
+-- ========================
+INSERT INTO habit VALUES (1, SYSDATE, '운동하기', 100, 1, 1000, '건강관리', 1);
+INSERT INTO habit VALUES (2, SYSDATE, '독서하기', 200, 1, 1500, '자기계발', 2);
+INSERT INTO habit VALUES (3, SYSDATE, '물 마시기', 50, 0, 500, '수분섭취', 3);
+INSERT INTO habit VALUES (4, SYSDATE, '명상하기', 80, 1, 800, '마음챙김', 4);
+INSERT INTO habit VALUES (5, SYSDATE, '아침 일찍 일어나기', 120, 1, 1200, '습관형성', 5);
 
--- 습관 로그 테이블: habit_log
-INSERT INTO habit_log VALUES (1, SYSDATE, SYSDATE, 50, 1);
-INSERT INTO habit_log VALUES (2, SYSDATE, SYSDATE, 100, 2);
-INSERT INTO habit_log VALUES (3, SYSDATE, SYSDATE, 150, 3);
-INSERT INTO habit_log VALUES (4, SYSDATE, SYSDATE, 200, 4);
-INSERT INTO habit_log VALUES (5, SYSDATE, SYSDATE, 250, 5);
+-- ========================
+-- 습관 로그 테이블 (habit_log)
+-- ========================
+INSERT INTO habit_log VALUES (1, SYSDATE, SYSDATE, 100, 1);
+INSERT INTO habit_log VALUES (2, SYSDATE, SYSDATE, 200, 2);
+INSERT INTO habit_log VALUES (3, SYSDATE, SYSDATE, 50, 3);
+INSERT INTO habit_log VALUES (4, SYSDATE, SYSDATE, 80, 4);
+INSERT INTO habit_log VALUES (5, SYSDATE, SYSDATE, 120, 5);
 
--- 습관-습관로그 매핑 테이블: habit_habit_log
+-- ========================
+-- 습관-로그 조인 테이블 (habit_habit_log)
+-- ========================
 INSERT INTO habit_habit_log VALUES (1, 1);
 INSERT INTO habit_habit_log VALUES (2, 2);
 INSERT INTO habit_habit_log VALUES (3, 3);
 INSERT INTO habit_habit_log VALUES (4, 4);
 INSERT INTO habit_habit_log VALUES (5, 5);
 
--- 거래 내역 테이블: transaction
-INSERT INTO transaction VALUES (1, 10000, 'A1001', 1, 10, 'Credit', 'Food', SYSDATE, 'StoreA', '001', 1);
-INSERT INTO transaction VALUES (2, 20000, 'A1002', 2, 20, 'Debit', 'Shopping', SYSDATE, 'StoreB', '002', 2);
-INSERT INTO transaction VALUES (3, 15000, 'A1003', 3, 30, 'Credit', 'Transport', SYSDATE, 'StoreC', '003', 3);
-INSERT INTO transaction VALUES (4, 18000, 'A1004', 4, 40, 'Debit', 'Utilities', SYSDATE, 'StoreD', '004', 4);
-INSERT INTO transaction VALUES (5, 22000, 'A1005', 5, 50, 'Credit', 'Health', SYSDATE, 'StoreE', '005', 5);
+-- ========================
+-- 거래 내역 테이블 (transaction)
+-- ========================
+INSERT INTO transaction VALUES (1, 50000, 'APP001', 1, 1, 'Credit', '식비', SYSDATE, '마트A', '001', 1);
+INSERT INTO transaction VALUES (2, 80000, 'APP002', 2, 2, 'Credit', '쇼핑', SYSDATE, '백화점B', '002', 2);
+INSERT INTO transaction VALUES (3, 30000, 'APP003', 3, 3, 'Debit', '교통', SYSDATE, '버스C', '003', 3);
+INSERT INTO transaction VALUES (4, 45000, 'APP004', 4, 4, 'Credit', '카페', SYSDATE, '카페D', '004', 4);
+INSERT INTO transaction VALUES (5, 70000, 'APP005', 5, 5, 'Debit', '영화', SYSDATE, '영화관E', '005', 5);
 
--- 코인 내역 테이블: coin_history
+-- ========================
+-- 코인 내역 테이블 (coin_history)
+-- ========================
 INSERT INTO coin_history VALUES (1, SYSDATE, 1000, 100, 'deposit', 1);
-INSERT INTO coin_history VALUES (2, SYSDATE, 1800, 200, 'withdraw', 2);
-INSERT INTO coin_history VALUES (3, SYSDATE, 3100, 300, 'deposit', 3);
-INSERT INTO coin_history VALUES (4, SYSDATE, 3700, 400, 'withdraw', 4);
-INSERT INTO coin_history VALUES (5, SYSDATE, 4200, 500, 'deposit', 5);
+INSERT INTO coin_history VALUES (2, SYSDATE, 1500, 200, 'withdraw', 2);
+INSERT INTO coin_history VALUES (3, SYSDATE, 2000, 300, 'deposit', 3);
+INSERT INTO coin_history VALUES (4, SYSDATE, 2500, 400, 'withdraw', 4);
+INSERT INTO coin_history VALUES (5, SYSDATE, 3000, 500, 'deposit', 5);
 
--- 관리자 테이블: admin
+-- ========================
+-- 관리자 테이블 (admin)
+-- ========================
 INSERT INTO admin VALUES (1, 3, 'ADMIN', SYSDATE);
 INSERT INTO admin VALUES (2, 5, 'MANAGER', SYSDATE);
 INSERT INTO admin VALUES (3, 1, 'EDITOR', SYSDATE);
 INSERT INTO admin VALUES (4, 4, 'VIEWER', SYSDATE);
-INSERT INTO admin VALUES (5, 2, 'SUPER_ADMIN', SYSDATE);
+INSERT INTO admin VALUES (5, 2, 'OWNER', SYSDATE);
 
--- 마이데이터 계좌 테이블: Mydata_account
-INSERT INTO Mydata_account VALUES ('T1001', SYSDATE, 'KB Bank', 500000);
-INSERT INTO Mydata_account VALUES ('T1002', SYSDATE, 'Shinhan Bank', 600000);
-INSERT INTO Mydata_account VALUES ('T1003', SYSDATE, 'NH Bank', 450000);
-INSERT INTO Mydata_account VALUES ('T1004', SYSDATE, 'Woori Bank', 700000);
-INSERT INTO Mydata_account VALUES ('T1005', SYSDATE, 'Kakao Bank', 300000);
+-- ========================
+-- 마이데이터 계좌 테이블 (Mydata_account)
+-- ========================
+INSERT INTO Mydata_account VALUES ('TR001', SYSDATE, 'KB국민은행', 1000000);
+INSERT INTO Mydata_account VALUES ('TR002', SYSDATE, '신한은행', 800000);
+INSERT INTO Mydata_account VALUES ('TR003', SYSDATE, '하나은행', 600000);
+INSERT INTO Mydata_account VALUES ('TR004', SYSDATE, '카카오뱅크', 400000);
+INSERT INTO Mydata_account VALUES ('TR005', SYSDATE, 'NH농협', 700000);
 
--- 마이데이터 거래내역 테이블: Mydata_transaction
-INSERT INTO Mydata_transaction VALUES (1, 'T1001', SYSDATE, SYSDATE, 'D', 'Transfer', 'Note1', 50000, 450000);
-INSERT INTO Mydata_transaction VALUES (2, 'T1002', SYSDATE, SYSDATE, 'W', 'Deposit', 'Note2', 60000, 660000);
-INSERT INTO Mydata_transaction VALUES (3, 'T1003', SYSDATE, SYSDATE, 'D', 'Withdrawal', 'Note3', 40000, 410000);
-INSERT INTO Mydata_transaction VALUES (4, 'T1004', SYSDATE, SYSDATE, 'D', 'Transfer', 'Note4', 70000, 630000);
-INSERT INTO Mydata_transaction VALUES (5, 'T1005', SYSDATE, SYSDATE, 'W', 'Deposit', 'Note5', 30000, 330000);
+-- ========================
+-- 마이데이터 거래 테이블 (Mydata_transaction)
+-- ========================
+INSERT INTO Mydata_transaction VALUES (1, 'TR001', SYSDATE, SYSDATE, 'D', '이체', '친구 송금', 50000, 950000);
+INSERT INTO Mydata_transaction VALUES (2, 'TR002', SYSDATE, SYSDATE, 'W', '입금', '월급', 200000, 1000000);
+INSERT INTO Mydata_transaction VALUES (3, 'TR003', SYSDATE, SYSDATE, 'D', '출금', 'ATM 출금', 100000, 500000);
+INSERT INTO Mydata_transaction VALUES (4, 'TR004', SYSDATE, SYSDATE, 'W', '이체', '생활비', 150000, 550000);
+INSERT INTO Mydata_transaction VALUES (5, 'TR005', SYSDATE, SYSDATE, 'D', '쇼핑', '인터넷 쇼핑 결제', 200000, 500000);
+
 
 SELECT * FROM "user";
-
+SELECT * FROM card;
+SELECT * FROM user_card;
 SELECT * FROM nyang_coin;
-
 SELECT * FROM habit;
-
 SELECT * FROM habit_log;
-
 SELECT * FROM habit_habit_log;
-
 SELECT * FROM transaction;
-
 SELECT * FROM coin_history;
-
 SELECT * FROM admin;
-
 SELECT * FROM Mydata_account;
-
 SELECT * FROM Mydata_transaction;
