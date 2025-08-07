@@ -1,73 +1,73 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>로그인 - 모으냥</title>
-<link rel="icon" href="images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="../css/login.css" />
-<link rel="icon" href="images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="css/footer.css" />
-<!-- ✅ 외부 JS 파일 연결 -->
-<script defer src="js/common.js"></script>
-</head>
-<body>
-
-	<div class="container">
-		<a href="mainpage"><img class="cat-image" src="../images/cat.png" alt="고양이 이미지"></a>
-		<h1>어서오세요, 모으냥~</h1>
-
-		<div class="login-box">
-			<form id="loginForm">
-				<label for="username">아이디</label> <input type="text" id="username" name="username" required> <label for="password">비밀번호</label> <input type="password" id="password" name="password" required>
-
-				<button type="submit">로그인</button>
-			</form>
-
-			<div class="links">
-				<a href="registerpage">회원가입</a> | <a href="find-id">아이디 찾기</a> | <a href="find-password">비밀번호 찾기</a>
+	<!DOCTYPE html>
+	<html lang="ko">
+	<head>
+	<meta charset="UTF-8">
+	<title>로그인 - 모으냥</title>
+	<link rel="icon" href="images/cat.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="../css/login.css" />
+	<link rel="icon" href="images/cat.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="css/footer.css" />
+	<!-- ✅ 외부 JS 파일 연결 -->
+	<script defer src="js/common.js"></script>
+	</head>
+	<body>
+	
+		<div class="container">
+			<a href="mainpage"><img class="cat-image" src="../images/cat.png" alt="고양이 이미지"></a>
+			<h1>어서오세요, 모으냥~</h1>
+	
+			<div class="login-box">
+				<form id="loginForm">
+					<label for="username">아이디</label> <input type="text" id="username" name="username" required> <label for="password">비밀번호</label> <input type="password" id="password" name="password" required>
+	
+					<button type="submit">로그인</button>
+				</form>
+	
+				<div class="links">
+					<a href="registerpage">회원가입</a> | <a href="find-id">아이디 찾기</a> | <a href="find-password">비밀번호 찾기</a>
+				</div>
 			</div>
 		</div>
-	</div>
-	<!-- Footer 삽입 -->
-	<div id="footer"></div>
-</body>
-
-<script>
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault(); // form 기본 동작 방지
-
-    const id = document.getElementById("username").value;
-    const pw = document.getElementById("password").value;
-
-    try {
-        const response = await fetch("http://localhost:8811/user/validate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ id, pw })
-        });
-
-        if (response.status === 200) {
-            const user = await response.json();
-            const token = response.headers.get("Authorization");
-
-            // ✅ 사용자 정보 localStorage 저장
-            localStorage.setItem("token", token);
-            localStorage.setItem("userId", user.id);
-            localStorage.setItem("userName", user.name);  // ← 이 줄 추가!
-            localStorage.setItem("role", user.role);
-
-            alert("로그인 성공! 환영합니다 " + user.name + "님");
-            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
-
-        } else {
-            alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
-        }
-    } catch (err) {
-        console.error("로그인 요청 오류:", err);
-        alert("⚠️ 서버와의 연결에 실패했습니다.");
-    }
-});
-</script>
-</html>
+		<!-- Footer 삽입 -->
+		<div id="footer"></div>
+	</body>
+	
+	<script>
+	document.getElementById("loginForm").addEventListener("submit", async function(e) {
+	    e.preventDefault(); // form 기본 동작 방지
+	
+	    const id = document.getElementById("username").value;
+	    const pw = document.getElementById("password").value;
+	
+	    try {
+	        const response = await fetch("http://localhost:8812/api/proxy-login", {
+	            method: "POST",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            body: JSON.stringify({ id, pw })
+	        });
+	
+	        if (response.status === 200) {
+	            const user = await response.json();
+	            const token = response.headers.get("Authorization");
+	
+	            // ✅ 사용자 정보 localStorage 저장
+	            localStorage.setItem("token", token);
+	            localStorage.setItem("userId", user.id);
+	            localStorage.setItem("userName", user.name);  // ← 이 줄 추가!
+	            localStorage.setItem("role", user.role);
+	
+	            alert("로그인 성공! 환영합니다 " + user.name + "님");
+	            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
+	
+	        } else {
+	            alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
+	        }
+	    } catch (err) {
+	        console.error("로그인 요청 오류:", err);
+	        alert("⚠️ 서버와의 연결에 실패했습니다.");
+	    }
+	});
+	</script>
+	</html>
