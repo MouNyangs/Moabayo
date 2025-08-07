@@ -16,13 +16,16 @@ public class InitBrowser {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void onApplicationReady() {
-		String url = "http://localhost:" + serverPort;
-		System.setProperty("java.awt.headless", "false");
+		// 포트가 8812일 경우에만 브라우저 열기
+		if (serverPort == 8812) {
+			String url = "http://localhost:" + serverPort;
+			System.setProperty("java.awt.headless", "false");
 
-		try {
-			Desktop.getDesktop().browse(URI.create(url));
-		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				Desktop.getDesktop().browse(URI.create(url));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
