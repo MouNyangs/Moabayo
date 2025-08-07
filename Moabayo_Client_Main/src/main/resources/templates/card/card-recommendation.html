@@ -16,12 +16,22 @@ body {
 	background-color: #f9f9f9;
 }
 
-h1 {
+.card-header {
+	padding-top: 40px; /* 헤더와 콘텐츠 사이 공간 확보 */
 	text-align: center;
+	background-color: transparent;
+}
+
+.card-header h1 {
+	margin-top: 0; /* 기본 마진 제거 */
 	margin-bottom: 0.5rem;
 }
 
-p.intro {
+#header+.card-header {
+	padding-top: 30px;
+}
+
+.card-header p.intro {
 	text-align: center;
 	color: #555;
 	margin-bottom: 2rem;
@@ -94,26 +104,25 @@ p.intro {
 	<!-- Header 삽입 -->
 	<div id="header"></div>
 
-	<h1>추천 카드</h1>
-	<p class="intro">당신의 소비 패턴에 맞는 카드들을 추천해드려요!</p>
+	<div class="card-header">
+		<h1>추천 카드</h1>
+		<p class="intro">당신의 소비 패턴에 맞는 카드들을 추천해드려요!</p>
+	</div>
 
 	<div class="card-recommendations">
 
 		<!-- 카드 1 -->
 		<div class="card-item">
-			<div class="card-img"
-				style="background-image: url('/cardimg/summercat.png');"></div>
+			<div class="card-img" style="background-image: url('/cardimg/summercat.png');"></div>
 			<div class="card-content">
 				<div class="card-title">여름 피서 적립 카드</div>
-				<div class="card-desc">빙수, 카페, 워터파크 최대 10% 캐시백! 여름을 즐기는 당신에게
-					추천!</div>
+				<div class="card-desc">빙수, 카페, 워터파크 최대 10% 캐시백! 여름을 즐기는 당신에게 추천!</div>
 			</div>
 		</div>
 
 		<!-- 카드 2 -->
 		<div class="card-item">
-			<div class="card-img"
-				style="background-image: url('/cardimg/spacecat-card.png');"></div>
+			<div class="card-img" style="background-image: url('/cardimg/spacecat-card.png');"></div>
 			<div class="card-content">
 				<div class="card-title">우주여행 마일리지 카드</div>
 				<div class="card-desc">항공 마일리지와 쇼핑 리워드를 동시에! 특별한 혜택을 우주처럼.</div>
@@ -122,19 +131,16 @@ p.intro {
 
 		<!-- 카드 3 -->
 		<div class="card-item">
-			<div class="card-img"
-				style="background-image: url('/cardimg/holloweencat.png');"></div>
+			<div class="card-img" style="background-image: url('/cardimg/holloweencat.png');"></div>
 			<div class="card-content">
 				<div class="card-title">할로윈 시즌 혜택 카드</div>
-				<div class="card-desc">할로윈 한정 캐릭터 굿즈, 편의점/디저트 할인! 귀엽고 실속 있는
-					선택.</div>
+				<div class="card-desc">할로윈 한정 캐릭터 굿즈, 편의점/디저트 할인! 귀엽고 실속 있는 선택.</div>
 			</div>
 		</div>
 
 	</div>
 
-	<button class="view-button" onclick="location.href='/cards/detail'">자세히
-		보기</button>
+	<button class="view-button" onclick="location.href='/cards/detail'">자세히 보기</button>
 
 	<!-- Footer 삽입 -->
 	<div id="footer"></div>
