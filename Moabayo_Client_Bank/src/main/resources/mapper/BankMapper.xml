@@ -12,3 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 </mapper> -->
+
+<mapper namespace="com.sboot.moabayo.dao.BankMapper">
+    <select id="findById">
+        SELECT id, name, role
+        FROM users
+        WHERE id = #{id}
+    </select>
+</mapper>

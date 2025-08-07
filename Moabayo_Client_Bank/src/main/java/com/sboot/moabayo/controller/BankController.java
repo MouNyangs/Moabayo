@@ -8,8 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bank")
 public class BankController {
+	@GetMapping("/index")
+	public String bank_index() {
+		return "index";
+	}
+	
 	@GetMapping("/main")
-	public String bank_main() {
+	public String main_page() {
 		return "bank/main";
+	}
+	
+	@GetMapping("/accounts")
+	public String accounts() {
+		return "bank/accounts";
 	}
 }
