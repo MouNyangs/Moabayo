@@ -22,3 +22,4 @@ public class MainController {
 		return "login/register";
 	}
 }
+	

@@ -18,7 +18,7 @@ public class JwtUtil {
     private final String secret = "moabayo-jwt-secret-key-moabayo-jwt-secret-key"; // 최소 256bit
     private final long expirationTime = 1000 * 60 * 60 * 2; // 2시간
 
-    private Key getSigningKey() {
+    public Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 

@@ -1,6 +1,8 @@
 package com.sboot.moabayo.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +15,34 @@ import com.sboot.moabayo.vo.UserInfoVO;
 @RequestMapping("/user")
 public class LoginCheckController {
 
-	@PostMapping("/validate")
-	public UserInfoVO validate(@RequestBody LoginFormVO form) {
-		// 예시 하드코딩
-		if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
-			return new UserInfoVO("admin", "관리자", "ADMIN");
-		}
-		return null;
+	/*
+	 * @CrossOrigin(origins = "http://localhost:8812", exposedHeaders =
+	 * "Authorization" )
+	 */
+	@PostMapping("/login")
+	public ResponseEntity<UserInfoVO> validate(@RequestBody LoginFormVO form) {
+		System.out.println("받은 ID: " + form.getId());
+		System.out.println("받은 PW: " + form.getPw());
+		
+	    if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
+	        // ✅ 유저 정보 생성
+	        UserInfoVO user = new UserInfoVO("admin", "관리자", "ADMIN");
+
+	        // ✅ JWT 토큰 발급
+	        String token = JwtGenerate.createToken(form.getId());
+	        
+	        System.out.println(token);
+
+	        // ✅ 토큰을 응답 헤더에 담기
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.set("Authorization", "Bearer " + token);
+
+	        // ✅ 유저 정보 + 헤더 포함한 응답
+	        return ResponseEntity.ok().headers(headers).body(user);
+	    }
+
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
 	}
+
 }
