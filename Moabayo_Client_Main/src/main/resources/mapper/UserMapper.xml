@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- download disable 에러는 무시하세요!! -->
+<!-- <mapper namespace="com.sboot.moabayo.dao.UserMapper">
+예시입니다. 스프링부트에서는 mybatis-config.xml이 필요 없긴하지만 필요하면 사용할 수있게 두었습니다.
+    <select id="findById" resultType="com.sboot.moabayo.vo.UserInfoVO">
+        SELECT id, name, role
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+</mapper> -->
