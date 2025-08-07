@@ -1,5 +1,6 @@
 package com.sboot.moabayo.jwt;
 
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,11 +13,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class MainJwtFilter extends OncePerRequestFilter {
+public class CardJwtFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final CardJwtGenerate jwtUtil;
 
-    public MainJwtFilter(JwtUtil jwtUtil) {
+    public CardJwtFilter(CardJwtGenerate jwtUtil) {
         this.jwtUtil = jwtUtil;  // ✅ 생성자 주입
     }
 
@@ -42,7 +43,7 @@ public class MainJwtFilter extends OncePerRequestFilter {
             try {
                 String token = authHeader.substring(BEARER.length());
                 Jwts.parserBuilder()
-                        .setSigningKey(jwtUtil.getSigningKey()) // ✅ 수정 완료
+                        .setSigningKey(jwtUtil.getKey()) // ✅ 수정 완료
                         .build()
                         .parseClaimsJws(token);
 

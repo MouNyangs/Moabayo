@@ -20,7 +20,8 @@
 	<section class="hero">
 		<img src="images/cat.png" alt="동전 든 고양이" class="hero-img" />
 		<h1>오늘도 귀엽게 모으냥~</h1>
-		<a href="cards"><button class="cta-btn">계좌 & 카드 등록</button></a> <a
+		<a href="#" onclick="goToCardService()"><button class="cta-btn">계좌 & 카드 등록</button></a>
+ <a
 			href="recommendcards"><button class="cta-btn">저축 시작하기</button></a>
 	</section>
 
@@ -45,5 +46,44 @@
 
 	<!-- Footer 삽입 -->
 	<div id="footer"></div>
+	
+<script>
+function goToCardService() {
+    const token = localStorage.getItem('token');
+    console.log("👉 가져온 토큰:", token);
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "loginpage";
+        return;
+    }
+
+    // ✅ 카드 서비스의 주소로 이동하면서 토큰 포함 (Fetch 사용)
+    fetch("http://localhost:8812/secure/verify", {
+        method: "GET",
+        headers: {
+        	  "Authorization": "Bearer " + token
+        	}
+
+    })
+    .then(res => {
+        if (res.ok) {
+            // ✅ HTML을 문자열로 받아서 새로운 창에 띄우기
+            return res.text();
+        } else {
+            throw new Error("인증 실패");
+        }
+    })
+    .then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+    })
+    .catch(err => {
+        alert("인증되지 않았습니다. 다시 로그인해주세요.");
+        window.location.href = "loginpage";
+    });
+}
+
+</script>
 </body>
 </html>

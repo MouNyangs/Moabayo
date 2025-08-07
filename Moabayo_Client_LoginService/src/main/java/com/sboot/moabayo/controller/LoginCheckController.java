@@ -31,12 +31,15 @@ public class LoginCheckController {
 
 	        // ✅ JWT 토큰 발급
 	        String token = JwtGenerate.createToken(form.getId());
-	        
+	        String refreshToken = JwtGenerate.createRefreshToken(form.getId());
 	        System.out.println(token);
+	        System.out.println(refreshToken);
+	        
 
 	        // ✅ 토큰을 응답 헤더에 담기
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.set("Authorization", "Bearer " + token);
+	        headers.set("Refresh-Token", refreshToken);  // ✅ 새로 추가
 
 	        // ✅ 유저 정보 + 헤더 포함한 응답
 	        return ResponseEntity.ok().headers(headers).body(user);
