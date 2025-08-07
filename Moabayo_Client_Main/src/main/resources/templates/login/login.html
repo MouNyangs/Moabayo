@@ -40,7 +40,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const pw = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://localhost:8811/user/validate", {
+        const response = await fetch("http://localhost:8812/user/validate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
