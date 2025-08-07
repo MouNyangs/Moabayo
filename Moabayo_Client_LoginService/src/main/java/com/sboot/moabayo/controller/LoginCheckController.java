@@ -13,7 +13,6 @@ import com.sboot.moabayo.vo.UserInfoVO;
 @RequestMapping("/user")
 public class LoginCheckController {
 
-	@CrossOrigin(origins = "http://localhost:8812")
 	@PostMapping("/validate")
 	public UserInfoVO validate(@RequestBody LoginFormVO form) {
 		// 예시 하드코딩
