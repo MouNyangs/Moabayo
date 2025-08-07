@@ -6,7 +6,7 @@ import java.security.Key;
 import java.util.Date;
 import io.jsonwebtoken.security.Keys;
 
-public class JwtUtil {
+public class JwtGenerate {
 	// 비밀 키 생성 ( HS256용 랜덤키)
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	// 토큰 만료 시간 : 10분

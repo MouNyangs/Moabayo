@@ -36,13 +36,13 @@
 
 <script>
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault(); // form 기본 동작 방지
+    e.preventDefault(); // form 기본 제출 방지
 
     const id = document.getElementById("username").value;
     const pw = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://localhost:8812/user/validate", {
+        const response = await fetch("/user/validate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -50,28 +50,37 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             body: JSON.stringify({ id, pw })
         });
 
-        if (response.status === 200) {
+        if (response.ok) {
+            // JSON 응답 파싱
             const user = await response.json();
+
+            // 헤더에서 토큰 추출 (Authorization: Bearer xxx)
             const token = response.headers.get("Authorization");
 
-            // ✅ 사용자 정보 localStorage 저장
+            if (!token) {
+                alert("⚠️ 로그인 성공했지만 토큰이 없습니다.");
+                return;
+            }
+
+            // localStorage 저장
             localStorage.setItem("token", token);
             localStorage.setItem("userId", user.id);
-            localStorage.setItem("userName", user.name);  // ← 이 줄 추가!
-            localStorage.setItem("role", user.role);
-           
-            alert("로그인 성공! 환영합니다 " + user.name + "님");
-            alert("토큰 "+token);
-            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
+            localStorage.setItem("userName", user.name || ""); // name이 없을 수도 있으니 기본값 처리
+            localStorage.setItem("role", user.role || "");
+
+            alert("✅ 로그인 성공! 환영합니다 " + (user.name || user.id) + "님");
+            location.href = "/mainpage"; // 로그인 성공 후 이동
 
         } else {
-            alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
+            const errorText = await response.text();
+            alert("❌ 로그인 실패: " + errorText);
         }
     } catch (err) {
-        console.error("로그인 요청 오류:", err);
-        alert("⚠️ 서버와의 연결에 실패했습니다.");
+        console.error("🚨 로그인 요청 실패:", err);
+        alert("⚠️ 서버에 연결할 수 없습니다.");
     }
 });
 </script>
+
 </html>
 
