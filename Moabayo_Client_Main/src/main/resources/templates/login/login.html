@@ -28,46 +28,49 @@
 				</div>
 			</div>
 		</div>
-		<!-- Footer 삽입 -->
-		<div id="footer"></div>
-	</body>
-	
-	<script>
-	document.getElementById("loginForm").addEventListener("submit", async function(e) {
-	    e.preventDefault(); // form 기본 동작 방지
-	
-	    const id = document.getElementById("username").value;
-	    const pw = document.getElementById("password").value;
-	
-	    try {
-	        const response = await fetch("http://localhost:8812/api/proxy-login", {
-	            method: "POST",
-	            headers: {
-	                "Content-Type": "application/json"
-	            },
-	            body: JSON.stringify({ id, pw })
-	        });
-	
-	        if (response.status === 200) {
-	            const user = await response.json();
-	            const token = response.headers.get("Authorization");
-	
-	            // ✅ 사용자 정보 localStorage 저장
-	            localStorage.setItem("token", token);
-	            localStorage.setItem("userId", user.id);
-	            localStorage.setItem("userName", user.name);  // ← 이 줄 추가!
-	            localStorage.setItem("role", user.role);
-	
-	            alert("로그인 성공! 환영합니다 " + user.name + "님");
-	            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
-	
-	        } else {
-	            alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
-	        }
-	    } catch (err) {
-	        console.error("로그인 요청 오류:", err);
-	        alert("⚠️ 서버와의 연결에 실패했습니다.");
-	    }
-	});
-	</script>
-	</html>
+
+	</div>
+	<!-- Footer 삽입 -->
+	<div id="footer"></div>
+</body>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault(); // form 기본 동작 방지
+
+    const id = document.getElementById("username").value;
+    const pw = document.getElementById("password").value;
+
+    try {
+        const response = await fetch("http://localhost:8812/user/validate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id, pw })
+        });
+
+        if (response.status === 200) {
+            const user = await response.json();
+            const token = response.headers.get("Authorization");
+
+            // ✅ 사용자 정보 localStorage 저장
+            localStorage.setItem("token", token);
+            localStorage.setItem("userId", user.id);
+            localStorage.setItem("userName", user.name);  // ← 이 줄 추가!
+            localStorage.setItem("role", user.role);
+
+            alert("로그인 성공! 환영합니다 " + user.name + "님");
+            location.href = "mainpage"; // 로그인 성공 후 이동할 페이지
+
+        } else {
+            alert("❌ 로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.");
+        }
+    } catch (err) {
+        console.error("로그인 요청 오류:", err);
+        alert("⚠️ 서버와의 연결에 실패했습니다.");
+    }
+});
+</script>
+</html>
+

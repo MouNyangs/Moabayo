@@ -16,6 +16,7 @@ import com.sboot.moabayo.vo.UserInfoVO;
 @RequestMapping("/api")
 public class LoginCheckController {
 
+
 	@CrossOrigin(origins = "http://localhost:8812")
 	@PostMapping("/login")
 	public ResponseEntity<UserInfoVO> validate(@RequestBody LoginFormVO form) {
@@ -37,6 +38,7 @@ public class LoginCheckController {
 	    }
 
 	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
 	}
 
 }
