@@ -9,7 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class CardJwtGenerate {
+public class MoaJwtGenerate {
 
     private static final String SECRET = "ThisIsASecretKeyThatMustBeOver32Characters!";
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
