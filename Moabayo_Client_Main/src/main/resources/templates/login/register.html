@@ -18,7 +18,7 @@
 	<div class="signup-container">
 	<h2 class="text-center mb-4">🐾 모으냥즈 회원가입 🐾</h2>
 
-	<form id="signupForm" class="has-validation" novalidate>
+	<form id="signupForm" class="has-validation" method="post" action="/registration/register" novalidate>
 		<!-- 이름 -->
 		<div class="form-floating mb-3">
 			<input type="text" class="form-control" id="name" placeholder="홍길동" required>
@@ -69,14 +69,31 @@
 				핸드폰 번호를 입력하라냥...
 			</div>
 		</div>
-
+		
+		<!-- 이메일 -->
+		<div class="form-floating mb-3">
+			<input type="tel" class="form-control" id="email" placeholder="aaa123@alpha.aa" required>
+			<label for="phone">이메일</label>
+			<div class="valid-feedback">
+				완벽하다냥!
+			</div>
+			<div class="invalid-feedback">
+				이메일을 입력하라냥...
+			</div>
+		</div>
 
 		<!-- 주소 검색 -->
 		<div class="mb-3">
-			<label for="address" class="form-label">주소</label>
-			<div class="input-group">
+			<div class="input-group mb-3">
+				<div id="zip-code-box">
+				  <input type="text" id="zipCode" name="zipCode" placeholder="우편번호" readonly required>
+				  <button type="button" id="searchAddress">주소 검색</button>
+				</div>
+			</div>
+
+			<div class="input-group mb-3">
 				<input type="text" class="form-control" id="address" placeholder="주소를 검색하세요" readonly required>
-				<button type="button" id="searchAddress" class="btn btn-outline-secondary">검색</button>
+<!-- 				<button type="button" id="searchAddress" class="btn btn-outline-secondary">검색</button> -->
 				<div class="valid-feedback">
 					완벽하다냥!
 				</div>
