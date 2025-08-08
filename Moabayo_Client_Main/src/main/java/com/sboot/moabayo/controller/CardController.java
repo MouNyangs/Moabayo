@@ -13,22 +13,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CardController {
 
-    private final CardFeignClient cardFeignClient;
+	private final CardFeignClient cardFeignClient;
 
-    @GetMapping("/card/verify")
-    public ResponseEntity<String> verifyCardAccess(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+	@GetMapping("/card/verify")
+	public ResponseEntity<String> verifyCardAccess(HttpServletRequest request) {
+		String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(401).body("토큰 없음 또는 잘못된 형식");
-        }
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			return ResponseEntity.status(401).body("토큰 없음 또는 잘못된 형식");
+		}
 
-        // ✅ FeignClient를 통해 카드 서비스의 verify 호출
-        try {
-            ResponseEntity<String> response = cardFeignClient.verifyToken(authHeader);
-            return ResponseEntity.ok(response.getBody());
-        } catch (Exception e) {
-            return ResponseEntity.status(403).body("인증 실패: " + e.getMessage());
-        }
-    }
+		// ✅ FeignClient를 통해 카드 서비스의 verify 호출
+		try {
+			ResponseEntity<String> response = cardFeignClient.verifyToken(authHeader);
+			return ResponseEntity.ok(response.getBody());
+		} catch (Exception e) {
+			return ResponseEntity.status(403).body("인증 실패: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("recommendcards")
+	public String recommendCards() {
+		return "card/card-recommendation";
+	}
+	
+	@GetMapping("cardlist")
+	public String cardList() {
+		return "card/cardList";
+	}
 }
