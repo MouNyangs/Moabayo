@@ -3,6 +3,7 @@ package com.sboot.moabayo.jwt;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,7 +25,9 @@ public class JwtGenerate {
 
 	//토큰 생성 메서드
 	public static String createToken(String username) {
-		return Jwts.builder().setSubject(username)
+		return Jwts.builder().setSubject(username)				
+				.setSubject(username)
+	            .setId(UUID.randomUUID().toString())			
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() 
 				+ ACCESS_EXPIRATION_TIME))
@@ -35,6 +38,8 @@ public class JwtGenerate {
 	// ✅ 리프레시 토큰 생성 메서드
 	public static String createRefreshToken(String username) {
 		return Jwts.builder().setSubject(username)
+				.setSubject(username)
+	            .setId(UUID.randomUUID().toString())
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis()
 				+ REFRESH_EXPIRATION_TIME))
