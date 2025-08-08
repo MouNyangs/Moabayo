@@ -31,7 +31,6 @@ public class LoginController {
         if (userResponse.getStatusCode() == HttpStatus.OK) {
             // ✅ JWT 토큰 헤더에서 꺼내기
             String token = userResponse.getHeaders().getFirst("Authorization");
-            System.out.println("✅ 메인 서버가 받은 토큰: " + token);
 
             if (token != null) {
                 // ✅ 토큰을 헤더에 담아 프론트로 전달

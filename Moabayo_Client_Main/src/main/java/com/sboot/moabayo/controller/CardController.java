@@ -18,7 +18,6 @@ public class CardController {
     @GetMapping("/card/verify")
     public ResponseEntity<String> verifyCardAccess(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        System.out.println("🔑 받은 토큰: " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body("토큰 없음 또는 잘못된 형식");

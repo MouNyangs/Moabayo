@@ -22,8 +22,6 @@ public class LoginCheckController {
 	 */
 	@PostMapping("/login")
 	public ResponseEntity<UserInfoVO> validate(@RequestBody LoginFormVO form) {
-		System.out.println("받은 ID: " + form.getId());
-		System.out.println("받은 PW: " + form.getPw());
 		
 	    if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
 	        // ✅ 유저 정보 생성
@@ -32,8 +30,6 @@ public class LoginCheckController {
 	        // ✅ JWT 토큰 발급
 	        String token = JwtGenerate.createToken(form.getId());
 	        String refreshToken = JwtGenerate.createRefreshToken(form.getId());
-	        System.out.println(token);
-	        System.out.println(refreshToken);
 	        
 
 	        // ✅ 토큰을 응답 헤더에 담기
