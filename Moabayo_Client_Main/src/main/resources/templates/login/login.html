@@ -69,6 +69,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             localStorage.setItem("role", user.role || "");
 
             alert("✅ 로그인 성공! 환영합니다 " + (user.name || user.id) + "님");
+            alert("토큰" +token);
             location.href = "/mainpage"; // 로그인 성공 후 이동
 
         } else {

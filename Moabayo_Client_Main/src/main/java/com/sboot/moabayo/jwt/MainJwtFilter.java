@@ -12,11 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class MainJwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    public JwtFilter(JwtUtil jwtUtil) {
+    public MainJwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;  // ✅ 생성자 주입
     }
 

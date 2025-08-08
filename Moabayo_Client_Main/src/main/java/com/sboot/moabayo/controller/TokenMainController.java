@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sboot.moabayo.feign.LoginFeignClient;
 import com.sboot.moabayo.vo.LoginFormVO;
 import com.sboot.moabayo.vo.UserInfoVO;
-import com.sboot.moabayo.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ public class TokenMainController {
         ResponseEntity<UserInfoVO> feignResponse = moabayoClientMain.checkUser(form);
         UserInfoVO user = feignResponse.getBody();
         String token = feignResponse.getHeaders().getFirst("Authorization");
-        System.out.println(token);
         
 
         if (user != null && token != null) {
