@@ -1,91 +1,58 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>모으냥즈</title>
-  <link rel="icon" href="images/cat.ico" type="image/x-icon" />
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/header.css" />
-  <link rel="stylesheet" href="css/mainpage.css" />
-  <link rel="stylesheet" href="css/footer.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<meta charset="UTF-8">
+<title>모으냥즈</title>
+<link rel="icon" href="images/cat.ico" type="image/x-icon" />
+<!-- CSS -->
+<link rel="stylesheet" href="css/header.css" />
+<link rel="stylesheet" href="css/mainpage.css" />
+<link rel="stylesheet" href="css/footer.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- ✅ 외부 JS defer로 로딩 -->
-  <script defer src="js/common.js"></script>
+<!-- ✅ 외부 JS defer로 로딩 -->
+<script defer src="js/common.js"></script>
+<script defer src="js/cardservice.js"></script>
 </head>
 <body>
 
-  <!-- ✅ Header -->
-  <div id="header"></div>
+	<!-- ✅ Header -->
+	<div id="header"></div>
 
-  <!-- ✅ 메인 섹션 -->
-  <section class="hero">
-    <img src="images/cat.png" alt="동전 든 고양이" class="hero-img" />
-    <h1>오늘도 귀엽게 모으냥~</h1>
-    <a href="#" onclick="goToCardService()"><button class="cta-btn">계좌 & 카드 등록</button></a>
-    <a href="recommendcards"><button class="cta-btn">저축 시작하기</button></a>
-  </section>
+	<!-- ✅ 메인 섹션 -->
+	<section class="hero">
+		<img src="images/cat.png" alt="동전 든 고양이" class="hero-img" />
+		<h1>오늘도 귀엽게 모으냥~</h1>
+		<a href="#" onclick="goToCardService()">
+			<button class="cta-btn">계좌 & 카드 등록</button>
+		</a>
+		<a href="recommendcards">
+			<button class="cta-btn">저축 시작하기</button>
+		</a>
+	</section>
 
-  <!-- ✅ 추천 상품 -->
-  <section class="product-section">
-    <h2>지금 인기 있는 저축 상품</h2>
-    <div class="product-cards">
-      <div class="product-card">
-        <h3>단기 저축 플랜</h3>
-        <p>6개월 · 연 3.2%</p>
-      </div>
-      <div class="product-card">
-        <h3>고양이 장학적금</h3>
-        <p>1년 · 연 4.0%</p>
-      </div>
-      <div class="product-card">
-        <h3>자동 저금통</h3>
-        <p>자투리 자동저장</p>
-      </div>
-    </div>
-  </section>
+	<!-- ✅ 추천 상품 -->
+	<section class="product-section">
+		<h2>지금 인기 있는 저축 상품</h2>
+		<div class="product-cards">
+			<div class="product-card">
+				<h3>단기 저축 플랜</h3>
+				<p>6개월 · 연 3.2%</p>
+			</div>
+			<div class="product-card">
+				<h3>고양이 장학적금</h3>
+				<p>1년 · 연 4.0%</p>
+			</div>
+			<div class="product-card">
+				<h3>자동 저금통</h3>
+				<p>자투리 자동저장</p>
+			</div>
+		</div>
+	</section>
 
-  <!-- ✅ Footer -->
-  <div id="footer"></div>
-
-  <!-- ✅ 카드 서비스 이동용 JS -->
-<script>
-  function goToCardService() {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      window.location.href = "loginpage";
-      return;
-    }
-
-    // ✅ 카드 인증 요청
-    fetch("http://localhost:8812/card/verify", {
-      method: "GET",
-      headers: {
-        "Authorization": token
-      }
-    })
-    .then(res => {
-      if (res.ok) {
-        return res.text();  // HTML 문자열로 응답 받음
-      } else {
-        throw new Error("인증 실패");
-      }
-    })
-    .then(html => {
-      document.open();
-      document.write(html);
-      document.close();
-    })
-    .catch(err => {
-      console.error("❌ 인증 에러:", err);
-      alert("인증되지 않았습니다. 다시 로그인해주세요.");
-      window.location.href = "loginpage";
-    });
-  }
-</script>
+	<!-- ✅ Footer -->
+	<div id="footer"></div>
 
 </body>
 </html>
