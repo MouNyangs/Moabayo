@@ -5,7 +5,6 @@ DROP TABLE age_stats CASCADE CONSTRAINTS;
 DROP TABLE micro_payment_stats CASCADE CONSTRAINTS;
 DROP TABLE region_stats CASCADE CONSTRAINTS;
 
-
 -- 1. 업종코드 (참조 테이블)
 CREATE TABLE industry_codes (
     upjong_code VARCHAR2(20) PRIMARY KEY,                         -- 업종 코드
@@ -62,3 +61,21 @@ select * from gender_stats;
 select * from age_stats;
 select * from micro_payment_stats;
 select * from region_stats;
+
+SELECT
+    s.sid,
+    s.serial#,
+    s.username,
+    l.locked_mode,
+    o.object_name,
+    o.object_type
+FROM
+    v$locked_object l
+JOIN
+    dba_objects o ON l.object_id = o.object_id
+JOIN
+    v$session s ON l.session_id = s.sid
+WHERE
+    o.object_name = 'AGE_UPJONG_SUMMARY';
+    
+ALTER SYSTEM KILL SESSION '128,49237' IMMEDIATE;
