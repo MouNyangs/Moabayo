@@ -23,18 +23,19 @@
         password,
         phone
     ) VALUES (
-        #{id},
+        #{id, jdbcType=NUMERIC},
         SYSDATE,
-        #{address},
-        #{addressDetail},
-        #{zipCode},
-        #{email},
-        #{name},
-        #{loginId},
-        #{password},
-        #{phone}
+        #{address, jdbcType=VARCHAR},
+        #{addressDetail, jdbcType=VARCHAR},
+        #{zipCode, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{name, jdbcType=VARCHAR},
+        #{loginId, jdbcType=VARCHAR},
+        #{password, jdbcType=VARCHAR},
+        #{phone, jdbcType=VARCHAR}
     )
 </insert>
+
 
 
 <select id="countByLoginId" resultType="int">

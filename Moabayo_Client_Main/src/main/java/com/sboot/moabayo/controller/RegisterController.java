@@ -1,6 +1,7 @@
 package com.sboot.moabayo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +21,17 @@ public class RegisterController {
 	
 	 @PostMapping("/register")
 	    public String register(UserVO vo) {
+		 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		 String pw = vo.getPassword(); 
+			String encodedPwd = encoder.encode(pw);
+			vo.setPassword(encodedPwd);
+			String id = vo.getLoginId();
+			System.out.println(id);
+			System.out.println(encodedPwd);
 		 registerService.register(vo);
 	        return "redirect:/member/success"; // 가입 성공 후 이동
 	    }
+	 
 	 
 	    @ResponseBody
 	    @GetMapping("/checkId")
@@ -35,4 +44,12 @@ public class RegisterController {
 	    public String success() {
 	        return "member/success"; // 회원가입 완료 화면 (JSP/Thymeleaf 등)
 	    }
+	    
+	  
+
+//	    @GetMapping("/check")
+//	    public ResponseEntity<String> checkUserId(@RequestParam String userid) {
+//	        boolean exists = registerService.isUserIdExists(userid);
+//	        return exists ? ResponseEntity.ok("DUPLICATE") : ResponseEntity.ok("OK");
+//	    }
 }
