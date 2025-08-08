@@ -1,77 +1,99 @@
 @charset "UTF-8";
 
 body {
-	font-family: 'Noto Sans KR', sans-serif;
-	background-color: #fffaf3;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
+  font-family: 'Jua', sans-serif;
+  background: linear-gradient(to bottom right, #fdf6e3, #fcefc3);
+  margin: 0;
+  padding: 0;
 }
 
 .signup-container {
-	background: #ffffff;
-	border: 3px solid #ffd9ec;
-	border-radius: 20px;
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-	width: 420px;
-	padding: 30px 40px;
+  width: 400px;
+  margin: 80px auto;
+  padding: 40px;
+  background-color: #fffdf5;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
 }
 
 .signup-container h2 {
-	text-align: center;
-	color: #ff69b4;
-	margin-bottom: 30px;
+  color: #d48a00;
+  margin-bottom: 30px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 label {
-	font-weight: bold;
-	color: #333;
-	display: block;
-	margin-top: 15px;
+  font-size: 16px;
+  text-align: left;
+  margin-left: 5px;
+  color: #444;
 }
 
-input[type="text"], input[type="password"], input[type="tel"] {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ffd9ec;
-	border-radius: 10px;
-	margin-top: 5px;
-	font-size: 14px;
+input[type="text"],
+input[type="password"],
+input[type="tel"] {
+  padding: 12px;
+  border: 2px solid #f2d088;
+  border-radius: 10px;
+  font-size: 14px;
+  background-color: #fffdf5;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #e4a546;
+  outline: none;
 }
 
 #address-box {
-	display: flex;
-	gap: 10px;
-	margin-top: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+#address-box input {
+  flex: 1;
 }
 
 #searchAddress {
-	background-color: #ffb6c1;
-	color: white;
-	border: none;
-	border-radius: 8px;
-	padding: 10px;
-	cursor: pointer;
+  padding: 10px 15px;
+  background-color: #e4a546;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #searchAddress:hover {
-	background-color: #ff8fa3;
+  background-color: #c68f28;
 }
 
 .submit-btn {
-	width: 100%;
-	background-color: #ff69b4;
-	color: white;
-	border: none;
-	border-radius: 12px;
-	padding: 12px;
-	margin-top: 30px;
-	font-size: 16px;
-	font-weight: bold;
-	cursor: pointer;
+  margin-top: 10px;
+  padding: 14px;
+  background-color: #ffbb33;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-	background-color: #ff4d94;
+  background-color: #e5a821;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .signup-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
 }

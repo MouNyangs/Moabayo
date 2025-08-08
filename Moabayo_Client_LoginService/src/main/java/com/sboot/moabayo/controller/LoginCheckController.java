@@ -1,5 +1,6 @@
 package com.sboot.moabayo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,40 +10,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sboot.moabayo.jwt.JwtGenerate;
+import com.sboot.moabayo.service.LoginService;
 import com.sboot.moabayo.vo.LoginFormVO;
 import com.sboot.moabayo.vo.UserInfoVO;
+import com.sboot.moabayo.vo.UserVO;
 
 @RestController
 @RequestMapping("/user")
 public class LoginCheckController {
 
-	/*
-	 * @CrossOrigin(origins = "http://localhost:8812", exposedHeaders =
-	 * "Authorization" )
-	 */
-	@PostMapping("/login")
-	public ResponseEntity<UserInfoVO> validate(@RequestBody LoginFormVO form) {
-		
-	    if ("admin".equals(form.getId()) && "1234".equals(form.getPw())) {
-	        // ✅ 유저 정보 생성
-	        UserInfoVO user = new UserInfoVO("admin", "관리자", "ADMIN");
+    @Autowired
+    private LoginService loginService;
 
-	        // ✅ JWT 토큰 발급
-	        String token = JwtGenerate.createToken(form.getId());
-	        String refreshToken = JwtGenerate.createRefreshToken(form.getId());
-	        
+    @PostMapping("/login")
+    public ResponseEntity<UserInfoVO> validate(@RequestBody LoginFormVO form) {
 
-	        // ✅ 토큰을 응답 헤더에 담기
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.set("Authorization", "Bearer " + token);
-	        headers.set("Refresh-Token", refreshToken);  // ✅ 새로 추가
+        // 1. 로그인 시도한 아이디로 DB 조회
+        UserVO user = loginService.login(form.getId());
 
-	        // ✅ 유저 정보 + 헤더 포함한 응답
-	        return ResponseEntity.ok().headers(headers).body(user);
-	    }
+        // 2. 사용자 존재 여부 확인
+        if (user != null && user.getPassword().equals(form.getPw())) {
 
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            // 3. JWT 발급
+            String token = JwtGenerate.createToken(user.getLoginId());
+            String refreshToken = JwtGenerate.createRefreshToken(user.getLoginId());
 
-	}
+            // 4. 응답 헤더에 JWT 포함
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
+            headers.set("Refresh-Token", refreshToken);
 
+            // 5. 사용자 정보 구성 후 응답
+            UserInfoVO userInfo = new UserInfoVO(user.getLoginId(), user.getName(), user.getIsAdmin());
+
+            return ResponseEntity.ok().headers(headers).body(userInfo);
+        }
+
+        // 6. 로그인 실패
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }
