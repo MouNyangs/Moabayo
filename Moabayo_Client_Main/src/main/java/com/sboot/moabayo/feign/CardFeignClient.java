@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 
 // Eureka 에 등록된 서버 이름.
-@FeignClient(name = "Card")
+@FeignClient(name = "CARD")
 public interface CardFeignClient {
 
     // 토큰 인증 요청

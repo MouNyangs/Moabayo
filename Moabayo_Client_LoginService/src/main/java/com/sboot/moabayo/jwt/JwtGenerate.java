@@ -1,15 +1,20 @@
 package com.sboot.moabayo.jwt;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 public class JwtGenerate {
-	// 비밀 키 생성 ( HS256용 랜덤키)
-	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+	
+	
+
+	
+	private static final String SECRET = "ThisIsASecretKeyThatMustBeOver32Characters!";
+	private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+
 
 	// 토큰 만료 시간 : 10분
 	private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 10; // 10분

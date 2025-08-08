@@ -21,7 +21,7 @@ public class CardJwtFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;  // ✅ 생성자 주입
     }
 
-    private static final String BEARER = "Bearer ";
+    private static final String BEARER ="Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,6 +33,7 @@ public class CardJwtFilter extends OncePerRequestFilter {
 
         if (uri.startsWith("/secure")) {
             String authHeader = request.getHeader("Authorization");
+            System.out.println("토큰토큰:"+ authHeader);
 
             if (authHeader == null || !authHeader.startsWith(BEARER)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
