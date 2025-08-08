@@ -28,7 +28,6 @@ public class MainJwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException, java.io.IOException {
 
         String uri = request.getRequestURI();
-        System.out.println("요청 URI: " + uri);
 
         if (uri.startsWith("/secure")) {
             String authHeader = request.getHeader("Authorization");
