@@ -1,18 +1,18 @@
-//package com.sboot.moabayo.controller;
-//
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.GetMapping;
-//
+package com.sboot.moabayo.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
 //import com.sboot.moabayo.feign.CardFeignClient;
-//
-//import jakarta.servlet.http.HttpServletRequest;
-//import lombok.RequiredArgsConstructor;
-//
-//@Controller
-//@RequiredArgsConstructor
-//public class CardController {
-//
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class CardController {
+
 //    private final CardFeignClient cardFeignClient;
 //
 //    @GetMapping("/card/verify")
@@ -31,4 +31,14 @@
 //            return ResponseEntity.status(403).body("인증 실패: " + e.getMessage());
 //        }
 //    }
-//}
+
+	@GetMapping("recommendcards")
+	public String cardRecommend() {
+		return "card/recommend";
+	}
+
+	@GetMapping("carddetail")
+	public String cardDetail() {
+		return "card/card-detail";
+	}
+}
