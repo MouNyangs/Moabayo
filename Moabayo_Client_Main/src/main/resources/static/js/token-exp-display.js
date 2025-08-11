@@ -30,7 +30,7 @@
     }
 
     const tok = getStoredToken();
-    if (!tok) { expEl.textContent = '토큰 없음'; remainEl.textContent = '-'; return; }
+    if (!tok) { expEl.textContent = '토큰 없나'; remainEl.textContent = '-'; return; }
 
     try {
       const { exp } = parseJwt(tok);
