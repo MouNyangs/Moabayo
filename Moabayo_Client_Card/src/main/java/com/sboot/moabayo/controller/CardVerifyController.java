@@ -39,7 +39,7 @@ public class CardVerifyController {
 	        session.setAttribute("token", token); // 또는 사용자 정보
 
 	        // URL 정리해서 리다이렉트 (토큰 제거)
-	        return "redirect:/card/cardList"; // index.html 대신 정제된 주소로 이동
+	        return "redirect:/usercard/cardList"; // index.html 대신 정제된 주소로 이동
 	    } catch (Exception e) {
 	        return "redirect:/error";
 	    }

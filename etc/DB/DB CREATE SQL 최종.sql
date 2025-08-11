@@ -206,6 +206,12 @@ INSERT INTO users VALUES
 INSERT INTO users VALUES
 (5, TO_DATE('2025-08-05','YYYY-MM-DD'), 'ACC127', 'Daejeon', 'Yuseong-gu', '34055', 'user5@example.com', 'Jung Minjae', 'minjae5', 'pass567', '010-5678-9012', 'token5', 'simple5', 0);
 
+-- User ID Sequence.
+CREATE SEQUENCE user_seq
+START WITH 6
+INCREMENT BY 1
+NOCACHE;
+
 --bank_product
 INSERT INTO bank_product (account_id, name, img, description, category, benefits, interest, type) VALUES
 (101, 'Standard Savings', NULL, 'Basic savings account', 'Savings', 'No fees', 1.2, 'Savings');
