@@ -1,37 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
-<body>
-	<header class="site-header">
-		<!-- 왼쪽: 로고 -->
-		<div class="left-section">
-			<a href="mainpage">
-				<img src="images/cat.png" alt="로고" class="logo-img" />
-			</a>
-		</div>
+<header class="site-header">
+  <!-- 왼쪽: 로고 -->
+  <div class="left-section">
+    <a href="mainpage">
+      <img src="images/cat.png" alt="로고" class="logo-img" />
+    </a>
+  </div>
 
-		<!-- 가운데: 메뉴 -->
-		<div class="center-section">
-			<nav class="nav-bar">
-				<a href="mainpage">홈</a>
-				<a href="recommendcards">저축상품</a>
-				<a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
-				<a href="transactions">계좌조회</a>
-				<a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
+  <!-- 가운데: 메뉴 -->
+  <div class="center-section">
+    <nav class="nav-bar">
+      <a href="mainpage">홈</a>
+      <a href="recommendcards">저축상품</a>
+      <a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
+      <a href="transactions">계좌조회</a>
+      <a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
 
-			</nav>
-		</div>
+      <!-- ✅ 고객센터 바로 옆에 토큰 박스 -->
+      <div class="token-box">
+        <div>만료 시각(KST): <span id="expTime">-</span></div>
+        <div>남은 시간: <span id="remainTime">-</span></div>
+      </div>
+    </nav>
+  </div>
 
-		<!-- 오른쪽: 로그인/회원가입 or 유저 이름 + 로그아웃 드롭다운 -->
-		<div class="right-section" id="authSection"></div>
-	</header>
+  <!-- 오른쪽: 로그인/회원가입 or 유저 이름 + 로그아웃 드롭다운 -->
+  <div class="right-section" id="authSection"></div>
+</header>
 
-	<!-- Bootstrap JS (Popper 포함) -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 16px;
+  }
+  .left-section .logo-img { height: 36px; }
+  .center-section .nav-bar { display: flex; align-items: center; gap: 12px; }
+  .token-box { 
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    padding: 6px 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+    background-color: #cce5ff;
+  }
+  #remainTime { font-weight: 700; }
+  .login-wrap { margin-bottom: 8px; }
+</style>
