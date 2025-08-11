@@ -7,7 +7,7 @@
 
     <select id="findByLoginId" resultType="com.sboot.moabayo.vo.UserVO" parameterType="string">
         SELECT 
-            id,
+            user_id as userId,
             login_id AS loginId,
             password,
             name,
