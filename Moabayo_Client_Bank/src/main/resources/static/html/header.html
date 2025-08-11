@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+	<header class="site-header">
+		<!-- 왼쪽: 로고 -->
+		<div class="left-section">
+			<a href="mainpage">
+				<img src="images/cat.png" alt="로고" class="logo-img" />
+			</a>
+		</div>
+
+		<!-- 가운데: 메뉴 -->
+		<div class="center-section">
+			<nav class="nav-bar">
+				<a href="mainpage">홈</a>
+				<a href="javascript:void(0);" onclick="goToBankService()">저축상품</a>
+				<a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
+				<a href="transactions">계좌조회</a>
+				<a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
+
+			</nav>
+		</div>
+
+		<!-- 오른쪽: 로그인/회원가입 or 유저 이름 + 로그아웃 드롭다운 -->
+		<div class="right-section" id="authSection"></div>
+	</header>
+
+	<!-- Bootstrap JS (Popper 포함) -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
