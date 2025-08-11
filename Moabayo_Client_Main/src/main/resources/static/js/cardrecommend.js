@@ -1,100 +1,117 @@
-document.addEventListener("DOMContentLoaded", () => {
-	const cardsList = document.querySelector(".cards");
-	const cards = document.querySelectorAll(".cards li");
-	const prevBtn = document.querySelector(".prev");
-	const nextBtn = document.querySelector(".next");
+gsap.registerPlugin(ScrollTrigger);
 
-	const cardWidth = 320; // 카드 300 + gap 20
-	const originalCount = cards.length;
+gsap.to("img", { opacity: 1, delay: 0.1 }); // gentle fade in
 
-	// 앞뒤로 카드 복제해서 무한 루프 구현
-	for (let i = 0; i < originalCount; i++) {
-		const cloneFront = cards[originalCount - 1 - i].cloneNode(true);
-		cardsList.insertBefore(cloneFront, cardsList.firstChild);
-		const cloneBack = cards[i].cloneNode(true);
-		cardsList.appendChild(cloneBack);
+let iteration = 0;
+
+const spacing = 0.1,
+	snap = gsap.utils.snap(spacing),
+	cards = gsap.utils.toArray('.cards li'),
+	seamlessLoop = buildSeamlessLoop(cards, spacing),
+	scrub = gsap.to(seamlessLoop, {
+		totalTime: 0,
+		duration: 0.5,
+		ease: "power3",
+		paused: true
+	}),
+	trigger = ScrollTrigger.create({
+		start: 0,
+		onUpdate(self) {
+			if (self.progress === 1 && self.direction > 0 && !self.wrapping) {
+				wrapForward(self);
+			} else if (self.progress < 1e-5 && self.direction < 0 && !self.wrapping) {
+				wrapBackward(self);
+			} else {
+				scrub.vars.totalTime = snap((iteration + self.progress) * seamlessLoop.duration());
+				scrub.invalidate().restart();
+				self.wrapping = false;
+			}
+		},
+		end: "+=3000",
+		pin: ".gallery"
+	});
+
+function wrapForward(trigger) {
+	iteration++;
+	trigger.wrapping = true;
+	trigger.scroll(trigger.start + 1);
+}
+
+function wrapBackward(trigger) {
+	iteration--;
+	if (iteration < 0) {
+		iteration = 9;
+		seamlessLoop.totalTime(seamlessLoop.totalTime() + seamlessLoop.duration() * 10);
+		scrub.pause();
+	}
+	trigger.wrapping = true;
+	trigger.scroll(trigger.end - 1);
+}
+
+function scrubTo(totalTime) {
+	let progress = (totalTime - seamlessLoop.duration() * iteration) / seamlessLoop.duration();
+	if (progress > 1) {
+		wrapForward(trigger);
+	} else if (progress < 0) {
+		wrapBackward(trigger);
+	} else {
+		trigger.scroll(trigger.start + progress * (trigger.end - trigger.start));
+	}
+}
+
+document.querySelector(".next").addEventListener("click", () => scrubTo(scrub.vars.totalTime + spacing));
+document.querySelector(".prev").addEventListener("click", () => scrubTo(scrub.vars.totalTime - spacing));
+
+function buildSeamlessLoop(items, spacing) {
+	let overlap = Math.ceil(1 / spacing),
+		startTime = items.length * spacing + 0.5,
+		loopTime = (items.length + overlap) * spacing + 1,
+		rawSequence = gsap.timeline({ paused: true }),
+		seamlessLoop = gsap.timeline({
+			paused: true,
+			repeat: -1,
+			onRepeat() {
+				this._time === this._dur && (this._tTime += this._dur - 0.01);
+			}
+		}),
+		l = items.length + overlap * 2,
+		time = 0,
+		i, index, item;
+
+	gsap.set(items, { xPercent: 300, opacity: 0, scale: 0 });
+
+	for (i = 0; i < l; i++) {
+		index = i % items.length;
+		item = items[index];
+		time = i * spacing;
+		rawSequence.fromTo(item, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: "power1.in", immediateRender: false }, time)
+			.fromTo(item, { xPercent: 300 }, { xPercent: -300, duration: 1, ease: "none", immediateRender: false }, time);
+		i <= items.length && seamlessLoop.add("label" + i, time);
 	}
 
-	const allCards = cardsList.querySelectorAll("li");
-	const totalCards = allCards.length;
+	rawSequence.time(startTime);
+	seamlessLoop.to(rawSequence, {
+		time: loopTime,
+		duration: loopTime - startTime,
+		ease: "none"
+	}).fromTo(rawSequence, { time: overlap * spacing + 1 }, {
+		time: startTime,
+		duration: startTime - (overlap * spacing + 1),
+		immediateRender: false,
+		ease: "none"
+	});
+	return seamlessLoop;
+}
+const gallery = document.querySelector('.gallery');
 
-	let currentIndex = originalCount;
-	let isTransitioning = false; // 트랜지션 중복 방지
-
-	function updateSlider(animate = true) {
-		if (animate) {
-			cardsList.style.transition = "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-		} else {
-			cardsList.style.transition = "none";
-		}
-		const offset = currentIndex * cardWidth;
-		cardsList.style.transform = `translateX(${-offset}px)`;
-
-		allCards.forEach(card => card.classList.remove("active"));
-
-		// 중앙 카드 active 처리 (currentIndex + 1 위치)
-		let activeIndex = currentIndex + 1;
-		if (activeIndex >= totalCards) activeIndex = activeIndex - totalCards;
-		allCards[activeIndex].classList.add("active");
-	}
-
-	cardsList.addEventListener("transitionstart", () => {
-		isTransitioning = true;
+if (gallery) {
+	gallery.addEventListener('mouseenter', () => {
+		document.body.style.overflow = 'hidden';
 	});
 
-	cardsList.addEventListener("transitionend", () => {
-		isTransitioning = false;
-
-		// transition 끝나고 바로 위치 점프 할 때 깜빡임 방지용 처리
-		if (currentIndex >= originalCount * 2) {
-			currentIndex -= originalCount;
-			// transition 끄고 위치만 옮긴 뒤 다음 프레임에 transition 다시 켜기
-			cardsList.style.transition = "none";
-			requestAnimationFrame(() => {
-				updateSlider(false);
-				requestAnimationFrame(() => {
-					cardsList.style.transition = "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-				});
-			});
-		} else if (currentIndex < originalCount) {
-			currentIndex += originalCount;
-			cardsList.style.transition = "none";
-			requestAnimationFrame(() => {
-				updateSlider(false);
-				requestAnimationFrame(() => {
-					cardsList.style.transition = "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-				});
-			});
-		}
+	gallery.addEventListener('mouseleave', () => {
+		document.body.style.overflow = '';
 	});
-
-	prevBtn.addEventListener("click", () => {
-		if (isTransitioning) return; // 트랜지션 중에는 무시
-		currentIndex--;
-		updateSlider();
-	});
-
-	nextBtn.addEventListener("click", () => {
-		if (isTransitioning) return;
-		currentIndex++;
-		updateSlider();
-	});
-
-	// 휠 스크롤 이벤트로 카드 이동
-	cardsList.addEventListener("wheel", (e) => {
-		e.preventDefault();
-
-		if (isTransitioning) return;
-
-		if (e.deltaY < 0) {
-			currentIndex--;
-		} else {
-			currentIndex++;
-		}
-		updateSlider();
-	}, { passive: false });
-
-	// 초기 세팅
-	currentIndex = originalCount;
-	updateSlider(false);
-});
+} else {
+	console.warn("'.gallery' 요소를 찾지 못했습니다.");
+}

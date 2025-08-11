@@ -1,85 +1,85 @@
 @charset "UTF-8";
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #FFF8DC;
-    }
+body {
+	margin: 0;
+	font-family: 'Segoe UI', sans-serif;
+	background-color: #FFF8DC;
+}
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 80px;
-    }
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 80px;
+}
 
-    .cat-image {
-      width: 150px;
-      margin-bottom: 20px;
-    }
+.cat-image {
+	width: 150px;
+	margin-bottom: 20px;
+}
 
-    h1 {
-      font-family: '나눔손글씨 붓';
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-      color: #333;
-    }
+h1 {
+	font-family: '나눔손글씨 붓';
+	font-size: 1.8rem;
+	margin-bottom: 10px;
+	color: #333;
+}
 
-    .login-box {
-      background-color: #fffef4;
-      border: 2px solid #ffeaa7;
-      border-radius: 20px;
-      padding: 2rem 2.5rem;
-      width: 320px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+.login-box {
+	background-color: #fffef4;
+	border: 2px solid #ffeaa7;
+	border-radius: 20px;
+	padding: 2rem 2.5rem;
+	width: 320px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-    .login-box label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #5C4D7D;
-    }
+.login-box label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: bold;
+	color: #5C4D7D;
+}
 
-    .login-box input {
-      width: 100%;
-      padding: 0.7rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
+.login-box input {
+	width: 100%;
+	padding: 0.7rem;
+	margin-bottom: 1.2rem;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	font-size: 1rem;
+	box-sizing: border-box;
+}
 
-    .login-box button {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #f8c000;
-      border: none;
-      border-radius: 20px;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.login-box button {
+	width: 100%;
+	padding: 0.8rem;
+	background-color: #f8c000;
+	border: none;
+	border-radius: 20px;
+	color: #fff;
+	font-size: 1.1rem;
+	font-weight: bold;
+	cursor: pointer;
+}
 
-    .login-box button:hover {
-      background-color: #ffb000;
-    }
+.login-box button:hover {
+	background-color: #ffb000;
+}
 
-    .links {
-      margin-top: 1rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-    }
+.links {
+	margin-top: 1rem;
+	text-align: center;
+	font-size: 0.9rem;
+	color: #666;
+}
 
-    .links a {
-      margin: 0 0.4rem;
-      color: #5C4D7D;
-      text-decoration: none;
-    }
+.links a {
+	margin: 0 0.4rem;
+	color: #5C4D7D;
+	text-decoration: none;
+}
 
-    .links a:hover {
-      text-decoration: underline;
-    }
+.links a:hover {
+	text-decoration: underline;
+}
