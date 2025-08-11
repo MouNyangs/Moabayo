@@ -19,4 +19,8 @@ public class CardProductService {
     public List<CardProductVO> getRecommendCards() {
         return mapper.getRecommendCards();
     }
+    
+    public List<CardProductVO> getCardProducts() {
+        return mapper.getCardProducts();
+    }
 }

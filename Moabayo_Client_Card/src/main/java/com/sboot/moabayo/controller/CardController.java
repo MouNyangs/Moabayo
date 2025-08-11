@@ -22,15 +22,15 @@ public class CardController {
 	
 	@GetMapping("cardList")
 	public String showCardList(Model model) {
-//	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
+	    List<CardProductVO> cardList = service.getCardProducts();
+	    model.addAttribute("cardList", cardList);
 	    return "cardList"; // cardList.html 렌더링
 	}
 	
 	@GetMapping("recommendcards")
 	public String recommendCards(Model model) {
 	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
+	    model.addAttribute("cardList", cardList);
 	    return "card-recommendation"; // cardList.html 렌더링
 	}
 }
