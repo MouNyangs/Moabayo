@@ -11,14 +11,14 @@ function goToCardService() {
 	fetch("http://localhost:8812/jwt/verify", {
 		method: "GET",
 		headers: {
-			"Authorization": token
+			"Authorization": `Bearer ${token}`
 		}
 	})
 		.then(res => {
 			console.log(res);
 			if (res.ok) {
 				// ✅ 인증 성공 시 브라우저 이동 (진짜 이동)
-				const cardUrl = `http://localhost:8814/card/cardList?token=${encodeURIComponent(token)}`;
+				const cardUrl = `http://localhost:8814/usercard/cardList?token=${encodeURIComponent(token)}`;
 				window.location.href = cardUrl;
 			} else {
 				throw new Error("인증 실패");
