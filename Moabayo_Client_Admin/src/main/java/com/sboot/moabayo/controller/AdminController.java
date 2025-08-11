@@ -41,6 +41,4 @@ public class AdminController {
 	    return "index";  // templates/index.html
 	}
 
-
-
 }
