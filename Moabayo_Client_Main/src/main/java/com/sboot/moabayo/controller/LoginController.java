@@ -1,5 +1,7 @@
 package com.sboot.moabayo.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class LoginController {
                 // ✅ 토큰을 헤더에 담아 프론트로 전달
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Authorization", token);  // 필수
-
+                headers.setAccessControlExposeHeaders(List.of("Authorization", "Refresh-Token"));
                 return ResponseEntity
                         .status(userResponse.getStatusCode()) // ✅ 수정
                         .headers(headers)

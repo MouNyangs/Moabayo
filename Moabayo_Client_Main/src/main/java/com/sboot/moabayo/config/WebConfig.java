@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8812") // JS가 실행되는 주소 (혹은 *)
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization"); // ✅ Authorization 헤더를 클라이언트에서 읽을 수 있도록 허용
+                .exposedHeaders("Authorization", "Refresh-Token") // ✅ 이거 추가
+                .allowedMethods("*");
     }
 }

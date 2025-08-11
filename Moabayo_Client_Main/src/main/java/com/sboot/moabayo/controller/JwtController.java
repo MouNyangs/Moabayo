@@ -18,6 +18,7 @@ public class JwtController {
     @GetMapping("/jwt/verify")
     public ResponseEntity<String> verifyCardAccess(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+        System.out.println(authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body("토큰 없음 또는 잘못된 형식");

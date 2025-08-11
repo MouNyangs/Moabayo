@@ -25,7 +25,7 @@ public class CardController {
         this.service = service;
     }
 	
-	@GetMapping("cardList")
+	@GetMapping("/cardList")
 	public String showCardList(@RequestParam String token,Model model,HttpSession session) {
 		 try {
 		    	
@@ -57,7 +57,7 @@ public class CardController {
 	}
 
 	
-	@GetMapping("recommendcards")
+	@GetMapping("/recommendcards")
 	public String recommendCards(Model model) {
 	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);

@@ -1,4 +1,5 @@
 function goToCardService() {
+	console.log("[goToCardService] clicked");
 	const token = localStorage.getItem('token');
 
 	if (!token) {
@@ -11,7 +12,7 @@ function goToCardService() {
 	fetch("http://localhost:8812/jwt/verify", {
 		method: "GET",
 		headers: {
-			"Authorization": `Bearer ${token}`
+			"Authorization": token
 		}
 	})
 		.then(res => {
@@ -24,14 +25,9 @@ function goToCardService() {
 				throw new Error("인증 실패");
 			}
 		})
-/*		.then(html => {
-			document.open();
-			document.write(html);
-			document.close();
-		})*/
-		.catch(err => {
+		/*.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
 			window.location.href = "loginpage";
-		});
-}
+		});*/
+};
