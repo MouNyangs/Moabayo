@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import com.sboot.moabayo.jwt.CardJwtFilter;
 import com.sboot.moabayo.jwt.CardJwtGenerate;
 
+
 @Configuration
 public class CardWebConfig {
 
