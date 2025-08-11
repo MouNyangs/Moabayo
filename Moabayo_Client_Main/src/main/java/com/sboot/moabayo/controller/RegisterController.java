@@ -3,6 +3,7 @@ package com.sboot.moabayo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,8 @@ public class RegisterController {
 			String id = vo.getLoginId();			
 			System.out.println(encodedPwd);
 		    registerService.register(vo);
-	        return "redirect:/member/success"; // 가입 성공 후 이동
+	        return "redirect:/registration/welcome"; // 가입 성공 후 이동
 	    }
-	 
 	 
 	    @ResponseBody
 	    @GetMapping("/checkId")
@@ -38,13 +38,11 @@ public class RegisterController {
 	        boolean exists = registerService.isLoginIdExists(id);
 	        return exists ? "duplicate" : "available";
 	    }
-
-	    @GetMapping("/success")
-	    public String success() {
-	        return "member/success"; // 회원가입 완료 화면 (JSP/Thymeleaf 등)
-	    }
 	    
-	  
+		@GetMapping("/welcome")
+		public String welcomepage(Model model) {
+			return "login/welcome";
+		}
 
 //	    @GetMapping("/check")
 //	    public ResponseEntity<String> checkUserId(@RequestParam String userid) {
