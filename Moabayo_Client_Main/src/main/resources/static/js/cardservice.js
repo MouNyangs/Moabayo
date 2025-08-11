@@ -1,4 +1,5 @@
 function goToCardService() {
+	console.log("[goToCardService] clicked");
 	const token = localStorage.getItem('token');
 
 	if (!token) {
@@ -18,20 +19,15 @@ function goToCardService() {
 			console.log(res);
 			if (res.ok) {
 				// ✅ 인증 성공 시 브라우저 이동 (진짜 이동)
-				const cardUrl = `http://localhost:8814/card/cardList?token=${encodeURIComponent(token)}`;
+				const cardUrl = `http://localhost:8814/usercard/cardList?token=${encodeURIComponent(token)}`;
 				window.location.href = cardUrl;
 			} else {
 				throw new Error("인증 실패");
 			}
 		})
-/*		.then(html => {
-			document.open();
-			document.write(html);
-			document.close();
-		})*/
-		.catch(err => {
+		/*.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
 			window.location.href = "loginpage";
-		});
-}
+		});*/
+};
