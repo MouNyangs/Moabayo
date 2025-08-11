@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>은행 예적금·대출 — 인덱스</title>
+  <!-- Bootstrap 5.3 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" href="images/cat.ico" type="image/x-icon" />
+  <style>
+    :root{
+      --brand-bg:#fff8e6; /* 베이지/노랑 톤 */
+      --brand-accent:#f1c40f;
+      --brand-dark:#6b5b38;
+    }
+    body{background:#faf7f1}
+    .hero{background:linear-gradient(180deg,var(--brand-bg),#ffffff);}
+    .chip{border:1px solid #eadfb3;border-radius:999px;padding:.25rem .6rem;background:#fff}
+    .rating{font-weight:700;color:#0d6efd}
+    .rate-badge{background:#fff3cd;color:#8c6d1f;border:1px solid #ffe69c}
+    .type-badge{background:#e7f1ff;color:#084298;border:1px solid #b6d4fe}
+    .loan-badge{background:#fde2e1;color:#842029;border:1px solid #f5c2c7}
+    .product-card{transition:transform .15s ease, box-shadow .15s ease}
+    .product-card:hover{transform:translateY(-2px);box-shadow:0 0.5rem 1rem rgba(0,0,0,.08)}
+    .bank-logo{width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid #eee}
+    .no-outline:focus{box-shadow:none}
+    .sticky-actions{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #eee}
+    /* skeleton */
+    .skeleton{background:linear-gradient(90deg,#eee 25%,#f6f6f6 37%,#eee 63%);background-size:400% 100%;animation:skeleton-loading 1.4s ease infinite}
+    @keyframes skeleton-loading{0%{background-position:100% 0}100%{background-position:-100% 0}}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="border-bottom bg-white">
+    <div class="container d-flex align-items-center justify-content-between py-3 gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <img src="images/cat.png" alt="모으냥즈" width="36" height="36" class="rounded" />
+        <strong class="fs-5">은행 예·적금·대출</strong>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="mainpage" class="btn btn-sm btn-outline-secondary">홈</a>
+        <a href="/recommendproducts" class="btn btn-sm btn-primary">추천 받기</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / Filters Row -->
+  <section class="hero border-bottom">
+    <div class="container py-4">
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-lg-4">
+          <h1 class="h4 mb-2">내 소비습관에 맞는 금융상품 찾기</h1>
+          <p class="text-secondary mb-0">입출금 · 적금 · 예금 · 대출을 한 곳에서 비교하세요.</p>
+        </div>
+        <div class="col-12 col-lg-8">
+          <div class="d-flex flex-wrap gap-2">
+            <div class="input-group flex-grow-1" role="search">
+              <span class="input-group-text bg-white">🔎</span>
+              <input id="searchInput" type="search" class="form-control" placeholder="상품명, 은행, 키워드(예: 청년, 자동이체)" />
+            </div>
+            <button class="btn btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#filterCanvas">필터</button>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">정렬</button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><button class="dropdown-item sort-btn" data-sort="rateDesc">금리 높은순</button></li>
+                <li><button class="dropdown-item sort-btn" data-sort="rateAsc">금리 낮은순</button></li>
+                <li><button class="dropdown-item sort-btn" data-sort="popular">인기순</button></li>
+                <li><button class="dropdown-item sort-btn" data-sort="new">신규순</button></li>
+              </ul>
+            </div>
+            <div class="btn-group" role="group" aria-label="View switch">
+              <input type="radio" class="btn-check" name="viewMode" id="viewGrid" autocomplete="off" checked>
+              <label class="btn btn-outline-secondary" for="viewGrid">그리드</label>
+              <input type="radio" class="btn-check" name="viewMode" id="viewList" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="viewList">리스트</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Chips -->
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <button class="btn btn-sm chip no-outline quick-chip" data-chip="youth"># 청년우대</button>
+        <button class="btn btn-sm chip no-outline quick-chip" data-chip="autotransfer"># 자동이체 우대</button>
+        <button class="btn btn-sm chip no-outline quick-chip" data-chip="firsttimer"># 첫거래 우대</button>
+        <button class="btn btn-sm chip no-outline quick-chip" data-chip="ladymom"># 육아맘 특화</button>
+        <button class="btn btn-sm chip no-outline quick-chip" data-chip="nightowl"># 야행성 고객</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offcanvas Filters (mobile) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="filterCanvas" aria-labelledby="filterLabel">
+    <div class="offcanvas-header">
+      <h5 id="filterLabel">필터</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="filterBodyMobile"></div>
+      <button id="applyFiltersMobile" class="btn btn-primary w-100 mt-3" data-bs-dismiss="offcanvas">적용하기</button>
+    </div>
+  </div>
+
+  <main class="container py-4">
+    <div class="row">
+      <!-- Sidebar Filters (desktop) -->
+      <aside class="col-lg-3 d-none d-lg-block">
+        <div class="card mb-3">
+          <div class="card-body" id="filterBodyDesktop">
+            <!-- JS에서 동일한 필터 UI 주입 -->
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="mb-2">프로모션</h6>
+            <div class="small text-secondary">자동이체 3건 등록 시 최고 연 0.3%p 추가</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Products Column -->
+      <section class="col-lg-9">
+        <div id="resultCount" class="small text-secondary mb-2">검색 결과 0건</div>
+        <div id="productGrid" class="row g-3"></div>
+        <div id="productList" class="list-group d-none"></div>
+
+        <!-- Pagination -->
+        <nav class="mt-4">
+          <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-top bg-white mt-5">
+    <div class="container py-4 small text-secondary d-flex justify-content-between">
+      <span>© 2025 모아봐요 모으냥즈</span>
+      <a href="#" class="text-secondary">고객센터</a>
+    </div>
+  </footer>
+
+  <!-- Templates injected by JS -->
+  <template id="filterTemplate">
+    <h6 class="mb-3">상품 유형</h6>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <div class="form-check">
+        <input class="form-check-input filter-type" type="checkbox" value="DEMAND" id="typeDemand" checked>
+        <label class="form-check-label" for="typeDemand">입출금</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input filter-type" type="checkbox" value="SAVINGS" id="typeSavings" checked>
+        <label class="form-check-label" for="typeSavings">적금</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input filter-type" type="checkbox" value="TIMEDEPOSIT" id="typeTimedeposit" checked>
+        <label class="form-check-label" for="typeTimedeposit">예금</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input filter-type" type="checkbox" value="LOAN" id="typeLoan" checked>
+        <label class="form-check-label" for="typeLoan">대출</label>
+      </div>
+    </div>
+
+    <h6 class="mb-2">금리(%)</h6>
+    <div class="row g-2 align-items-center mb-3">
+      <div class="col"><input id="rateMin" type="number" step="0.1" min="0" class="form-control" placeholder="최소"/></div>
+      <div class="col-auto">~</div>
+      <div class="col"><input id="rateMax" type="number" step="0.1" min="0" class="form-control" placeholder="최대"/></div>
+    </div>
+
+    <h6 class="mb-2">은행</h6>
+    <select id="bankSelect" class="form-select mb-3">
+      <option value="ALL" selected>전체</option>
+      <option>모으냥즈은행</option>
+      <option>냥청년은행</option>
+      <option>냥육아은행</option>
+      <option>캣파이낸스</option>
+    </select>
+
+    <h6 class="mb-2">우대 조건</h6>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <div class="form-check">
+        <input class="form-check-input pref-check" type="checkbox" value="autotransfer" id="prefAuto">
+        <label class="form-check-label" for="prefAuto">자동이체</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input pref-check" type="checkbox" value="youth" id="prefYouth">
+        <label class="form-check-label" for="prefYouth">청년</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input pref-check" type="checkbox" value="firsttimer" id="prefFirst">
+        <label class="form-check-label" for="prefFirst">첫거래</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input pref-check" type="checkbox" value="ladymom" id="prefMom">
+        <label class="form-check-label" for="prefMom">육아</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input pref-check" type="checkbox" value="nightowl" id="prefNight">
+        <label class="form-check-label" for="prefNight">야간</label>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button id="applyFilters" class="btn btn-primary flex-grow-1">필터 적용</button>
+      <button id="resetFilters" class="btn btn-outline-secondary">초기화</button>
+    </div>
+  </template>
+
+  <template id="cardTemplate">
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card product-card h-100">
+        <div class="card-body d-flex flex-column gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <img class="bank-logo" alt="은행 로고" />
+            <div class="d-flex flex-column">
+              <strong class="product-name"></strong>
+              <span class="text-secondary small bank-name"></span>
+            </div>
+            <div class="ms-auto d-flex gap-1 align-items-center">
+              <span class="badge type-badge product-type">유형</span>
+              <span class="badge rate-badge product-rate">연 0.0%</span>
+            </div>
+          </div>
+          <p class="text-secondary small mb-0 product-desc"></p>
+          <div class="d-flex flex-wrap gap-1 product-tags"></div>
+          <div class="d-flex align-items-center justify-content-between mt-auto">
+            <div class="small">기간 <span class="product-term">-</span> · 최대 <span class="product-max">-</span></div>
+            <a class="btn btn-sm btn-outline-primary stretched-link detail-link">자세히</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="listItemTemplate">
+    <a class="list-group-item list-group-item-action py-3">
+      <div class="d-flex w-100 align-items-center gap-3">
+        <img class="bank-logo" alt="은행 로고" />
+        <div class="me-auto">
+          <div class="d-flex align-items-center gap-2">
+            <strong class="product-name"></strong>
+            <span class="badge type-badge product-type">유형</span>
+            <span class="badge rate-badge product-rate">연 0.0%</span>
+          </div>
+          <div class="small text-secondary bank-name"></div>
+          <div class="small text-secondary product-desc text-truncate"></div>
+          <div class="d-flex flex-wrap gap-1 mt-1 product-tags"></div>
+        </div>
+        <div class="text-end small">
+          <div>기간 <span class="product-term">-</span></div>
+          <div>최대 <span class="product-max">-</span></div>
+        </div>
+      </div>
+    </a>
+  </template>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ---- Mock Data (실서비스에서는 서버 데이터로 교체) ----
+    const PRODUCTS = [
+      { id:1, name:"냥청년 적금", bank:"냥청년은행", type:"SAVINGS", rate:4.2, term:"12~36개월", max:"월 100만원", tags:["youth","autotransfer","firsttimer"], desc:"청년 맞춤 우대금리, 자동이체로 최대 0.3%p 추가.", logo:"/images/banks/youth.png", createdAt:"2025-07-01", popular:98 },
+      { id:2, name:"냥육아 적금", bank:"냥육아은행", type:"SAVINGS", rate:4.0, term:"12~24개월", max:"월 70만원", tags:["ladymom","autotransfer"], desc:"육아맘 생활 맞춤 혜택(쿠폰/캐시백).", logo:"/images/banks/mom.png", createdAt:"2025-07-10", popular:92 },
+      { id:3, name:"캣플러스 예금", bank:"캣파이낸스", type:"TIMEDEPOSIT", rate:3.6, term:"6~24개월", max:"제한없음", tags:["firsttimer"], desc:"첫 거래 고객 우대 금리 제공.", logo:"/images/banks/catfin.png", createdAt:"2025-06-21", popular:75 },
+      { id:4, name:"모으냥즈 입출금 통장", bank:"모으냥즈은행", type:"DEMAND", rate:1.2, term:"제한없음", max:"제한없음", tags:["autotransfer","nightowl"], desc:"수수료 우대 및 야간 혜택 제공.", logo:"/images/banks/moa.png", createdAt:"2025-08-01", popular:88 },
+      { id:5, name:"냥청년 전세자금", bank:"냥청년은행", type:"LOAN", rate:3.1, term:"최대 4년", max:"1억 5천만원", tags:["youth"], desc:"청년 전세자금 특화 대출 상품.", logo:"/images/banks/youth.png", createdAt:"2025-07-25", popular:84 },
+      { id:6, name:"새벽형 적금", bank:"모으냥즈은행", type:"SAVINGS", rate:4.1, term:"6~12개월", max:"월 50만원", tags:["nightowl","autotransfer"], desc:"야행성 고객 자동이체 우대.", logo:"/images/banks/moa.png", createdAt:"2025-07-30", popular:71 },
+      { id:7, name:"빠른대출", bank:"캣파이낸스", type:"LOAN", rate:4.8, term:"최대 5년", max:"7천만원", tags:[], desc:"간편 심사·신속 실행.", logo:"/images/banks/catfin.png", createdAt:"2025-05-30", popular:63 },
+      { id:8, name:"정기예금 플러스", bank:"냥육아은행", type:"TIMEDEPOSIT", rate:3.9, term:"12개월", max:"제한없음", tags:["autotransfer"], desc:"안정적인 금리, 자동이체 우대.", logo:"/images/banks/mom.png", createdAt:"2025-06-28", popular:69 },
+    ];
+
+    // ---- State ----
+    const state = {
+      query: "",
+      types: new Set(["DEMAND","SAVINGS","TIMEDEPOSIT","LOAN"]),
+      rateMin: null,
+      rateMax: null,
+      bank: "ALL",
+      prefs: new Set(),
+      sort: "rateDesc",
+      view: "grid",
+      page: 1,
+      perPage: 9,
+    };
+
+    // ---- Utils ----
+    const typeLabel = (t)=>({DEMAND:"입출금", SAVINGS:"적금", TIMEDEPOSIT:"예금", LOAN:"대출"}[t]||t);
+
+    function buildFilters(container){
+      const tpl = document.getElementById('filterTemplate');
+      container.innerHTML = tpl.innerHTML;
+    }
+
+    function syncFilterValues(){
+      // types
+      document.querySelectorAll('.filter-type').forEach(chk=>{
+        chk.checked = state.types.has(chk.value);
+      });
+      // rate
+      document.getElementById('rateMin').value = state.rateMin ?? '';
+      document.getElementById('rateMax').value = state.rateMax ?? '';
+      // bank
+      document.getElementById('bankSelect').value = state.bank;
+      // prefs
+      document.querySelectorAll('.pref-check').forEach(chk=>{
+        chk.checked = state.prefs.has(chk.value);
+      });
+    }
+
+    function collectFilterValues(){
+      const newTypes = new Set();
+      document.querySelectorAll('.filter-type').forEach(chk=>{ if(chk.checked) newTypes.add(chk.value); });
+      state.types = newTypes;
+      const min = parseFloat(document.getElementById('rateMin').value); state.rateMin = isNaN(min)?null:min;
+      const max = parseFloat(document.getElementById('rateMax').value); state.rateMax = isNaN(max)?null:max;
+      state.bank = document.getElementById('bankSelect').value;
+      const prefs = new Set();
+      document.querySelectorAll('.pref-check').forEach(chk=>{ if(chk.checked) prefs.add(chk.value); });
+      state.prefs = prefs;
+      state.page = 1; // reset page
+    }
+
+    function filterProducts(){
+      let list = PRODUCTS.filter(p=> state.types.has(p.type));
+      if(state.query){
+        const q = state.query.toLowerCase();
+        list = list.filter(p => (p.name+" "+p.bank+" "+p.desc).toLowerCase().includes(q));
+      }
+      if(state.bank !== 'ALL') list = list.filter(p=>p.bank === state.bank);
+      if(state.rateMin!=null) list = list.filter(p=>p.rate >= state.rateMin);
+      if(state.rateMax!=null) list = list.filter(p=>p.rate <= state.rateMax);
+      if(state.prefs.size>0) list = list.filter(p=> [...state.prefs].every(t=>p.tags.includes(t)) );
+
+      switch(state.sort){
+        case 'rateDesc': list.sort((a,b)=>b.rate-a.rate); break;
+        case 'rateAsc': list.sort((a,b)=>a.rate-b.rate); break;
+        case 'popular': list.sort((a,b)=>b.popular-a.popular); break;
+        case 'new': list.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt)); break;
+      }
+      return list;
+    }
+
+    function paginate(list){
+      const start = (state.page-1)*state.perPage;
+      return list.slice(start, start+state.perPage);
+    }
+
+    function render(){
+      const list = filterProducts();
+      document.getElementById('resultCount').textContent = `검색 결과 ${list.length}건`;
+
+      const paged = paginate(list);
+      renderGrid(paged);
+      renderList(paged);
+      renderPagination(list.length);
+    }
+
+    function badgeForType(t){
+      const span = document.createElement('span');
+      span.className = `badge ${t==='LOAN'?'loan-badge':'type-badge'} product-type`;
+      span.textContent = typeLabel(t);
+      return span;
+    }
+
+    function renderGrid(items){
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      const tpl = document.getElementById('cardTemplate');
+      items.forEach(p=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.product-name').textContent = p.name;
+        node.querySelector('.bank-name').textContent = p.bank;
+        node.querySelector('.product-type').replaceWith(badgeForType(p.type));
+        node.querySelector('.product-rate').textContent = `연 ${p.rate.toFixed(1)}%`;
+        node.querySelector('.product-desc').textContent = p.desc;
+        node.querySelector('.product-term').textContent = p.term;
+        node.querySelector('.product-max').textContent = p.max;
+        node.querySelector('.bank-logo').src = p.logo;
+        const tagsWrap = node.querySelector('.product-tags');
+        p.tags.forEach(t=>{
+          const s = document.createElement('span');
+          s.className = 'badge bg-light text-secondary border';
+          s.textContent = `# ${t}`;
+          tagsWrap.appendChild(s);
+        })
+        const detail = node.querySelector('.detail-link');
+        detail.href = `/bank/products/${p.id}`; // 라우팅 규칙에 맞게 수정
+        grid.appendChild(node);
+      });
+      document.getElementById('productGrid').classList.toggle('d-none', state.view!=="grid");
+    }
+
+    function renderList(items){
+      const listEl = document.getElementById('productList');
+      listEl.innerHTML = '';
+      const tpl = document.getElementById('listItemTemplate');
+      items.forEach(p=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.product-name').textContent = p.name;
+        node.querySelector('.bank-name').textContent = p.bank;
+        node.querySelector('.product-type').replaceWith(badgeForType(p.type));
+        node.querySelector('.product-rate').textContent = `연 ${p.rate.toFixed(1)}%`;
+        node.querySelector('.product-desc').textContent = p.desc;
+        node.querySelector('.product-term').textContent = p.term;
+        node.querySelector('.product-max').textContent = p.max;
+        node.querySelector('.bank-logo').src = p.logo;
+        const tagsWrap = node.querySelector('.product-tags');
+        p.tags.forEach(t=>{
+          const s = document.createElement('span');
+          s.className = 'badge bg-light text-secondary border';
+          s.textContent = `# ${t}`;
+          tagsWrap.appendChild(s);
+        })
+        const anchor = node.querySelector('a');
+        anchor.href = `/bank/products/${p.id}`;
+        listEl.appendChild(node);
+      });
+      listEl.classList.toggle('d-none', state.view!=="list");
+    }
+
+    function renderPagination(total){
+      const ul = document.getElementById('pagination');
+      ul.innerHTML = '';
+      const pages = Math.max(1, Math.ceil(total/state.perPage));
+      const add = (label, page, disabled=false, active=false)=>{
+        const li = document.createElement('li');
+        li.className = `page-item ${disabled?'disabled':''} ${active?'active':''}`;
+        const a = document.createElement('a');
+        a.className = 'page-link'; a.href = '#'; a.textContent = label;
+        a.addEventListener('click', (e)=>{ e.preventDefault(); if(!disabled){ state.page = page; render(); }});
+        li.appendChild(a); ul.appendChild(li);
+      }
+      add('«', Math.max(1, state.page-1), state.page===1);
+      for(let i=1;i<=pages;i++) add(i, i, false, i===state.page);
+      add('»', Math.min(pages, state.page+1), state.page===pages);
+    }
+
+    function mountFilters(){
+      const desktop = document.getElementById('filterBodyDesktop');
+      const mobile = document.getElementById('filterBodyMobile');
+      buildFilters(desktop);
+      buildFilters(mobile);
+      syncFilterValues();
+
+      document.getElementById('applyFilters').addEventListener('click', ()=>{ collectFilterValues(); render(); });
+      document.getElementById('resetFilters').addEventListener('click', ()=>{
+        state.types = new Set(["DEMAND","SAVINGS","TIMEDEPOSIT","LOAN"]);
+        state.rateMin = state.rateMax = null; state.bank='ALL'; state.prefs = new Set(); state.page = 1;
+        syncFilterValues(); render();
+      });
+      document.getElementById('applyFiltersMobile').addEventListener('click', ()=>{ collectFilterValues(); render(); });
+    }
+
+    function mountTopbar(){
+      document.getElementById('searchInput').addEventListener('input', (e)=>{ state.query = e.target.value.trim(); state.page=1; render(); });
+      document.querySelectorAll('.sort-btn').forEach(btn=> btn.addEventListener('click', ()=>{ state.sort = btn.dataset.sort; render(); }));
+      document.getElementById('viewGrid').addEventListener('change', ()=>{ state.view='grid'; render(); });
+      document.getElementById('viewList').addEventListener('change', ()=>{ state.view='list'; render(); });
+      document.querySelectorAll('.quick-chip').forEach(ch=> ch.addEventListener('click', ()=>{
+        const key = ch.dataset.chip;
+        if(state.prefs.has(key)) state.prefs.delete(key); else state.prefs.add(key);
+        // 시각적 토글
+        ch.classList.toggle('btn-primary'); ch.classList.toggle('chip'); ch.classList.toggle('text-white');
+        state.page=1; render();
+      }));
+    }
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', ()=>{
+      mountFilters();
+      mountTopbar();
+      render();
+    });
+  </script>
+</body>
+</html>
