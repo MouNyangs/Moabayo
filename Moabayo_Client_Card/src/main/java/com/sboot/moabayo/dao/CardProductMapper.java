@@ -9,4 +9,5 @@ import com.sboot.moabayo.vo.CardProductVO;
 @Mapper
 public interface CardProductMapper {
     List<CardProductVO> getRecommendCards();
+    List<CardProductVO> getCardProducts();
 }

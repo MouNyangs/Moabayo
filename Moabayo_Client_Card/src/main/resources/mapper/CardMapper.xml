@@ -19,5 +19,18 @@
         FROM CARD_PRODUCT
         ORDER BY CARD_ID ASC
     </select>
-
+    <select id="getCardProducts" resultType="com.sboot.moabayo.vo.CardProductVO">
+        SELECT
+            CARD_ID     AS cardId,
+            IMG         AS img,
+            NAME        AS name,
+            BRAND       AS brand,
+            DESCRIPTION AS description,
+            CATEGORY    AS category,
+            BENEFITS    AS benefits,
+            INTEREST    AS interest,
+            TYPE        AS type
+        FROM CARD_PRODUCT
+        ORDER BY CARD_ID ASC
+    </select>
 </mapper>
