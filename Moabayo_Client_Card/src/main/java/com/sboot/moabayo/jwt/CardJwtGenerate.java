@@ -12,7 +12,7 @@ import io.jsonwebtoken.security.Keys;
 public class CardJwtGenerate {
 
     private static final String SECRET = "ThisIsASecretKeyThatMustBeOver32Characters!";
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    private final static Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 10;
     private static final long REFRESH_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7;
@@ -35,7 +35,7 @@ public class CardJwtGenerate {
             .compact();
     }
 
-    public Key getKey() {
+    public static Key getKey() {
         return key;
     }
 }

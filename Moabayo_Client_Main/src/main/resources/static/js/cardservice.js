@@ -8,24 +8,27 @@ function goToCardService() {
 	}
 
 	// ✅ 카드 인증 요청
-	fetch("http://localhost:8812/card/verify", {
+	fetch("http://localhost:8812/jwt/verify", {
 		method: "GET",
 		headers: {
 			"Authorization": token
 		}
 	})
 		.then(res => {
+			console.log(res);
 			if (res.ok) {
-				return res.text();  // HTML 문자열로 응답 받음
+				// ✅ 인증 성공 시 브라우저 이동 (진짜 이동)
+				const cardUrl = `http://localhost:8814/card/cardList?token=${encodeURIComponent(token)}`;
+				window.location.href = cardUrl;
 			} else {
 				throw new Error("인증 실패");
 			}
 		})
-		.then(html => {
+/*		.then(html => {
 			document.open();
 			document.write(html);
 			document.close();
-		})
+		})*/
 		.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
