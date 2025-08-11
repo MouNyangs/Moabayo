@@ -25,10 +25,9 @@ public class RegisterController {
 		 String pw = vo.getPassword(); 
 			String encodedPwd = encoder.encode(pw);
 			vo.setPassword(encodedPwd);
-			String id = vo.getLoginId();
-			System.out.println(id);
+			String id = vo.getLoginId();			
 			System.out.println(encodedPwd);
-		 registerService.register(vo);
+		    registerService.register(vo);
 	        return "redirect:/member/success"; // 가입 성공 후 이동
 	    }
 	 
