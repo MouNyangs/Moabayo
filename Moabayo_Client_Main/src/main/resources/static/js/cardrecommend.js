@@ -115,3 +115,61 @@ if (gallery) {
 } else {
 	console.warn("'.gallery' 요소를 찾지 못했습니다.");
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+	const cardsWrap = document.querySelector('#main-card-section .cards-wrap');
+	const cardItems = document.querySelectorAll('#main-card-section .card-item');
+	const prevBtn = document.querySelector('#main-card-section .prev');
+	const nextBtn = document.querySelector('#main-card-section .next');
+
+	if (!cardsWrap) return;
+
+	const STEP = 260; // 한 번에 이동할 픽셀 (카드 너비+간격에 맞춰 조정)
+
+	// Prev/Next
+	if (prevBtn) prevBtn.addEventListener('click', () => cardsWrap.scrollBy({ left: -STEP, behavior: 'smooth' }));
+	if (nextBtn) nextBtn.addEventListener('click', () => cardsWrap.scrollBy({ left: STEP, behavior: 'smooth' }));
+
+	// 마우스 휠을 가로 스크롤로 변환 (페이지 세로 스크롤 방지)
+	cardsWrap.addEventListener('wheel', (e) => {
+		// 수직 휠 움직임이 있을 때만 처리
+		if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+			e.preventDefault(); // 중요: 페이지가 같이 스크롤 되는 것을 막음
+			cardsWrap.scrollLeft += e.deltaY; // deltaY를 가로로 적용
+		}
+	}, { passive: false });
+
+	// 가운데 카드 자동 highlighting (가장 화면 중앙에 있는 카드에 .center 추가)
+	const updateCenter = () => {
+		const wrapRect = cardsWrap.getBoundingClientRect();
+		const centerX = wrapRect.left + wrapRect.width / 2;
+		let closest = null;
+		let best = Infinity;
+
+		cardItems.forEach(item => {
+			const r = item.getBoundingClientRect();
+			const itemCenter = r.left + r.width / 2;
+			const diff = Math.abs(itemCenter - centerX);
+			if (diff < best) {
+				best = diff;
+				closest = item;
+			}
+			item.classList.remove('center');
+		});
+		if (closest) closest.classList.add('center');
+	};
+
+	// 스크롤 발생시 중앙 계산 (성능: requestAnimationFrame으로 묶음)
+	let rafId = null;
+	const onScroll = () => {
+		if (rafId) cancelAnimationFrame(rafId);
+		rafId = requestAnimationFrame(() => { updateCenter(); rafId = null; });
+	};
+	cardsWrap.addEventListener('scroll', onScroll);
+
+	// 초기 중앙 지정
+	updateCenter();
+
+	// 화면 리사이즈에도 중앙 재계산
+	window.addEventListener('resize', updateCenter);
+});

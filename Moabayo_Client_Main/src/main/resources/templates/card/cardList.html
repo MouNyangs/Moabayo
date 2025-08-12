@@ -1,13 +1,13 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>카드 리스트 상세 화면</title>
 <link rel="icon" href="images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="css/header.css" />
+<link rel="stylesheet" th:href="@{/css/header.css}" />
 <link rel="stylesheet" href="css/footer.css" />
 <!-- ✅ 외부 JS 파일 연결 -->
-<script defer src="js/common.js"></script>
+<script defer th:src="@{/js/common.js}"></script>
 <style>
 body {
 	margin: 0;
@@ -123,29 +123,26 @@ body {
 <body>
 
 	<!-- Header 삽입 -->
-	<div id="header"></div>
+	<div th:replace="html/header :: header"></div>
 
 	<div class="container">
 
 		<!-- 왼쪽 카드 리스트 -->
 		<div class="card-list">
 
-			<div class="card-box" onclick="showDetails(0)"
-				style="background-image: url('/cardimg/summercat.png');">
+			<div class="card-box" onclick="showDetails(0)" style="background-image: url('/cardimg/summercat.png');">
 				<div class="card-brand">VISA</div>
 				<div class="card-number">****-****-****-1234</div>
 				<div class="card-owner">키갈동</div>
 			</div>
 
-			<div class="card-box" onclick="showDetails(1)"
-				style="background-image: url('/cardimg/spacecat-card.png');">
+			<div class="card-box" onclick="showDetails(1)" style="background-image: url('/cardimg/spacecat-card.png');">
 				<div class="card-brand">DISCOVER</div>
 				<div class="card-number">****-****-****-5678</div>
 				<div class="card-owner">크리스탈</div>
 			</div>
 
-			<div class="card-box" onclick="showDetails(2)"
-				style="background-image: url('/cardimg/holloweencat.png');">
+			<div class="card-box" onclick="showDetails(2)" style="background-image: url('/cardimg/holloweencat.png');">
 				<div class="card-brand">MASTER</div>
 				<div class="card-number">****-****-****-9876</div>
 				<div class="card-owner">김지원</div>

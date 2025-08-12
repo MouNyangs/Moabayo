@@ -1,10 +1,14 @@
 @charset "UTF-8";
 
 .site-header {
-	position: relative;
+	position: fixed; /* 고정 */
+	top: 0; /* 상단에 고정 */
+	left: 0;
+	width: 100%; /* 전체 너비 */
 	height: 80px;
 	background-color: #FFF9DB;
 	border-bottom: 1px solid #FFD54F;
+	z-index: 1000; /* 다른 요소 위에 표시 */
 }
 
 .left-section {
@@ -278,4 +282,9 @@
 	color: #333;
 	align-self: center; /* flex 컨테이너 안에 있을 때 중앙 정렬 */
 	white-space: nowrap;
+}
+
+/* 페이지 내용이 헤더 아래로 밀리도록 여백 추가 */
+body {
+	padding-top: 80px; /* 헤더 높이 만큼 여백 추가 */
 }
