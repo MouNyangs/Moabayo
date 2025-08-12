@@ -1,29 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-      <!-- ============ TEAM ============ -->
-     
-        <div class="section-title"><i class='bx bxs-group'></i><h2>직원/권한</h2></div>
-        <div class="card">
-          <div class="toolbar">
-            <button class="btn">신규 직원 추가</button>
-            <select class="input"><option>전체 부서</option><option>영업</option><option>리스크</option><option>IT운영</option></select>
-          </div>
-          <div class="table-wrap" style="margin-top:.5rem;">
-            <table>
-              <thead><tr><th>이름</th><th>ID</th><th>부서</th><th>직급</th><th>권한</th><th>최근 로그인</th><th>관리</th></tr></thead>
-              <tbody>
-                <tr><td>하완용</td><td>hwy</td><td>IT운영</td><td>매니저</td><td><span class="pill">전메뉴 읽기/쓰기</span></td><td>08-12 08:55</td><td class="actions"><button class="btn">수정</button><button class="btn">잠금</button></td></tr>
-                <tr><td>하지혁</td><td>jjh</td><td>리스크</td><td>애널리스트</td><td><span class="pill">리스크/분석</span></td><td>08-12 08:17</td><td class="actions"><button class="btn">수정</button><button class="btn">해지</button></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="help">※ 작업 로그(Audit Log)와 2FA 상태는 상세에서 확인</div>
-        </div>
-  
-</body>
-</html>
+<section id="team" class="page">
+  <div class="section-title"><i class='bx bxs-group'></i><h2>직원/권한</h2></div>
+  <div class="card">
+    <div class="toolbar">
+      <button class="btn" data-hook="admin-new">신규 직원 추가</button>
+      <select class="input" data-hook="admin-dept"><option>전체 부서</option><option>영업</option><option>리스크</option><option>IT운영</option></select>
+    </div>
+    <div class="table-wrap" style="margin-top:.5rem;">
+      <table>
+        <thead><tr><th>이름</th><th>ID</th><th>부서</th><th>직급</th><th>권한</th><th>최근 로그인</th><th>관리</th></tr></thead>
+        <tbody data-bind="admins"><!-- JS 바인딩 --></tbody>
+      </table>
+    </div>
+    <div class="help">※ 작업 로그(Audit Log)와 2FA 상태는 상세에서 확인</div>
+  </div>
+</section>
