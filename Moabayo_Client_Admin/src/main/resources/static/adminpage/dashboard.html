@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+      <!-- ============ DASHBOARD ============ -->
+      <section id="dashboard" class="page active">
+        <div class="kpis">
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-bank'></i><span>신규 계좌(오늘)</span></div>
+            <h3>124</h3>
+            <div class="delta up">+12.5% MoM</div>
+            <div class="muted">예금/적금/대출 합산</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-credit-card'></i><span>신규 카드(이번달)</span></div>
+            <h3>3,482</h3>
+            <div class="delta up">+4.1% MoM</div>
+            <div class="muted">신용/체크</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-dollar-circle'></i><span>오늘 총거래액</span></div>
+            <h3>₩ 8.27B</h3>
+            <div class="delta down">-1.8% DoD</div>
+            <div class="muted">입금/출금/결제</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-shield-alt-2'></i><span>위험 경보</span></div>
+            <h3>7</h3>
+            <span class="badge danger">High 2</span>
+            <span class="badge warn">Med 5</span>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:1rem;">
+          <div class="card">
+            <div class="section-title"><i class='bx bx-transfer'></i><h3>실시간 거래 스트림(요약)</h3></div>
+            <div class="toolbar">
+              <select id="txFilter">
+                <option value="all">전체</option>
+                <option value="deposit">입금</option>
+                <option value="withdraw">출금</option>
+                <option value="card">카드결제</option>
+              </select>
+              <span class="help">※ 실제 연동 시 WebSocket/SSE 추천</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>시간</th>
+                    <th>유형</th>
+                    <th>금액</th>
+                    <th>계좌/카드</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>09:12:33</td><td>카드결제</td><td>₩ 58,900</td><td>****-1234</td><td><span class="badge ok">승인</span></td></tr>
+                  <tr><td>09:11:02</td><td>입금</td><td>₩ 1,200,000</td><td>110-***-00123</td><td><span class="badge ok">완료</span></td></tr>
+                  <tr><td>09:10:18</td><td>출금</td><td>₩ 300,000</td><td>110-***-00987</td><td><span class="badge ok">완료</span></td></tr>
+                  <tr><td>09:09:41</td><td>카드결제</td><td>₩ 12,500</td><td>****-7788</td><td><span class="badge warn">지연</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-error'></i><h3>리스크/이상거래 경보</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>발생시각</th><th>유형</th><th>설명</th><th>조치</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>09:05</td>
+                    <td><span class="badge danger">고액 해외송금</span></td>
+                    <td>신규고객 A, 10분 내 2회 연속</td>
+                    <td class="actions">
+                      <button class="btn">상세</button>
+                      <button class="btn">보류</button>
+                      <button class="btn primary">차단</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>08:57</td>
+                    <td><span class="badge warn">다중 로그인</span></td>
+                    <td>서로 다른 3개 국가 IP</td>
+                    <td class="actions">
+                      <button class="btn">상세</button>
+                      <button class="btn primary">세션만료</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="help" style="margin-top:.5rem;">※ AML 규칙/스코어링 연동 포인트</div>
+          </div>
+        </div>
+      </section>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+      <!-- ============ BANK ============ -->
+      
+        <div class="section-title"><i class='bx bxs-bank'></i><h2>은행 관리</h2></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-user-detail'></i><h3>고객/계좌</h3></div>
+            <div class="toolbar">
+              <input class="input" type="text" placeholder="이름/계좌번호 검색">
+              <button class="btn">검색</button>
+              <button class="btn">신규 계좌 개설</button>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr><th>고객명</th><th>계좌번호</th><th>상품</th><th>잔액</th><th>상태</th><th>관리</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>김모으</td><td>110-***-123456</td><td>자유입출금</td><td>₩ 3,420,000</td><td><span class="badge ok">정상</span></td><td class="actions"><button class="btn">상세</button><button class="btn">거래</button></td></tr>
+                  <tr><td>하지혁</td><td>210-***-000111</td><td>정기적금</td><td>₩ 820,000</td><td><span class="badge ok">정상</span></td><td class="actions"><button class="btn">상세</button><button class="btn">거래</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="help">※ 상세에서 KYC/신용등급/연체정보 표출</div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-credit-card'></i><h3>카드 상품/발급</h3></div>
+            <div class="toolbar">
+              <button class="btn">신규 카드상품 등록</button>
+              <button class="btn">혜택 편집</button>
+              <span class="chip">발급대기 12건</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr><th>카드명</th><th>연회비</th><th>주요혜택</th><th>상태</th><th>관리</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>냥청년 적금 카드</td><td>₩ 20,000</td><td>대중교통 10% · 편의점 5%</td><td><span class="badge ok">판매중</span></td><td class="actions"><button class="btn">수정</button><button class="btn">중지</button></td></tr>
+                  <tr><td>모으냥즈 플래티넘</td><td>₩ 80,000</td><td>항공 마일리지 · 라운지</td><td><span class="badge warn">점검</span></td><td class="actions"><button class="btn">수정</button><button class="btn">재개</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bx-transfer'></i><h3>거래 모니터링</h3></div>
+            <div class="toolbar">
+              <select class="input">
+                <option>최근 24시간</option><option>최근 7일</option><option>최근 30일</option>
+              </select>
+              <select class="input">
+                <option>전체</option><option>입금</option><option>출금</option><option>카드결제</option><option>해외송금</option>
+              </select>
+              <button class="btn">필터 적용</button>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead><tr><th>시간</th><th>유형</th><th>금액</th><th>채널</th><th>위험</th><th>조치</th></tr></thead>
+                <tbody>
+                  <tr><td>08:51</td><td>해외송금</td><td>₩ 5,200,000</td><td>모바일</td><td><span class="badge warn">중간</span></td><td class="actions"><button class="btn">검토</button></td></tr>
+                  <tr><td>08:42</td><td>카드결제</td><td>₩ 210,000</td><td>오프라인</td><td><span class="badge ok">낮음</span></td><td class="actions"><button class="btn">상세</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-map-pin'></i><h3>지점 · ATM</h3></div>
+            <div class="toolbar">
+              <input class="input" type="text" placeholder="지점명/코드 검색">
+              <button class="btn">검색</button>
+              <span class="chip">ATM 장애 1건</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead><tr><th>코드</th><th>지점명</th><th>담당자</th><th>ATM</th><th>상태</th></tr></thead>
+                <tbody>
+                  <tr><td>BR-001</td><td>안양 본점</td><td>하완용</td><td>8</td><td><span class="badge ok">정상</span></td></tr>
+                  <tr><td>BR-014</td><td>시흥 장곡</td><td>하지혁</td><td>3</td><td><span class="badge warn">점검</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      
+</body>
+</html>
