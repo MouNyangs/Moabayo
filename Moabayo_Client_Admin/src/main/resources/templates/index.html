@@ -1,105 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Boxicons -->
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'
-	rel='stylesheet'>
-<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js'
-	rel='stylesheet'>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-<!-- My CSS -->
-<!-- <link rel="stylesheet" href="style.css"> -->
+<!-- Project Assets -->
 <link rel="stylesheet" href="/css/admin.css" />
 <script defer src="/js/admin.js"></script>
-<title>AdminHub</title>
+<title>모으냥즈 관리자</title>
+<style>
+  /* 페이지 전환용 최소 스타일 (기존 CSS와 충돌 없이) */
+  .page { display:none; }
+  .page.active { display:block; }
+
+  /* 가독성 보조 */
+  .muted { color: var(--text-muted, #6b7280); font-size: 12px; }
+  .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .card { background: var(--card, #fff); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .section-title { display:flex; align-items:center; gap:.5rem; margin: 8px 0 16px; }
+  .section-title i { opacity:.85; }
+  .kpis { display:grid; grid-template-columns: repeat(4, minmax(180px,1fr)); gap:1rem; }
+  .kpi h3 { margin:6px 0 2px; }
+  .kpi .delta.up { color:#16a34a; }
+  .kpi .delta.down { color:#ef4444; }
+  .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+  .toolbar .input, .toolbar select { padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; }
+  .table-wrap { overflow:auto; }
+  .inline { display:inline-flex; gap:.5rem; align-items:center; }
+  .badge { padding:3px 8px; border-radius:999px; font-size:12px; }
+  .badge.ok { background:#e6fffa; color:#0f766e; }
+  .badge.warn { background:#fff7ed; color:#b45309; }
+  .badge.danger { background:#fee2e2; color:#b91c1c; }
+  .pill { padding:4px 10px; border-radius:999px; background:#f3f4f6; font-size:12px; }
+  .help { font-size:12px; color:#6b7280; }
+  .actions { display:flex; gap:.5rem; flex-wrap:wrap; }
+  .actions .btn { padding:8px 12px; border-radius:8px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
+  .actions .btn.primary { background:#111827; color:#fff; border-color:#111827; }
+  .chip { font-size:12px; padding:4px 8px; border-radius:8px; background:#eef2ff; }
+</style>
 </head>
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="#" class="brand"> <i class='bx bxs-smile  bx-lg'></i> <span
-			class="text">AdminHub</span>
+		<a href="#dashboard" class="brand">
+      <i class='bx bxs-smile bx-lg'></i>
+      <span class="text">모으냥즈</span>
 		</a>
 		<ul class="side-menu top">
-			<li class="active"><a href="#"> <i
-					class='bx bxs-dashboard bx-sm'></i> <span class="text">Dashboard</span>
-			</a></li>
-			<li><a href="#"> <i class='bx bxs-shopping-bag-alt bx-sm'></i>
-					<span class="text">My Store</span>
-			</a></li>
-			<li><a href="#"> <i class='bx bxs-doughnut-chart bx-sm'></i>
-					<span class="text">Analytics</span>
-			</a></li>
-			<li><a href="#"> <i class='bx bxs-message-dots bx-sm'></i> <span
-					class="text">Message</span>
-			</a></li>
-			<li><a href="#"> <i class='bx bxs-group bx-sm'></i> <span
-					class="text">Team</span>
-			</a></li>
+			<li class="active"><a href="#dashboard"><i class='bx bxs-dashboard bx-sm'></i><span class="text">냥 집사 페이지</span></a></li>
+			<li><a href="#bank"><i class='bx bxs-shopping-bag-alt bx-sm'></i><span class="text">Bank</span></a></li>
+			<li><a href="#analytics"><i class='bx bxs-doughnut-chart bx-sm'></i><span class="text">Analytics</span></a></li>
+			<li><a href="#messages"><i class='bx bxs-message-dots bx-sm'></i><span class="text">Message</span></a></li>
+			<li><a href="#team"><i class='bx bxs-group bx-sm'></i><span class="text">Team</span></a></li>
 		</ul>
 		<ul class="side-menu bottom">
-			<li><a href="#"> <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
-					<span class="text">Settings</span>
-			</a></li>
-			<li><a href="#" class="logout"> <i
-					class='bx bx-power-off bx-sm bx-burst-hover'></i> <span
-					class="text">Logout</span>
-			</a></li>
+			<li><a href="#settings"><i class='bx bxs-cog bx-sm bx-spin-hover'></i><span class="text">Settings</span></a></li>
+			<li><a href="#logout" class="logout"><i class='bx bx-power-off bx-sm bx-burst-hover'></i><span class="text">Logout</span></a></li>
 		</ul>
 	</section>
 	<!-- SIDEBAR -->
-
-
 
 	<!-- CONTENT -->
 	<section id="content">
 		<!-- NAVBAR -->
 		<nav>
-			<i class='bx bx-menu bx-sm'></i> <a href="#" class="nav-link">Categories</a>
-			<form action="#">
+			<i class='bx bx-menu bx-sm'></i>
+			<a href="#dashboard" class="nav-link">Overview</a>
+
+			<form action="#" onsubmit="return false;">
 				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn">
-						<i class='bx bx-search'></i>
-					</button>
+					<input type="search" id="globalSearch" placeholder="계정, 고객, 거래 검색...">
+					<button type="button" class="search-btn"><i class='bx bx-search'></i></button>
 				</div>
 			</form>
-			<input type="checkbox" class="checkbox" id="switch-mode" hidden /> <label
-				class="swith-lm" for="switch-mode"> <i class="bx bxs-moon"></i>
+
+			<input type="checkbox" class="checkbox" id="switch-mode" hidden />
+			<label class="swith-lm" for="switch-mode">
+				<i class="bx bxs-moon"></i>
 				<i class="bx bx-sun"></i>
 				<div class="ball"></div>
 			</label>
 
-			<!-- Notification Bell -->
-			<a href="#" class="notification" id="notificationIcon"> <i
-				class='bx bxs-bell bx-tada-hover'></i> <span class="num">8</span>
+			<a href="#messages" class="notification" id="notificationIcon">
+        <i class='bx bxs-bell bx-tada-hover'></i><span class="num">8</span>
 			</a>
-			<div class="notification-menu" id="notificationMenu">
-				<ul>
-					<li>New message from John</li>
-					<li>Your order has been shipped</li>
-					<li>New comment on your post</li>
-					<li>Update available for your app</li>
-					<li>Reminder: Meeting at 3PM</li>
-				</ul>
-			</div>
 
-			<!-- Profile Menu -->
-			<a href="#" class="profile" id="profileIcon"> <img
-				src="https://placehold.co/600x400/png" alt="Profile">
+			<a href="#" class="profile" id="profileIcon">
+        <img src="https://placehold.co/64x64/png" alt="Profile">
 			</a>
-			<div class="profile-menu" id="profileMenu">
-				<ul>
-					<li><a href="#">My Profile</a></li>
-					<li><a href="#">Settings</a></li>
-					<li><a href="#">Log Out</a></li>
-				</ul>
-			</div>
 		</nav>
 		<!-- NAVBAR -->
-
 
 		<!-- MAIN -->
 		<main>
@@ -107,117 +101,401 @@
 				<div class="left">
 					<h1>Dashboard</h1>
 					<ul class="breadcrumb">
-						<li><a href="#">Dashboard</a></li>
+						<li><a href="#dashboard">Dashboard</a></li>
 						<li><i class='bx bx-chevron-right'></i></li>
-						<li><a class="active" href="#">Home</a></li>
+						<li><a class="active" href="#dashboard">Home</a></li>
 					</ul>
 				</div>
-				<a href="https://codepen.io/saglik216/pen/LEVjwBV"
-					class="btn-download" target="_blink"> <i
-					class='bx bxs-cloud-download bx-fade-down-hover'></i> <span
-					class="text">V2.5 Released</span>
+				<a href="https://codepen.io/saglik216/pen/LEVjwBV" class="btn-download" target="_blank">
+          <i class='bx bxs-cloud-download bx-fade-down-hover'></i>
+          <span class="text">V2.5 Released</span>
 				</a>
 			</div>
 
-			<ul class="box-info">
-				<li><i class='bx bxs-calendar-check'></i> <span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
-				</span></li>
-				<li><i class='bx bxs-group'></i> <span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
-				</span></li>
-				<li><i class='bx bxs-dollar-circle'></i> <span class="text">
-						<h3>N$2543.00</h3>
-						<p>Total Sales</p>
-				</span></li>
-			</ul>
+      <!-- ============ DASHBOARD ============ -->
+      <section id="dashboard" class="page active">
+        <div class="kpis">
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-bank'></i><span>신규 계좌(오늘)</span></div>
+            <h3>124</h3>
+            <div class="delta up">+12.5% MoM</div>
+            <div class="muted">예금/적금/대출 합산</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-credit-card'></i><span>신규 카드(이번달)</span></div>
+            <h3>3,482</h3>
+            <div class="delta up">+4.1% MoM</div>
+            <div class="muted">신용/체크</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-dollar-circle'></i><span>오늘 총거래액</span></div>
+            <h3>₩ 8.27B</h3>
+            <div class="delta down">-1.8% DoD</div>
+            <div class="muted">입금/출금/결제</div>
+          </div>
+          <div class="card kpi">
+            <div class="inline"><i class='bx bxs-shield-alt-2'></i><span>위험 경보</span></div>
+            <h3>7</h3>
+            <span class="badge danger">High 2</span>
+            <span class="badge warn">Med 5</span>
+          </div>
+        </div>
 
+        <div class="grid-2" style="margin-top:1rem;">
+          <div class="card">
+            <div class="section-title"><i class='bx bx-transfer'></i><h3>실시간 거래 스트림(요약)</h3></div>
+            <div class="toolbar">
+              <select id="txFilter">
+                <option value="all">전체</option>
+                <option value="deposit">입금</option>
+                <option value="withdraw">출금</option>
+                <option value="card">카드결제</option>
+              </select>
+              <span class="help">※ 실제 연동 시 WebSocket/SSE 추천</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>시간</th>
+                    <th>유형</th>
+                    <th>금액</th>
+                    <th>계좌/카드</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>09:12:33</td><td>카드결제</td><td>₩ 58,900</td><td>****-1234</td><td><span class="badge ok">승인</span></td></tr>
+                  <tr><td>09:11:02</td><td>입금</td><td>₩ 1,200,000</td><td>110-***-00123</td><td><span class="badge ok">완료</span></td></tr>
+                  <tr><td>09:10:18</td><td>출금</td><td>₩ 300,000</td><td>110-***-00987</td><td><span class="badge ok">완료</span></td></tr>
+                  <tr><td>09:09:41</td><td>카드결제</td><td>₩ 12,500</td><td>****-7788</td><td><span class="badge warn">지연</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search'></i> <i class='bx bx-filter'></i>
-					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><img src="https://placehold.co/600x400/png">
-									<p>Micheal John</p></td>
-								<td>18-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td><img src="https://placehold.co/600x400/png">
-									<p>Ryan Doe</p></td>
-								<td>01-06-2022</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td><img src="https://placehold.co/600x400/png">
-									<p>Tarry White</p></td>
-								<td>14-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td><img src="https://placehold.co/600x400/png">
-									<p>Selma</p></td>
-								<td>01-02-2023</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td><img src="https://placehold.co/600x400/png">
-									<p>Andreas Doe</p></td>
-								<td>31-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="todo">
-					<div class="head">
-						<h3>Todos</h3>
-						<i class='bx bx-plus icon'></i> <i class='bx bx-filter'></i>
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-error'></i><h3>리스크/이상거래 경보</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>발생시각</th><th>유형</th><th>설명</th><th>조치</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>09:05</td>
+                    <td><span class="badge danger">고액 해외송금</span></td>
+                    <td>신규고객 A, 10분 내 2회 연속</td>
+                    <td class="actions">
+                      <button class="btn">상세</button>
+                      <button class="btn">보류</button>
+                      <button class="btn primary">차단</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>08:57</td>
+                    <td><span class="badge warn">다중 로그인</span></td>
+                    <td>서로 다른 3개 국가 IP</td>
+                    <td class="actions">
+                      <button class="btn">상세</button>
+                      <button class="btn primary">세션만료</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="help" style="margin-top:.5rem;">※ AML 규칙/스코어링 연동 포인트</div>
+          </div>
+        </div>
+      </section>
 
-					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Check Inventory</p> <i class='bx bx-dots-vertical-rounded'></i>
-						</li>
-						<li class="completed">
-							<p>Manage Delivery Team</p> <i
-							class='bx bx-dots-vertical-rounded'></i>
-						</li>
-						<li class="not-completed">
-							<p>Contact Selma: Confirm Delivery</p> <i
-							class='bx bx-dots-vertical-rounded'></i>
-						</li>
-						<li class="completed">
-							<p>Update Shop Catalogue</p> <i
-							class='bx bx-dots-vertical-rounded'></i>
-						</li>
-						<li class="not-completed">
-							<p>Count Profit Analytics</p> <i
-							class='bx bx-dots-vertical-rounded'></i>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</main>
-		<!-- MAIN -->
+      <!-- ============ BANK ============ -->
+      <section id="bank" class="page">
+        <div class="section-title"><i class='bx bxs-bank'></i><h2>은행 관리</h2></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-user-detail'></i><h3>고객/계좌</h3></div>
+            <div class="toolbar">
+              <input class="input" type="text" placeholder="이름/계좌번호 검색">
+              <button class="btn">검색</button>
+              <button class="btn">신규 계좌 개설</button>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr><th>고객명</th><th>계좌번호</th><th>상품</th><th>잔액</th><th>상태</th><th>관리</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>김모으</td><td>110-***-123456</td><td>자유입출금</td><td>₩ 3,420,000</td><td><span class="badge ok">정상</span></td><td class="actions"><button class="btn">상세</button><button class="btn">거래</button></td></tr>
+                  <tr><td>하지혁</td><td>210-***-000111</td><td>정기적금</td><td>₩ 820,000</td><td><span class="badge ok">정상</span></td><td class="actions"><button class="btn">상세</button><button class="btn">거래</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="help">※ 상세에서 KYC/신용등급/연체정보 표출</div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-credit-card'></i><h3>카드 상품/발급</h3></div>
+            <div class="toolbar">
+              <button class="btn">신규 카드상품 등록</button>
+              <button class="btn">혜택 편집</button>
+              <span class="chip">발급대기 12건</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead>
+                  <tr><th>카드명</th><th>연회비</th><th>주요혜택</th><th>상태</th><th>관리</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>냥청년 적금 카드</td><td>₩ 20,000</td><td>대중교통 10% · 편의점 5%</td><td><span class="badge ok">판매중</span></td><td class="actions"><button class="btn">수정</button><button class="btn">중지</button></td></tr>
+                  <tr><td>모으냥즈 플래티넘</td><td>₩ 80,000</td><td>항공 마일리지 · 라운지</td><td><span class="badge warn">점검</span></td><td class="actions"><button class="btn">수정</button><button class="btn">재개</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bx-transfer'></i><h3>거래 모니터링</h3></div>
+            <div class="toolbar">
+              <select class="input">
+                <option>최근 24시간</option><option>최근 7일</option><option>최근 30일</option>
+              </select>
+              <select class="input">
+                <option>전체</option><option>입금</option><option>출금</option><option>카드결제</option><option>해외송금</option>
+              </select>
+              <button class="btn">필터 적용</button>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead><tr><th>시간</th><th>유형</th><th>금액</th><th>채널</th><th>위험</th><th>조치</th></tr></thead>
+                <tbody>
+                  <tr><td>08:51</td><td>해외송금</td><td>₩ 5,200,000</td><td>모바일</td><td><span class="badge warn">중간</span></td><td class="actions"><button class="btn">검토</button></td></tr>
+                  <tr><td>08:42</td><td>카드결제</td><td>₩ 210,000</td><td>오프라인</td><td><span class="badge ok">낮음</span></td><td class="actions"><button class="btn">상세</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class='bx bxs-map-pin'></i><h3>지점 · ATM</h3></div>
+            <div class="toolbar">
+              <input class="input" type="text" placeholder="지점명/코드 검색">
+              <button class="btn">검색</button>
+              <span class="chip">ATM 장애 1건</span>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead><tr><th>코드</th><th>지점명</th><th>담당자</th><th>ATM</th><th>상태</th></tr></thead>
+                <tbody>
+                  <tr><td>BR-001</td><td>안양 본점</td><td>하완용</td><td>8</td><td><span class="badge ok">정상</span></td></tr>
+                  <tr><td>BR-014</td><td>시흥 장곡</td><td>하지혁</td><td>3</td><td><span class="badge warn">점검</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ANALYTICS ============ -->
+      <section id="analytics" class="page">
+        <div class="section-title"><i class='bx bxs-doughnut-chart'></i><h2>분석</h2></div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>고객 분포</h3>
+            <p class="muted">연령/성별/지역 기준</p>
+            <div style="height:220px; display:flex; align-items:center; justify-content:center; border:1px dashed #e5e7eb; border-radius:12px;">
+              차트 영역 (연동 시 ECharts/Chart.js)
+            </div>
+          </div>
+          <div class="card">
+            <h3>상품별 잔액/매출 추이</h3>
+            <p class="muted">예금 · 적금 · 대출 · 카드</p>
+            <div style="height:220px; display:flex; align-items:center; justify-content:center; border:1px dashed #e5e7eb; border-radius:12px;">
+              차트 영역 (월별 라인)
+            </div>
+          </div>
+          <div class="card">
+            <h3>리스크 지표</h3>
+            <p class="muted">연체율 · 부도율 · 경보 수</p>
+            <div style="height:220px; display:flex; align-items:center; justify-content:center; border:1px dashed #e5e7eb; border-radius:12px;">
+              차트 영역 (게이지/도넛)
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div class="section-title"><i class='bx bxs-bullseye'></i><h3>캠페인 효과 분석</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>캠페인</th><th>기간</th><th>타겟</th><th>신규계좌</th><th>카드발급</th><th>전환율</th><th>상태</th></tr></thead>
+              <tbody>
+                <tr><td>냥청년 적금 프로모션</td><td>08.01~08.31</td><td>20~34세</td><td>1,204</td><td>2,138</td><td>7.4%</td><td><span class="badge ok">진행중</span></td></tr>
+                <tr><td>주말 교통 캐시백</td><td>07.01~07.31</td><td>전 고객</td><td>642</td><td>1,005</td><td>3.1%</td><td><span class="badge">종료</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MESSAGES ============ -->
+      <section id="messages" class="page">
+        <div class="section-title"><i class='bx bxs-message-dots'></i><h2>메시지 센터</h2></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title"><h3>고객 문의함</h3></div>
+            <div class="toolbar">
+              <select class="input">
+                <option>전체</option><option>미응답</option><option>처리중</option><option>완료</option>
+              </select>
+              <input class="input" type="text" placeholder="고객명/제목 검색">
+              <button class="btn">검색</button>
+            </div>
+            <div class="table-wrap" style="margin-top:.5rem;">
+              <table>
+                <thead><tr><th>접수일</th><th>고객</th><th>제목</th><th>분류</th><th>상태</th><th>담당</th></tr></thead>
+                <tbody>
+                  <tr><td>08-12</td><td>김**</td><td>카드 분실 신고</td><td>보안</td><td><span class="badge danger">미응답</span></td><td>홍길동</td></tr>
+                  <tr><td>08-12</td><td>이**</td><td>적금 중도해지 문의</td><td>상품</td><td><span class="badge warn">처리중</span></td><td>박하늘</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><h3>공지 발송</h3></div>
+            <div class="toolbar" style="margin-bottom:.5rem;">
+              <select class="input"><option>전체 고객</option><option>신규고객(30일)</option><option>미사용 카드고객</option></select>
+              <select class="input"><option>이메일</option><option>SMS</option><option>푸시</option></select>
+            </div>
+            <textarea rows="6" class="input" style="width:100%; resize:vertical;" placeholder="공지 내용을 입력하세요."></textarea>
+            <div class="actions" style="margin-top:.5rem;">
+              <button class="btn">미리보기</button>
+              <button class="btn primary">발송</button>
+            </div>
+            <div class="help">※ 대량 발송은 큐/배치 연동</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TEAM ============ -->
+      <section id="team" class="page">
+        <div class="section-title"><i class='bx bxs-group'></i><h2>직원/권한</h2></div>
+        <div class="card">
+          <div class="toolbar">
+            <button class="btn">신규 직원 추가</button>
+            <select class="input"><option>전체 부서</option><option>영업</option><option>리스크</option><option>IT운영</option></select>
+          </div>
+          <div class="table-wrap" style="margin-top:.5rem;">
+            <table>
+              <thead><tr><th>이름</th><th>ID</th><th>부서</th><th>직급</th><th>권한</th><th>최근 로그인</th><th>관리</th></tr></thead>
+              <tbody>
+                <tr><td>하완용</td><td>hwy</td><td>IT운영</td><td>매니저</td><td><span class="pill">전메뉴 읽기/쓰기</span></td><td>08-12 08:55</td><td class="actions"><button class="btn">수정</button><button class="btn">잠금</button></td></tr>
+                <tr><td>하지혁</td><td>jjh</td><td>리스크</td><td>애널리스트</td><td><span class="pill">리스크/분석</span></td><td>08-12 08:17</td><td class="actions"><button class="btn">수정</button><button class="btn">해지</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="help">※ 작업 로그(Audit Log)와 2FA 상태는 상세에서 확인</div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section id="settings" class="page">
+        <div class="section-title"><i class='bx bxs-cog'></i><h2>환경 설정</h2></div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>보안</h3>
+            <div style="display:flex; gap:1rem; align-items:center; margin:.5rem 0;">
+              <label class="inline"><input type="checkbox" checked> 관리자 2단계 인증(2FA)</label>
+              <label class="inline"><input type="checkbox" checked> 세션 유휴 만료 15분</label>
+            </div>
+            <div class="toolbar">
+              <select class="input">
+                <option>비밀번호 최소 8자</option>
+                <option>최소 10자(권장)</option>
+                <option>최소 12자(강화)</option>
+              </select>
+              <button class="btn">적용</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>영업일/공휴일</h3>
+            <div class="toolbar">
+              <input class="input" type="date">
+              <button class="btn">공휴일 추가</button>
+              <button class="btn">삭제</button>
+            </div>
+            <p class="help">※ 배치/이자계산/정산 스케줄과 연동</p>
+          </div>
+
+          <div class="card">
+            <h3>알림 채널</h3>
+            <div class="toolbar">
+              <label class="inline"><input type="checkbox" checked> 이메일</label>
+              <label class="inline"><input type="checkbox" checked> SMS</label>
+              <label class="inline"><input type="checkbox"> 푸시</label>
+            </div>
+            <div class="toolbar">
+              <input class="input" type="email" placeholder="관리용 이메일">
+              <button class="btn">저장</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>시스템</h3>
+            <div class="toolbar">
+              <select class="input"><option>KST (Asia/Seoul)</option><option>UTC</option></select>
+              <select class="input"><option>₩ KRW</option><option>$ USD</option><option>€ EUR</option></select>
+              <button class="btn">저장</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- (원래 있던 Recent Orders & Todos 섹션은 Dashboard로 흡수했으므로 제거) -->
+      </main>
 	</section>
 	<!-- CONTENT -->
 
-
+  <!-- 기존 script.js 참조 유지 -->
 	<script src="script.js"></script>
+
+  <!-- 아주 얇은 페이지 전환 스크립트 (hash 기반) -->
+  <script>
+    (function () {
+      const pages = document.querySelectorAll('.page');
+      const sidebarLinks = document.querySelectorAll('#sidebar .side-menu a');
+
+      function activate(hash) {
+        const target = (hash || '#dashboard').split('?')[0];
+        pages.forEach(p => p.classList.toggle('active', '#' + p.id === target));
+        // 사이드바 active 표시
+        sidebarLinks.forEach(a => {
+          const aTarget = a.getAttribute('href');
+          if (!aTarget || !aTarget.startsWith('#')) return;
+          const li = a.closest('li');
+          if (!li) return;
+          li.classList.toggle('active', aTarget === target);
+        });
+        // 헤더 breadcrumb 제목 동기화
+        const h1 = document.querySelector('.head-title h1');
+        const map = {
+          '#dashboard': 'Dashboard',
+          '#bank': 'Bank',
+          '#analytics': 'Analytics',
+          '#messages': 'Message',
+          '#team': 'Team',
+          '#settings': 'Settings'
+        };
+        if (h1 && map[target]) h1.textContent = map[target];
+      }
+
+      window.addEventListener('hashchange', () => activate(location.hash));
+      document.addEventListener('DOMContentLoaded', () => activate(location.hash || '#dashboard'));
+    })();
+  </script>
 </body>
 </html>
