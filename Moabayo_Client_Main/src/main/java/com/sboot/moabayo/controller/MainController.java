@@ -26,5 +26,10 @@ public class MainController {
 	public String myPage() {
 		return "mypage/mypage";
 	}
-
+	
+	// __Cloudinary__ 페이지 접근
+	@GetMapping("cloudinary")
+	public String upload_image(Model model) {
+		return "main/cloudinaryUploader";
+	}
 }
