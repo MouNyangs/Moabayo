@@ -37,13 +37,16 @@
 	font-weight: bold;
 }
 
+
 .right-section {
+	 margin-left:auto;
 	position: absolute;
 	right: 30px;
 	top: 50%;
 	transform: translateY(-50%);
 	display: flex;
 	align-items: center;
+	gap:12px;
 	overflow: visible; /* 메뉴가 밖으로 나가도 보이도록 */
 }
 

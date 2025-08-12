@@ -1,13 +1,10 @@
 // js/token-exp-display.js
 (function () {
-  console.log('[JWT] token-exp-display loaded');
-
   function getStoredToken() {
     const raw = localStorage.getItem('token');
     if (!raw) return null;
     return raw.startsWith('Bearer ') ? raw.slice(7) : raw;
   }
-
   function parseJwt(token) {
     const parts = token.split('.');
     if (parts.length !== 3) throw new Error('Invalid JWT');
@@ -18,54 +15,71 @@
     );
     return JSON.parse(json);
   }
+  function getUserId(p) { return p.userId ?? p.uid ?? p.id ?? p.username ?? p.sub ?? null; }
 
   let timer;
 
-  function startTokenTimer() {
-    const expEl = document.getElementById('expTime');
+  function hideRemain() {
+    const wrap = document.getElementById('remainWrap');
     const remainEl = document.getElementById('remainTime');
-    if (!expEl || !remainEl) {
-      console.log('[JWT] token box not found yet');
-      return;
-    }
+    if (timer) clearInterval(timer);
+    if (remainEl) remainEl.textContent = '-';
+    if (wrap) wrap.style.display = 'none';
+  }
+  function showRemain() {
+    const wrap = document.getElementById('remainWrap');
+    if (wrap) wrap.style.display = 'inline';
+  }
+
+  function startTokenTimer() {
+    const wrap = document.getElementById('remainWrap');
+    const remainEl = document.getElementById('remainTime');
+    if (!wrap || !remainEl) return;
 
     const tok = getStoredToken();
-    if (!tok) { expEl.textContent = '토큰 없나'; remainEl.textContent = '-'; return; }
+    if (!tok) { hideRemain(); return; }
 
     try {
-      const { exp } = parseJwt(tok);
-      if (!exp) { expEl.textContent = 'exp 없음'; remainEl.textContent = '-'; return; }
+      const payload = parseJwt(tok);
+      const uid = getUserId(payload);
+      const exp = payload.exp;
+
+      // 유저 아이디가 없거나 exp 없으면 표시 안 함
+      if (!uid || !exp) { hideRemain(); return; }
 
       const expMs = exp * 1000;
-      expEl.textContent = new Date(expMs).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-
       if (timer) clearInterval(timer);
-      timer = setInterval(() => {
+
+      function tick() {
         const left = expMs - Date.now();
-        if (left <= 0) { remainEl.textContent = '만료됨'; clearInterval(timer); return; }
+        if (left <= 0) {
+          remainEl.textContent = '만료됨';
+          clearInterval(timer);
+          // 만료 시 아예 숨기려면 다음 줄 주석 해제
+          // hideRemain();
+          return;
+        }
         const s = Math.floor(left / 1000);
         const h = Math.floor(s / 3600);
         const m = Math.floor((s % 3600) / 60);
         const ss = s % 60;
         const pad = n => (n < 10 ? '0' + n : n);
         remainEl.textContent = h > 0 ? `${h}:${pad(m)}:${pad(ss)}` : `${m}:${pad(ss)}`;
-      }, 1000);
-    } catch (e) {
-      console.warn('[JWT] parse error:', e);
-      expEl.textContent = '토큰 파싱 실패';
-      remainEl.textContent = e.message || 'error';
+      }
+
+      showRemain();
+      tick();
+      timer = setInterval(tick, 1000);
+    } catch {
+      hideRemain();
     }
   }
 
-  // 헤더가 주입될 때까지 대기했다가 실행
   function waitAndStart() {
-    if (document.getElementById('expTime') && document.getElementById('remainTime')) {
-      startTokenTimer();
-      return;
-    }
+    if (document.getElementById('remainTime')) { startTokenTimer(); return; }
     const target = document.getElementById('header') || document.body;
     const mo = new MutationObserver(() => {
-      if (document.getElementById('expTime') && document.getElementById('remainTime')) {
+      if (document.getElementById('remainTime')) {
         mo.disconnect();
         startTokenTimer();
       }
@@ -73,14 +87,7 @@
     mo.observe(target, { childList: true, subtree: true });
   }
 
-  // 다른 탭/창에서 토큰이 바뀌어도 갱신
-  window.addEventListener('storage', e => {
-    if (e.key === 'token') waitAndStart();
-  });
-
-  // 초기 진입 시도
+  window.addEventListener('storage', e => { if (e.key === 'token') waitAndStart(); });
   document.addEventListener('DOMContentLoaded', waitAndStart);
-
-  // 디버깅/수동 호출용
   window.startTokenTimer = startTokenTimer;
 })();
