@@ -122,3 +122,4 @@ body.dark .qa{background:var(--light)}
   #content nav form.show ~ .notification,
   #content nav form.show ~ .profile{display:none}
 }
+

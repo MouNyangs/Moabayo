@@ -18,7 +18,7 @@ public class JwtGenerate {
 
 
 	// 토큰 만료 시간 : 10분
-	private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 1; // 10분
+	private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 10; // 10분
 
 	// 리프레시 토큰 만료 시간 : 7일
 	private static final long REFRESH_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7; // 7일

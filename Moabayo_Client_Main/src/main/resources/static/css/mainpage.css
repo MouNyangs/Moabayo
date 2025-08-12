@@ -6,6 +6,11 @@
 	src: url('/fonts/Jua-Regular.ttf') format('truetype');
 }
 
+html, body {
+	height: 100%;
+	overflow: auto; /* 기본적으로 스크롤이 가능하도록 설정 */
+}
+
 body {
 	margin: 0;
 	font-family: 'Pretendard', sans-serif;

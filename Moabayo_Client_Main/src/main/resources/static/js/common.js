@@ -91,12 +91,6 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
-	fetch("cardscroll/cardscroll.html")
-		.then(res => res.text())
-		.then(html => {
-			document.getElementById("cardscroll").innerHTML = html;
-		})
-		.catch(err => console.error("파일 로딩 실패:", err));
 });
 
 document.addEventListener("DOMContentLoaded", () => {
