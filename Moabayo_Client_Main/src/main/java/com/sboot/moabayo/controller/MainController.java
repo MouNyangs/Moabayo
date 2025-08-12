@@ -21,5 +21,11 @@ public class MainController {
 	public String goregisterpage(Model model) {
 		return "login/register";
 	}
+	
+	// __Cloudinary__ 페이지 접근
+	@GetMapping("cloudinary")
+	public String upload_image(Model model) {
+		return "main/cloudinaryUploader";
+	}
 }
 	
