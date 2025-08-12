@@ -25,9 +25,9 @@ function goToCardService() {
 				throw new Error("인증 실패");
 			}
 		})
-		/*.catch(err => {
+		.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
 			window.location.href = "loginpage";
-		});*/
+		});
 };
