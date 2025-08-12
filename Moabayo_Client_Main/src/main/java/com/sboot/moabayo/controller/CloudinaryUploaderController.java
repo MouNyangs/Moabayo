@@ -34,11 +34,11 @@ public class CloudinaryUploaderController {
         private String url;
     }
 //		TODO: Cloudinary에 올라간 이미지 보는건 아직 구현중....    
-//    @GetMapping("/list")
-//    public ResponseEntity<List<ImageInfo>> listImages() throws Exception {
-//        List<ImageInfo> images = imageService.listImages();
-//        return ResponseEntity.ok(images);
-//    }
+    @GetMapping("/list")
+    public ResponseEntity<List<ImageInfo>> listImages() throws Exception {
+        List<ImageInfo> images = imageService.listImages();
+        return ResponseEntity.ok(images);
+    }
 
     @Data
     @AllArgsConstructor

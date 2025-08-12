@@ -79,22 +79,22 @@ public class ImageService {
     }
     
 //		TODO: Cloudinary에 올라간 이미지 보는건 아직 구현중....    
-//    public List<CloudinaryUploaderController.ImageInfo> listImages() throws IOException {
-//        Map<?, ?> result = cloudinary.api().resources(
-//            ObjectUtils.asMap(
-//                "type", "upload",
-//                "prefix", defaultFolder,  // 폴더 필터 (없으면 전체)
-//                "max_results", 20
-//            )
-//        );
-//
-//        List<Map<String, Object>> resources = (List<Map<String, Object>>) result.get("resources");
-//
-//        return resources.stream()
-//                .map(r -> new ImageController.ImageInfo(
-//                        (String) r.get("public_id"),
-//                        (String) r.get("secure_url")
-//                ))
-//                .collect(Collectors.toList());
-//    }
+    public List<CloudinaryUploaderController.ImageInfo> listImages() throws Exception {
+        Map<?, ?> result = cloudinary.api().resources(
+            ObjectUtils.asMap(
+                "type", "upload",
+                "prefix", defaultFolder,  // 폴더 필터 (없으면 전체)
+                "max_results", 20
+            )
+        );
+
+        List<Map<String, Object>> resources = (List<Map<String, Object>>) result.get("resources");
+
+        return resources.stream()
+                .map(r -> new CloudinaryUploaderController.ImageInfo(
+                        (String) r.get("public_id"),
+                        (String) r.get("secure_url")
+                ))
+                .collect(Collectors.toList());
+    }
 }
