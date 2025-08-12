@@ -53,7 +53,7 @@ public class CardController {
 	}
 	@GetMapping("/toCardList")
 	public String showDashboard() {
-	    return "cardList";  // templates/index.html
+	    return "index";  // templates/index.html
 	}
 
 	

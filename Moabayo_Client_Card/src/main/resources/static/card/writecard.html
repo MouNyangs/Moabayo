@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>N09-01 | 추천 카드</title>
+
+  <link rel="icon" href="/images/cat.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/css/header.css" />
+  <link rel="stylesheet" href="/css/footer.css" />
+  <script defer src="/js/common.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f8f3da; --mint:#e9f6ea; --panel:#ffffff;
+    --text:#1f2937; --muted:#6b7280; --brand:#28c2a0;
+    --border:#e5e7eb; --rank1:#f59e0b; --rank2:#9ca3af; --rank3:#d97706;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0; min-height:100vh; display:flex; flex-direction:column;
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+  }
+  .content{ flex:1; }
+
+  .hero{
+    max-width:1200px; margin:28px auto 0; padding:36px 24px;
+    border-radius:20px; background:var(--mint); text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .hero h1{ font-size:28px; font-weight:900; margin:0 0 8px; letter-spacing:-0.3px; }
+  .hero p{ margin:0; color:var(--muted); }
+  .hero .underline{ width:180px; height:3px; background:#cfe9d1; border-radius:2px; margin:14px auto 0; }
+
+  .section{ max-width:1200px; margin:18px auto 40px; padding:0 6px; position:relative; z-index:1; }
+  .toolbar{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin:8px 6px 12px; }
+  .toolbar .btn-filter{ border:1px solid var(--border); background:#fff; padding:.45rem .8rem; border-radius:999px; font-weight:700; font-size:14px; color:#111827; }
+
+  /* 캐러셀 */
+  .carousel{ position:relative; overflow:visible; }
+  .track{
+    display:grid; grid-auto-flow:column; grid-auto-columns:minmax(280px,1fr);
+    gap:18px; overflow-x:auto; overflow-y:visible; scroll-snap-type:x mandatory;
+    padding:20px 44px 6px; /* ↑ 배지가 위로 튀어나와도 안잘리게 여유 */
+  }
+  .track::-webkit-scrollbar{ height:10px; }
+  .track::-webkit-scrollbar-thumb{ background:#e5e7eb; border-radius:999px; }
+
+  .slide{ scroll-snap-align:center; }
+
+  /* 카드 래퍼: 배지가 바깥으로 보이도록 overflow를 visible 로 */
+  .card-wrap{
+    position:relative; background:#fff; border:1px solid var(--border);
+    border-radius:18px; overflow:visible;
+    box-shadow:0 10px 20px rgba(0,0,0,.06);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .card-wrap:hover{ transform:translateY(-4px); box-shadow:0 16px 28px rgba(0,0,0,.10); border-color:#dfe3ea; }
+
+  .pick{
+    position:absolute; top:10px; left:16px; z-index:2;
+    font-weight:800; font-size:14px; color:#0f172a;
+    background:rgba(255,255,255,.85); padding:.2rem .5rem; border-radius:8px;
+  }
+
+  /* 랭크 배지: 완전 밖으로 ‘툭’ */
+  .rank{
+    position:absolute; top:-16px; left:-16px; z-index:5;
+    width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; color:#fff; box-shadow:0 8px 16px rgba(0,0,0,.18);
+    pointer-events:none;
+  }
+  .rank.r1{ background:var(--rank1); }
+  .rank.r2{ background:var(--rank2); }
+  .rank.r3{ background:var(--rank3); }
+  .rank.r4{ background:#64748b; }
+
+  /* 이미지는 상단만 둥글게 (부모가 더 이상 자르지 않음) */
+  .thumb{
+    width:100%; aspect-ratio:16/10;
+    background:#f5f7fa center/cover no-repeat;
+    border-top-left-radius:18px; border-top-right-radius:18px;
+  }
+
+  .meta{ padding:14px 16px 16px; }
+  .name{ font-size:16px; font-weight:900; line-height:1.3; margin-bottom:6px; }
+  .issuer{ color:#6b7280; font-size:12px; margin-bottom:8px; }
+  .saving{ color:#0f172a; font-size:14px; }
+  .saving strong{ font-size:18px; font-weight:900; }
+
+  /* 좌우 네비 */
+  .nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--border);
+    background:#fff; display:grid; place-items:center;
+    box-shadow:0 8px 16px rgba(0,0,0,.08); cursor:pointer;
+  }
+  .nav:hover{ background:#f9fafb; }
+  .nav.prev{ left:6px; }
+  .nav.next{ right:6px; }
+  .nav svg{ width:18px; height:18px; }
+
+  @media (max-width:600px){
+    .track{ grid-auto-columns:85%; padding:20px 48px 6px; }
+  }
+</style>
+
+
+</head>
+<body>
+  <div id="header"></div>
+
+  <div class="content">
+    <section class="hero">
+      <h1><span id="userName">고객</span> 님에게 <strong>꼭 맞는 카드</strong></h1>
+      <p>최근 3개월 소비 패턴을 기반으로 추천했어요. 카드를 눌러 상세 혜택을 확인해보세요!</p>
+      <div class="underline"></div>
+    </section>
+
+    <section class="section">
+      <div class="toolbar">
+        <button class="btn-filter" id="btnBenefit">할인 + 적립</button>
+      </div>
+
+      <div class="carousel">
+        <button class="nav prev" id="prevBtn" aria-label="이전">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="track" id="track"></div>
+        <button class="nav next" id="nextBtn" aria-label="다음">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="footer"></div>
+
+  <script>
+    // 1) 사용자 이름 (header.js에서 로컬스토리지에 저장했다면 활용)
+    (function setUserName(){
+      const name = localStorage.getItem('userName') || '고객';
+      document.getElementById('userName').textContent = name;
+    })();
+
+    // 2) DB 연동 자리: /api/cards/recommend 호출 예제 (없으면 로컬 더미 사용)
+    async function fetchRecommendedCards(){
+      try{
+        // 실제 API가 준비되면 주석 해제:
+        // const res = await fetch('/api/cards/recommend?limit=4');
+        // if(res.ok) return await res.json();
+        // throw new Error('API 실패');
+      }catch(e){ /* 폴백으로 더미 반환 */ }
+
+      // ▶ 더미 데이터 (이미지는 /cardimg/ 폴더의 4개 사용)
+      return [
+        { id:'sc', name:'스페이스캣 클래식', issuer:'Moenyangs', img:'/cardimg/spacecat-card.png', pickRate:4.44, saving:67927 },
+        { id:'gr', name:'그린캣 에코',        issuer:'Moenyangs', img:'/cardimg/card-green.png',  pickRate:2.57, saving:39430 },
+        { id:'hl', name:'할로윈캣',           issuer:'Moenyangs', img:'/cardimg/holloweencat.png', pickRate:2.44, saving:37435 },
+        { id:'sm', name:'서머캣 카드',        issuer:'Moenyangs', img:'/cardimg/summercat.png',    pickRate:2.10, saving:31210 }
+      ];
+    }
+
+    // 3) 렌더링
+    function renderSlides(list){
+      const $track = document.getElementById('track');
+      $track.innerHTML = list.map((c, i)=>{
+        const rankClass = i===0 ? 'r1' : i===1 ? 'r2' : i===2 ? 'r3' : 'r4';
+        return `
+          <div class="slide">
+            <div class="card-wrap" onclick="viewDetail('${c.id}')">
+              <div class="pick">피킹률 약 ${c.pickRate.toFixed(2)} %</div>
+              <div class="rank ${rankClass}">${i+1}</div>
+              <div class="thumb" style="background-image:url('${c.img}')"></div>
+              <div class="meta">
+                <div class="name">${c.name}</div>
+                <div class="issuer">${c.issuer || ''}</div>
+                <div class="saving">▼ 한 달에 약 <strong>${c.saving.toLocaleString('ko-KR')}</strong>원 절약 가능!</div>
+              </div>
+            </div>
+          </div>`
+      }).join('');
+    }
+
+    // 4) 이동/네비
+    function attachCarousel(){
+      const track = document.getElementById('track');
+      const prev = document.getElementById('prevBtn');
+      const next = document.getElementById('nextBtn');
+      const step = () => track.clientWidth * 0.8; // 한 번에 살짝씩
+      prev.addEventListener('click', ()=> track.scrollBy({ left: -step(), behavior:'smooth' }));
+      next.addEventListener('click', ()=> track.scrollBy({ left:  step(), behavior:'smooth' }));
+    }
+
+    // 5) 상세 이동(원하는 라우팅으로 바꾸세요)
+    function viewDetail(id){
+      // 예: location.href = `/card/detail.html?id=${id}`;
+      console.log('view card:', id);
+    }
+    window.viewDetail = viewDetail; // 인라인에서 접근
+
+    // 초기화
+    (async function init(){
+      const data = await fetchRecommendedCards();
+      renderSlides(data);
+      attachCarousel();
+    })();
+  </script>
+</body>
+</html>

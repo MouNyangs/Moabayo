@@ -1,38 +1,29 @@
 <header class="site-header">
 
-	<!-- 왼쪽: 로고 -->
+  	<!-- 왼쪽: 로고 -->
 	<div class="left-section">
 		<a href="mainpage">
 			<img src="/images/cat.png" alt="로고" class="logo-img" />
 		</a>
 	</div>
+  
+		<!-- 가운데: 메뉴 -->
+		<div class="center-section">
+			<nav class="nav-bar">
+				<a href="mainpage">홈</a>
+				<a href="javascript:void(0);" onclick="goToBankService()">저축상품</a>
+				<a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
+				<a href="transactions">계좌조회</a>
+				<a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
+				</nav>
+		</div>
 
-	<!-- 가운데: 메뉴 -->
-	<div class="center-section">
-		<nav class="nav-bar row w-100">
-			<a class="col" href="mainpage">홈</a>
-			<a class="col" href="javascript:void(0);" onclick="goToBankService()">저축상품</a>
-			<a class="col" href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
-			<a class="col" href="transactions">계좌조회</a>
-			<a class="col" href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
-			
-			<!-- ✅ 고객센터 바로 옆에 토큰 박스 -->
-			<div class="token-box col">
-				<div>
-					만료 시각(KST): <span id="expTime">-</span>
-				</div>
-				<div>
-					남은 시간: <span id="remainTime">-</span>
-				</div>
-			</div>
-			<div class="col">
-				<a href="/cloudinary"><button>개발자 전용: Cloudinary Console</button></a>
-			</div>
-			
-		</nav>
-	</div>
-	<div></div>
+      <!-- ✅ 고객센터 바로 옆에 토큰 박스 -->
+      <div class="token-box" id="tokenBox" style="display:none;">
+  <div>남은 시간: <span id="remainTime">-</span></div>
+</div>
 
-	<!-- 오른쪽: 로그인/회원가입 or 유저 이름 + 로그아웃 드롭다운 -->
-	<div class="right-section" id="authSection"></div>
+
+  <!-- 오른쪽: 로그인/회원가입 or 유저 이름 + 로그아웃 드롭다운 -->
+  <div class="right-section" id="authSection"></div>
 </header>

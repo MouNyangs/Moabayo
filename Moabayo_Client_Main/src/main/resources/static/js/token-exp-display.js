@@ -1,12 +1,11 @@
 // js/token-exp-display.js
-(function() {
-	console.log('[JWT] token-exp-display loaded');
-
-	function getStoredToken() {
-		const raw = localStorage.getItem('token');
-		if (!raw) return null;
-		return raw.startsWith('Bearer ') ? raw.slice(7) : raw;
-	}
+(function () {
+  function getStoredToken() {
+    	console.log('[JWT] token-exp-display loaded');
+    const raw = localStorage.getItem('token');
+    if (!raw) return null;
+    return raw.startsWith('Bearer ') ? raw.slice(7) : raw;
+  }
 
 	function parseJwt(token) {
 		const parts = token.split('.');
@@ -19,68 +18,95 @@
 		return JSON.parse(json);
 	}
 
-	let timer;
+  function pickUserId(payload) {
+    return payload?.userId ?? payload?.uid ?? payload?.id ?? payload?.username ?? payload?.sub ?? null;
+  }
 
-	function startTokenTimer() {
-		const expEl = document.getElementById('expTime');
-		const remainEl = document.getElementById('remainTime');
-		if (!expEl || !remainEl) {
-			console.log('[JWT] token box not found yet');
-			return;
-		}
+  let timer;
 
-		const tok = getStoredToken();
-		if (!tok) { expEl.textContent = '토큰 없나'; remainEl.textContent = '-'; return; }
+  function hideRemain() {
+    const box = document.getElementById('tokenBox');
+    const remainEl = document.getElementById('remainTime');
+    if (timer) clearInterval(timer);
+    if (remainEl) remainEl.textContent = '-';
+    if (box) box.style.display = 'none';
+  }
 
-		try {
-			const { exp } = parseJwt(tok);
-			if (!exp) { expEl.textContent = 'exp 없음'; remainEl.textContent = '-'; return; }
+  function showRemain() {
+    const box = document.getElementById('tokenBox');
+    if (box) box.style.display = 'inline-block';
+  }
 
-			const expMs = exp * 1000;
-			expEl.textContent = new Date(expMs).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+  function startTokenTimer() {
+    const box = document.getElementById('tokenBox');
+    const remainEl = document.getElementById('remainTime');
+    if (!box || !remainEl) return;
 
-			if (timer) clearInterval(timer);
-			timer = setInterval(() => {
-				const left = expMs - Date.now();
-				if (left <= 0) { remainEl.textContent = '만료됨'; clearInterval(timer); logout(); return; }
-				const s = Math.floor(left / 1000);
-				const h = Math.floor(s / 3600);
-				const m = Math.floor((s % 3600) / 60);
-				const ss = s % 60;
-				const pad = n => (n < 10 ? '0' + n : n);
-				remainEl.textContent = h > 0 ? `${h}:${pad(m)}:${pad(ss)}` : `${m}:${pad(ss)}`;
-			}, 1000);
-		} catch (e) {
-			console.warn('[JWT] parse error:', e);
-			expEl.textContent = '토큰 파싱 실패';
-			remainEl.textContent = e.message || 'error';
-		}
-	}
+    const raw = localStorage.getItem('token');
+    if (!raw) { hideRemain(); return; }
+    const tok = raw.startsWith('Bearer ') ? raw.slice(7) : raw;
 
-	// 헤더가 주입될 때까지 대기했다가 실행
-	function waitAndStart() {
-		if (document.getElementById('expTime') && document.getElementById('remainTime')) {
-			startTokenTimer();
-			return;
-		}
-		const target = document.getElementById('header') || document.body;
-		const mo = new MutationObserver(() => {
-			if (document.getElementById('expTime') && document.getElementById('remainTime')) {
-				mo.disconnect();
-				startTokenTimer();
-			}
-		});
-		mo.observe(target, { childList: true, subtree: true });
-	}
+    try {
+      const payload = parseJwt(tok);
+      const uid = localStorage.getItem('userId') || pickUserId(payload);
+      const exp = payload?.exp;
 
-	// 다른 탭/창에서 토큰이 바뀌어도 갱신
-	window.addEventListener('storage', e => {
-		if (e.key === 'token') waitAndStart();
-	});
+      if (!uid || !exp) { hideRemain(); return; }
 
-	// 초기 진입 시도
-	document.addEventListener('DOMContentLoaded', waitAndStart);
+      const expMs = Number(exp) * 1000;
+      if (timer) clearInterval(timer);
 
-	// 디버깅/수동 호출용
-	window.startTokenTimer = startTokenTimer;
+      function tick() {
+        const left = expMs - Date.now();
+        if (left <= 0) {
+          remainEl.textContent = '만료됨';
+          clearInterval(timer);
+          hideRemain();
+          return;
+        }
+        const s = Math.floor(left / 1000);
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const ss = s % 60;
+        const pad = n => (n < 10 ? '0' + n : n);
+        remainEl.textContent = h > 0 ? `${h}:${pad(m)}:${pad(ss)}` : `${m}:${pad(ss)}`;
+      }
+
+      showRemain();
+      tick();
+      timer = setInterval(tick, 1000);
+    } catch (e) {
+      console.warn('[JWT] parse error:', e);
+      hideRemain();
+    }
+  }
+
+  function waitAndStart() {
+    // 헤더가 비동기로 주입되는 경우 대비
+    if (document.getElementById('tokenBox') && document.getElementById('remainTime')) {
+      startTokenTimer(); return;
+    }
+    const target = document.getElementById('header') || document.body;
+    const mo = new MutationObserver(() => {
+      if (document.getElementById('tokenBox') && document.getElementById('remainTime')) {
+        mo.disconnect();
+        startTokenTimer();
+      }
+    });
+    mo.observe(target, { childList: true, subtree: true });
+  }
+
+  // 다른 탭/창 변경
+  window.addEventListener('storage', e => {
+    if (e.key === 'token' || e.key === 'userId') waitAndStart();
+  });
+
+  // 같은 탭: 로그인/로그아웃 커스텀 이벤트
+  window.addEventListener('auth:login', waitAndStart);
+  window.addEventListener('auth:logout', () => { hideRemain(); });
+
+  document.addEventListener('DOMContentLoaded', waitAndStart);
+
+  // 수동 호출도 가능
+  window.startTokenTimer = startTokenTimer;
 })();
