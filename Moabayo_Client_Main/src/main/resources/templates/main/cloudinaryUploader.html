@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cloudinary Upload</title>
+</head>
+<body>
+	<h2>Cloudinary 업로드 테스트</h2>
+	<form id="form" enctype="multipart/form-data">
+	  <input type="file" name="file" />
+	  <button type="submit">업로드</button>
+	</form>
+	<hr>
+	<h3>결과</h3>
+	<div id="result"></div>
+
+	<hr>
+	<h3>이미 업로드된 이미지 목록</h3>
+	<button id="loadImages">이미지 목록 불러오기</button>
+	<div id="imageList"></div>
+
+	<script>
+	// 업로드 이벤트
+	document.getElementById('form').addEventListener('submit', async (e) => {
+	  e.preventDefault();
+	  const fd = new FormData(e.target);
+	  const res = await fetch('/api/images/upload', {
+	    method: 'POST',
+	    body: fd
+	  });
+	  const data = await res.json();
+	  
+	  document.getElementById('result').innerHTML = `
+	    <p>업로드 완료! URL:</p>
+	    <a href="${data.url}" target="_blank">${data.url}</a><br>
+	    <img src="${data.url}" style="max-width:200px; margin-top:10px;">
+	  `;
+	});
+
+	// 이미지 목록 불러오기
+	document.getElementById('loadImages').addEventListener('click', async () => {
+	  const res = await fetch('/api/images/list');
+	  const list = await res.json();
+	  const container = document.getElementById('imageList');
+	  container.innerHTML = ''; // 초기화
+	  
+	  list.forEach(item => {
+	    container.innerHTML += `
+	      <div style="display:inline-block; margin:5px; text-align:center;">
+	        <img src="${item.url}" style="width:150px; height:150px; object-fit:cover;"><br>
+	        <small>${item.publicId}</small>
+	      </div>
+	    `;
+	  });
+	});
+	</script>
+</body>
+</html>

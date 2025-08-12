@@ -11,13 +11,15 @@ body {
 }
 
 .gallery {
-	position: relative; /* 절대 -> 상대 위치 변경 */
-	width: 100%;
-	height: 100vh;
-	overflow: hidden;
-	display: flex; /* flex로 가운데 정렬 가능 */
-	justify-content: center;
-	align-items: center;
+	display: flex;
+	overflow-x: auto; /* 가로 스크롤 */
+	overflow-y: hidden;
+	white-space: nowrap;
+	scroll-behavior: smooth;
+	/* 세로 크기 고정 */
+	height: 300px; /* 카드 높이에 맞게 조정 */
+	padding: 10px;
+	box-sizing: border-box;
 }
 
 .cards {

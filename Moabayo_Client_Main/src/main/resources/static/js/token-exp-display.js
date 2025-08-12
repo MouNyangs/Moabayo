@@ -1,21 +1,22 @@
 // js/token-exp-display.js
 (function () {
   function getStoredToken() {
+    	console.log('[JWT] token-exp-display loaded');
     const raw = localStorage.getItem('token');
     if (!raw) return null;
     return raw.startsWith('Bearer ') ? raw.slice(7) : raw;
   }
 
-  function parseJwt(token) {
-    const parts = token.split('.');
-    if (parts.length !== 3) throw new Error('Invalid JWT');
-    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
-    const json = decodeURIComponent(
-      atob(padded).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-    );
-    return JSON.parse(json);
-  }
+	function parseJwt(token) {
+		const parts = token.split('.');
+		if (parts.length !== 3) throw new Error('Invalid JWT');
+		const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+		const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+		const json = decodeURIComponent(
+			atob(padded).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+		);
+		return JSON.parse(json);
+	}
 
   function pickUserId(payload) {
     return payload?.userId ?? payload?.uid ?? payload?.id ?? payload?.username ?? payload?.sub ?? null;
