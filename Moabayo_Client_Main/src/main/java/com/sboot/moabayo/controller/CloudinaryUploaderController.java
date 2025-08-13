@@ -1,49 +1,39 @@
 package com.sboot.moabayo.controller;
 
-import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.sboot.moabayo.service.CardProductService;
+import com.sboot.moabayo.service.ImageService;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.sboot.moabayo.service.ImageService;
-
-//__Cloudinary__ Controller
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/images")
 public class CloudinaryUploaderController {
 
     private final ImageService imageService;
+    private final CardProductService cardProductService;
 
-    /** multipart/form-data 로 업로드 */
+    /** 파일 업로드 + card_product.img 업데이트 */
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<UploadResponse> upload(@RequestPart("file") MultipartFile file) throws Exception {
-        String url = imageService.upload(file);
+    public ResponseEntity<UploadResponse> upload(
+        @RequestParam("cardId") Long cardId,
+        @RequestParam("file") MultipartFile file
+    ) throws Exception {
+        String url = imageService.upload(file);          // 1) Cloudinary 업로드
+        cardProductService.updateImageUrl(cardId, url);  // 2) DB 업데이트
         UploadResponse resp = new UploadResponse();
         resp.setUrl(url);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(resp);                  // 3) URL만 반환
     }
 
     @Data
-    static class UploadResponse {
-        private String url;
-    }
-//		TODO: Cloudinary에 올라간 이미지 보는건 아직 구현중....    
-    @GetMapping("/list")
-    public ResponseEntity<List<ImageInfo>> listImages() throws Exception {
-        List<ImageInfo> images = imageService.listImages();
-        return ResponseEntity.ok(images);
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class ImageInfo {
-        private String publicId;
-        private String url;
-    }
+    static class UploadResponse { private String url; }
 }
