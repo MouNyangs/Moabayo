@@ -1,69 +1,70 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<title>Moenyangs Card – Yellow Theme</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" href="http://localhost:8810/images/cat.ico" />
-<link rel="stylesheet" href="/css/newcard-yellow.css" />
-<!-- GSAP (필수) -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<!-- 앱 스크립트 -->
-<script defer src="/js/newcard-yellow.js"></script>
+  <meta charset="utf-8" />
+  <title>Moenyangs Card – Yellow Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/images/cat.ico" />
+  <link rel="stylesheet" href="/css/newcard-yellow.css" />
+  <!-- GSAP (필수) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <!-- 앱 스크립트 -->
+  <script defer src="/js/newcard-yellow.js"></script>
 </head>
 <body>
 
-	<svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <!-- 🔶 메인 배경 그라디언트(옐로우) -->
     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="65%">
-      <stop offset="10%" stop-color="#FFF3C4" />
-      <stop offset="90%" stop-color="#FFD26A" />
+      <stop offset="10%" stop-color="#FFF3C4"/>
+      <stop offset="90%" stop-color="#FFD26A"/>
     </linearGradient>
 
     <!-- 🔶 좌측 원: 크림 → 허니 -->
     <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="85%">
-      <stop offset="0%" stop-color="#FFF0C2" />
-      <stop offset="80%" stop-color="#F6C453" />
-      <stop offset="110%" stop-color="#F2B94E" />
+      <stop offset="0%"  stop-color="#FFF0C2"/>
+      <stop offset="80%" stop-color="#F6C453"/>
+      <stop offset="110%" stop-color="#F2B94E"/>
     </linearGradient>
 
     <!-- 🔶 우측 원: 라이트 옐로 → 앰버 -->
     <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="85%">
-      <stop offset="0%" stop-color="#FFE695" />
-      <stop offset="80%" stop-color="#FFC655" />
-      <stop offset="110%" stop-color="#FFB84D" />
+      <stop offset="0%"  stop-color="#FFE695"/>
+      <stop offset="80%" stop-color="#FFC655"/>
+      <stop offset="110%" stop-color="#FFB84D"/>
     </linearGradient>
 
     <!-- (유광용) -->
     <linearGradient id="sheenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0)" />
-      <stop offset="50%" stop-color="rgba(255,255,255,0.55)" />
-      <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+      <stop offset="0%"   stop-color="rgba(255,255,255,0)"/>
+      <stop offset="50%"  stop-color="rgba(255,255,255,0.55)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </linearGradient>
 
     <!-- 카드 라운드 영역 -->
     <clipPath id="cardClip">
-      <rect width="340" height="540" rx="30" ry="30" />
+      <rect width="340" height="540" rx="30" ry="30"/>
     </clipPath>
 
     <!-- 블러 마스크(카드 외곽만 보이게) -->
     <mask id="m">
-      <rect class="card" fill="#fff" width="340" height="540" rx="30" ry="30" />
+      <rect class="card" fill="#fff" width="340" height="540" rx="30" ry="30"/>
     </mask>
   </defs>
 
   <!-- 🔶 배경(노랑톤) -->
-  <rect fill="url(#grad1)" width="100%" height="100%" />
+  <rect fill="url(#grad1)" width="100%" height="100%"/>
 
   <g class="main">
     <!-- 🔶 뒤쪽 볼륨들도 노랑 팔레트 -->
-    <circle class="ball bg" fill="url(#grad2)" cx="120" cy="130" r="130" />
-    <circle class="ball bg" fill="url(#grad3)" cx="550" cy="410" r="210" />
+    <circle class="ball bg" fill="url(#grad2)" cx="120" cy="130" r="130"/>
+    <circle class="ball bg" fill="url(#grad3)" cx="550" cy="410" r="210"/>
 
     <!-- (숨겨둔) 블러 배경 -->
     <g class="blur" mask="url(#m)">
-      <image class="bg" x="33" y="7" width="700" height="600" xlink:href="https://assets.codepen.io/721952/bgBlur.jpg" />
+      <image class="bg" x="33" y="7" width="700" height="600"
+             xlink:href="https://assets.codepen.io/721952/bgBlur.jpg"/>
     </g>
 
     <!-- ===== 카드 ===== -->
@@ -71,30 +72,36 @@
       <!-- 카드 면(이미지). 회전/확대/이동은 #artInner 에 적용 -->
       <g id="artWrap" clip-path="url(#cardClip)">
         <g id="artInner">
-          <image class="card-art" x="0" y="0" width="340" height="540" preserveAspectRatio="xMidYMid slice" xlink:href="" />
+          <image class="card-art" x="0" y="0" width="340" height="540"
+                 preserveAspectRatio="xMidYMid slice" xlink:href=""/>
         </g>
         <!-- 유광 스트립 -->
-        <rect class="sheen" x="-360" y="0" width="180" height="540" fill="url(#sheenGrad)" opacity="0" />
+        <rect class="sheen" x="-360" y="0" width="180" height="540"
+              fill="url(#sheenGrad)" opacity="0"/>
       </g>
 
       <!-- 하얀 테두리 -->
-      <rect fill="none" stroke="#F8F2E6" stroke-width="3" width="341" height="541" rx="31" ry="31" opacity="0.95" />
+      <rect fill="none" stroke="#F8F2E6" stroke-width="3"
+            width="341" height="541" rx="31" ry="31" opacity="0.95"/>
 
       <!-- 텍스트/칩 -->
-      <text class="numTxt outline" fill="#fff" font-size="23">4678 9743 6489 9721</text>
+      <text class="numTxt outline"  fill="#fff" font-size="23">4678 9743 6489 9721</text>
 <text class="nameTxt outline" fill="#fffde8" font-size="15">MOENYANGS OWNER</text>
 
 
       <!-- ✅ 칩(유심) 회로선 포함 -->
       <g class="chip">
         <!-- 칩 몸통 -->
-        <rect x="0" y="0" width="58" height="76.5" rx="9" ry="9" fill="url(#grad2)" />
+        <rect x="0" y="0" width="58" height="76.5" rx="9" ry="9" fill="url(#grad2)"/>
         <!-- 안쪽 테두리 -->
-        <rect x="6" y="6" width="46" height="64.5" rx="6" ry="6" fill="none" stroke="#c9b678" stroke-width="1.4" opacity="0.95" />
+        <rect x="6" y="6" width="46" height="64.5" rx="6" ry="6"
+              fill="none" stroke="#c9b678" stroke-width="1.4" opacity="0.95"/>
         <!-- 가로 회로선 -->
-        <path d="M6 25.5 H52 M6 39 H52 M6 52.5 H52" fill="none" stroke="#c9b678" stroke-width="1.2" opacity="0.9" />
+        <path d="M6 25.5 H52 M6 39 H52 M6 52.5 H52"
+              fill="none" stroke="#c9b678" stroke-width="1.2" opacity="0.9"/>
         <!-- 세로 회로선 -->
-        <path d="M22 6 V70.5 M36 6 V70.5" fill="none" stroke="#c9b678" stroke-width="1.2" opacity="0.9" />
+        <path d="M22 6 V70.5 M36 6 V70.5"
+              fill="none" stroke="#c9b678" stroke-width="1.2" opacity="0.9"/>
       </g>
     </g>
   </g>

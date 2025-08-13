@@ -1,279 +1,197 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>N07-00 | 모으냥즈 카드 서비스 메인페이지</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>N07-00 | 모으냥즈 카드 서비스 메인페이지</title>
 
-<link rel="icon" href="/http://localhost:8810images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
-<!-- ✅ header/footer 자동삽입 스크립트 -->
-<script defer src="http://localhost:8810/js/common.js"></script>
+  <link rel="icon" href="/images/cat.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/css/header.css" />
+  <link rel="stylesheet" href="/css/footer.css" />
+  <!-- ✅ header/footer 자동삽입 스크립트 -->
+  <script defer src="/js/common.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
 
-<style>
-:root {
-	--bg: #f8f3da; /* 아이보리: 헤더/푸터 노랑과 어울림 */
-	--panel: #ffffff;
-	--text: #222;
-	--muted: #6b7280;
-	--card: #eef2f6; /* 버튼 내부 배경 */
-	--accent: #ff3b3b; /* 코드 텍스트 강조 */
-	--border: #d1d5db;
-	--highlight: #ffe59a; /* 제목 하이라이트 */
-	--circle: 230px; /* 🔵 동그라미 크기 */
-	--circle-mobile: 190px; /* 모바일 크기 */
-	--aura: #ffe59a; /* ✨ 아우라 색 */
-}
+  <style>
+    :root{
+      --bg:#f8f3da;          /* 아이보리: 헤더/푸터 노랑과 어울림 */
+      --panel:#ffffff;
+      --text:#222;
+      --muted:#6b7280;
+      --card:#eef2f6;        /* 버튼 내부 배경 */
+      --accent:#ff3b3b;      /* 코드 텍스트 강조 */
+      --border:#d1d5db;
+      --highlight:#ffe59a;   /* 제목 하이라이트 */
+      --circle:230px;        /* 🔵 동그라미 크기 */
+      --circle-mobile:190px; /* 모바일 크기 */
+      --aura:#ffe59a;        /* ✨ 아우라 색 */
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: "Pretendard", system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .content { flex: 1; display: block; }
 
-* {
-	box-sizing: border-box;
-}
+    .title-outer{
+      max-width: 1100px;                 /* 살짝 넓힘 */
+      margin: 18px auto 0;
+      color:#222; font-weight:600;
+    }
 
-html, body {
-	height: 100%;
-}
+    .frame{
+      max-width: 1100px;                 /* 좌우 여유 확보 */
+      margin: 40px auto 0;
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      padding: 32px 24px 40px;
+    }
 
-body {
-	margin: 0;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	font-family: "Pretendard", system-ui, -apple-system, Segoe UI, Roboto,
-		"Noto Sans KR", sans-serif;
-	background: var(--bg);
-	color: var(--text);
-}
+    .inner-title{
+      font-size: 20px; font-weight:700; text-align:center; margin-bottom: 36px;
+      position: relative;
+    }
+    .inner-title::after{
+      content:""; position:absolute; left:50%; transform:translateX(-50%);
+      bottom:-10px; width: 200px; height: 6px; border-radius: 3px;
+      background: var(--highlight); opacity:.9;
+    }
 
-.content {
-	flex: 1;
-	display: block;
-}
+    /* 🔵 동그란 버튼 */
+    .card-box{
+      width: var(--circle); height: var(--circle);
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      margin: 0 auto;
+      position: relative;                /* 아우라용 기준 */
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      cursor: pointer;
+      isolation: isolate;                /* 아우라가 밖으로 깔끔하게 */
+    }
+    /* ✨ 아우라(빛번짐) */
+    .card-box::before{
+      content:""; position:absolute; inset:-14px; border-radius:50%;
+      background: radial-gradient(closest-side, color-mix(in oklab, var(--aura) 70%, transparent) 0%, transparent 70%);
+      opacity:0; transform: scale(.9);
+      filter: blur(6px);
+      transition: opacity .2s ease, transform .2s ease, filter .2s ease;
+      z-index:-1; pointer-events:none;
+    }
+    .card-box:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      border-color:#c4c9d0;
+      background:#f3f7fa;
+    }
+    .card-box:hover::before{
+      opacity:1; transform: scale(1); filter: blur(10px);
+    }
 
-.title-outer {
-	max-width: 1100px; /* 살짝 넓힘 */
-	margin: 18px auto 0;
-	color: #222;
-	font-weight: 600;
-}
+    .card-content{ text-align:center; line-height:1.5; padding: 0 10px; }
+    .card-title{ font-size: 17px; font-weight:700; letter-spacing:-0.2px; }
+    .jump{ display:block; margin-top:10px; color:var(--accent); font-weight:700; text-decoration:none; }
+    .jump:hover{ text-decoration: underline; }
 
-.frame {
-	max-width: 1100px; /* 좌우 여유 확보 */
-	margin: 40px auto 0;
-	background: var(--panel);
-	border-radius: 14px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-	padding: 32px 24px 40px;
-}
+    .footer-note{ color: var(--muted); font-size: 12px; text-align:center; margin-top: 28px; }
 
-.inner-title {
-	font-size: 20px;
-	font-weight: 700;
-	text-align: center;
-	margin-bottom: 36px;
-	position: relative;
-}
+    /* ⬅ 좌우 간격 넓게: 부트스트랩 거터 커스텀 */
+    .wider-gutters{ --bs-gutter-x: 3rem; }  /* 필요시 3.5rem로 더 늘려도 됨 */
 
-.inner-title::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	bottom: -10px;
-	width: 200px;
-	height: 6px;
-	border-radius: 3px;
-	background: var(--highlight);
-	opacity: .9;
-}
+    /* 모바일 튜닝 */
+    @media (max-width: 576px){
+      .frame{ padding: 24px 16px 32px; }
+      .card-box{ width: var(--circle-mobile); height: var(--circle-mobile); }
+      .card-title{ font-size: 16px; }
+      .wider-gutters{ --bs-gutter-x: 1.5rem; }
+    }
 
-/* 🔵 동그란 버튼 */
-.card-box {
-	width: var(--circle);
-	height: var(--circle);
-	border-radius: 50%;
-	background: var(--card);
-	border: 1px solid var(--border);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 0 auto;
-	position: relative; /* 아우라용 기준 */
-	transition: transform .18s ease, box-shadow .18s ease, border-color .18s
-		ease, background .18s ease;
-	cursor: pointer;
-	isolation: isolate; /* 아우라가 밖으로 깔끔하게 */
-}
-/* ✨ 아우라(빛번짐) */
-.card-box::before {
-	content: "";
-	position: absolute;
-	inset: -14px;
-	border-radius: 50%;
-	background: radial-gradient(closest-side, color-mix(in oklab, var(--aura)
-		70%, transparent) 0%, transparent 70%);
-	opacity: 0;
-	transform: scale(.9);
-	filter: blur(6px);
-	transition: opacity .2s ease, transform .2s ease, filter .2s ease;
-	z-index: -1;
-	pointer-events: none;
-}
-
-.card-box:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 10px 24px rgba(0, 0, 0, .12);
-	border-color: #c4c9d0;
-	background: #f3f7fa;
-}
-
-.card-box:hover::before {
-	opacity: 1;
-	transform: scale(1);
-	filter: blur(10px);
-}
-
-.card-content {
-	text-align: center;
-	line-height: 1.5;
-	padding: 0 10px;
-}
-
-.card-title {
-	font-size: 17px;
-	font-weight: 700;
-	letter-spacing: -0.2px;
-}
-
-.jump {
-	display: block;
-	margin-top: 10px;
-	color: var(--accent);
-	font-weight: 700;
-	text-decoration: none;
-}
-
-.jump:hover {
-	text-decoration: underline;
-}
-
-.footer-note {
-	color: var(--muted);
-	font-size: 12px;
-	text-align: center;
-	margin-top: 28px;
-}
-
-/* ⬅ 좌우 간격 넓게: 부트스트랩 거터 커스텀 */
-.wider-gutters {
-	--bs-gutter-x: 3rem;
-} /* 필요시 3.5rem로 더 늘려도 됨 */
-
-/* 모바일 튜닝 */
-@media ( max-width : 576px) {
-	.frame {
-		padding: 24px 16px 32px;
-	}
-	.card-box {
-		width: var(--circle-mobile);
-		height: var(--circle-mobile);
-	}
-	.card-title {
-		font-size: 16px;
-	}
-	.wider-gutters {
-		--bs-gutter-x: 1.5rem;
-	}
-}
-
-#footer {
-	margin-top: 0 !important;
-}
-</style>
+    #footer { margin-top: 0 !important; }
+  </style>
 </head>
 <body>
 
-	<!-- Header: common.js가 /html/header.html을 주입 -->
-	<div id="header"></div>
+  <!-- Header: common.js가 /html/header.html을 주입 -->
+  <div id="header"></div>
 
-	<!-- 본문 -->
-	<div class="content">
-		<div class="title-outer px-3">N07-00 가상카드 서비스 메인페이지</div>
+  <!-- 본문 -->
+  <div class="content">
+    <div class="title-outer px-3">N07-00 가상카드 서비스 메인페이지</div>
 
-		<main class="frame">
-			<h1 class="inner-title">🐾모으냥즈🐾</h1>
+    <main class="frame">
+      <h1 class="inner-title">🐾모으냥즈🐾</h1>
 
-			<div class="container px-0">
-				<div class="row wider-gutters gx-5 gy-4 justify-content-center">
-					<!-- 본인 소유 카드 확인 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N07-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										본인 소유<br />카드 확인
-									</div>
-									<span class="jump">→ N07-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-					<!-- 카드 상품 전체 조회 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N08-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										카드 상품<br />전체 조회
-									</div>
-									<span class="jump">→ N08-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-					<!-- 카드 추천 서비스 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N09-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										카드 추천<br />서비스
-									</div>
-									<span class="jump">→ N09-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
+      <div class="container px-0">
+        <div class="row wider-gutters gx-5 gy-4 justify-content-center">
+          <!-- 본인 소유 카드 확인 -->
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <a class="text-decoration-none text-reset" href="#" onclick="go('N07-01')">
+              <div class="card-box">
+                <div class="card-content">
+                  <div class="card-title">본인 소유<br/>카드 확인</div>
+                  <span class="jump">→ N07-01</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!-- 카드 상품 전체 조회 -->
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <a class="text-decoration-none text-reset" href="#" onclick="go('N08-01')">
+              <div class="card-box">
+                <div class="card-content">
+                  <div class="card-title">카드 상품<br/>전체 조회</div>
+                  <span class="jump">→ N08-01</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!-- 카드 추천 서비스 -->
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <a class="text-decoration-none text-reset" href="#" onclick="go('N09-01')">
+              <div class="card-box">
+                <div class="card-content">
+                  <div class="card-title">카드 추천<br/>서비스</div>
+                  <span class="jump">→ N09-01</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
 
+    
+    </main>
+  </div>
 
-		</main>
-	</div>
+  <!-- Footer: common.js가 /html/footer.html을 주입 -->
+  <div id="footer"></div>
 
-	<!-- Footer: common.js가 /html/footer.html을 주입 -->
-	<div id="footer"></div>
+<script>
+  function go(code){
+    const map = {
+      'N07-01': '/card/allcardList.html',
+      'N08-01': '/card/newcard.html',
+      'N09-01': '/card/writecard.html'
+    };
+    const page = map[code];
+    if (!page) return alert('연결할 페이지가 정의되지 않았습니다.');
 
-	<script>
-		function go(code) {
-			const map = {
-				'N07-01' : '/card/allcardList.html',
-				'N08-01' : '/card/newcard.html',
-				'N09-01' : '/card/writecard.html'
-			};
-			const page = map[code];
-			if (!page)
-				return alert('연결할 페이지가 정의되지 않았습니다.');
-
-			// 현재 파일과 같은 폴더 기준으로 이동
-			const next = new URL(page, location.href).toString();
-			location.href = next;
-		}
-	</script>
+    // 현재 파일과 같은 폴더 기준으로 이동
+    const next = new URL(page, location.href).toString();
+    location.href = next;
+  }
+</script>
 
 </body>
 </html>
