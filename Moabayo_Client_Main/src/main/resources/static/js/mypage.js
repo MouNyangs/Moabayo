@@ -8,25 +8,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// ===== 다크모드 =====
-(function () {
-  const KEY = 'mb.theme';
-  const get = () => localStorage.getItem(KEY);
-  const apply = (mode) => { document.body.classList.toggle('dark', mode === 'dark'); localStorage.setItem(KEY, mode); };
-  apply(get() || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-
-  // 라벨 클릭으로도 동작하도록
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('[data-hook="toggle-theme"]')) return;
-    const next = document.body.classList.contains('dark') ? 'light' : 'dark';
-    apply(next);
-    // 스위치 체크 상태 동기화
-    const c = document.getElementById('switch-mode');
-    if (c) c.checked = (next === 'dark');
-  });
-})();
-
-// ===== 빠른 실행 버튼 라우팅 =====
+/*// ===== 빠른 실행 버튼 라우팅 =====
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.qa');
   if (!btn) return;
@@ -41,7 +23,7 @@ document.addEventListener('click', (e) => {
       break;
     case 'logout':       location.href = '/logout'; break;
   }
-});
+});*/
 
 // ===== 더미 데이터 바인딩 (원하면 API로 교체) =====
 window.addEventListener('DOMContentLoaded', async () => {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -9,7 +9,10 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
 
   <!-- Layout CSS -->
-  <link rel="stylesheet" href="/css/mypage.css"/>
+<link rel="stylesheet" href="/css/mypage.css">
+<link rel="stylesheet" href="/css/mypage-realtime.css?v=20250813">
+<script src="/js/theme.js?v=1"></script>
+
 </head>
 <body>
   <!-- SIDEBAR -->
@@ -104,80 +107,164 @@
         </li>
       </ul>
 
-      <!-- 액션/리스트 2단 -->
-      <div class="table-data">
-        <!-- 액션 카드 -->
-        <div class="order">
-          <div class="head">
-            <h3>빠른 실행</h3>
-          </div>
+  <!-- ✅ 하단 3컬럼: 빠른실행 | 실시간 패널 | 알림(축소) -->
+  
+  <!-- (NEW) 섹션 네비게이션: 원하는 위치에 추가 (보통 KPI 아래) -->
+<nav class="section-nav" aria-label="섹션 이동">
+  <button data-section="#qaSection"><i class='bx bxs-bolt'></i> 빠른 실행</button>
+  <button data-section="#realtimeSection"><i class='bx bxs-time'></i> 실시간</button>
+  <button data-section="#notifSection"><i class='bx bxs-bell'></i> 알림</button>
+</nav>
 
-          <div class="quick-actions">
-            <button class="qa" data-action="profile-edit">
-              <i class='bx bxs-user-detail'></i>
-              <div class="text">
-                <div class="title">정보 수정</div>
-                <div class="hint">개인정보/연락처</div>
-              </div>
-            </button>
-
-            <button class="qa" data-action="account-list">
-              <i class='bx bxs-bank'></i>
-              <div class="text">
-                <div class="title">계좌 조회</div>
-                <div class="hint">잔액/입출금</div>
-              </div>
-            </button>
-
-            <button class="qa" data-action="card-list">
-              <i class='bx bxs-credit-card'></i>
-              <div class="text">
-                <div class="title">카드 조회</div>
-                <div class="hint">보유/이력</div>
-              </div>
-            </button>
-
-            <button class="qa" data-action="pin-change">
-              <i class='bx bxs-key'></i>
-              <div class="text">
-                <div class="title">간편 비밀번호</div>
-                <div class="hint">변경/재설정</div>
-              </div>
-            </button>
-
-            <button class="qa warn" data-action="leave">
-              <i class='bx bxs-user-x'></i>
-              <div class="text">
-                <div class="title">회원탈퇴</div>
-                <div class="hint">계정 삭제</div>
-              </div>
-            </button>
-
-            <button class="qa danger" data-action="logout">
-              <i class='bx bx-log-out'></i>
-              <div class="text">
-                <div class="title">로그아웃</div>
-                <div class="hint">세션 종료</div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- 최근 내역 -->
-        <div class="todo">
-          <div class="head">
-            <h3>최근 알림</h3>
-          </div>
-          <ul class="todo-list" id="notifList">
-            <!-- JS로 채움 -->
-          </ul>
-        </div>
+  <div class="table-data layout-3col">
+    <!-- 1) 빠른 실행 (좌측 그대로) -->
+    <div class="order" id="qaSection">
+      <div class="head">
+        <h3>빠른 실행</h3>
       </div>
-    </main>
-    <!-- /MAIN -->
+      <div class="quick-actions">
+        <button class="qa" data-action="profile-edit">
+          <i class='bx bxs-user-detail'></i>
+          <div class="text"><div class="title">정보 수정</div><div class="hint">개인정보/연락처</div></div>
+        </button>
+        <button class="qa" data-action="account-list">
+          <i class='bx bxs-bank'></i>
+          <div class="text"><div class="title">계좌 조회</div><div class="hint">잔액/입출금</div></div>
+        </button>
+        <button class="qa" data-action="card-list">
+          <i class='bx bxs-credit-card'></i>
+          <div class="text"><div class="title">카드 조회</div><div class="hint">보유/이력</div></div>
+        </button>
+        <button class="qa" data-action="pin-change">
+          <i class='bx bxs-key'></i>
+          <div class="text"><div class="title">간편 비밀번호</div><div class="hint">변경/재설정</div></div>
+        </button>
+        <button class="qa warn" data-action="leave">
+          <i class='bx bxs-user-x'></i>
+          <div class="text"><div class="title">회원탈퇴</div><div class="hint">계정 삭제</div></div>
+        </button>
+        <button class="qa danger" data-action="logout">
+          <i class='bx bx-log-out'></i>
+          <div class="text"><div class="title">로그아웃</div><div class="hint">세션 종료</div></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2) 실시간 패널 (가운데, 신규) -->
+<section class="realtime" id="realtimeSection">
+  <div class="head">
+    <h3>실시간</h3>
+    <small id="rt-label" style="color:var(--sub)">정보 수정</small>
+  </div>
+
+  <!-- 버튼으로 전환되는 '뷰' 컨테이너 -->
+  <div class="rt-views">
+    <!-- 정보수정 -->
+    <div class="rt-view active" data-view="profile">
+      <form id="formProfile" class="rt-form">
+        <div class="grid-2">
+          <label>이름<input type="text" name="name" placeholder="홍길동" autocomplete="name"></label>
+          <label>연락처<input type="tel" name="phone" placeholder="010-1234-5678" autocomplete="tel"></label>
+        </div>
+        <div class="grid-2">
+          <label>이메일<input type="email" name="email" placeholder="user@example.com" autocomplete="email"></label>
+          <label>주소<input type="text" name="addr" placeholder="서울시 ..." autocomplete="street-address"></label>
+        </div>
+        <div class="grid-2">
+          <label>간편비밀번호 변경<input type="password" name="pin" placeholder="••••"></label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary"><i class='bx bx-save'></i> 저장</button>
+            <button type="reset" class="btn ghost">초기화</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 계좌조회 -->
+    <div class="rt-view" data-view="accounts">
+      <div class="panel-toolbar">
+        <input id="accSearch" type="search" placeholder="계좌번호/별칭 검색">
+        <button id="accRefresh" class="btn ghost"><i class='bx bx-refresh'></i> 새로고침</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" id="accTable" aria-label="계좌 목록">
+          <thead><tr><th>별칭</th><th>계좌번호</th><th class="right">잔액</th><th>상태</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 카드조회 -->
+    <div class="rt-view" data-view="cards">
+      <div class="panel-toolbar">
+        <input id="cardSearch" type="search" placeholder="카드명/브랜드 검색">
+        <button id="cardRefresh" class="btn ghost"><i class='bx bx-refresh'></i> 새로고침</button>
+      </div>
+      <div class="card-grid" id="cardGrid"></div>
+    </div>
+
+    <!-- 간편비밀번호 -->
+    <div class="rt-view" data-view="pin">
+      <form id="formPin" class="rt-form">
+        <div class="grid-2">
+          <label>현재 비밀번호<input type="password" name="cur" placeholder="••••"></label>
+          <label>새 비밀번호<input type="password" name="next" placeholder="••••"></label>
+        </div>
+        <div class="grid-2">
+          <label>새 비밀번호 확인<input type="password" name="next2" placeholder="••••"></label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary"><i class='bx bx-save'></i> 변경</button>
+            <button type="reset" class="btn ghost">초기화</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 회원탈퇴 -->
+    <div class="rt-view" data-view="leave">
+      <p style="margin:.25rem 0 .75rem; color:var(--sub)">탈퇴 시 모든 데이터가 삭제됩니다. 진행하시겠습니까?</p>
+      <form id="formLeave" class="rt-form">
+        <label>사유(선택)<input type="text" name="reason" placeholder="사유를 입력하세요"></label>
+        <div class="form-actions" style="margin-top:.5rem">
+          <button type="submit" class="btn primary" style="background:#ef4444;border-color:#ef4444">
+            <i class='bx bxs-user-x'></i> 탈퇴 진행
+          </button>
+          <button type="button" class="btn ghost" data-action="cancel-leave">취소</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 로그아웃 -->
+    <div class="rt-view" data-view="logout">
+      <p style="margin:.25rem 0 .75rem; color:var(--sub)">현재 세션에서 로그아웃합니다.</p>
+      <div class="form-actions">
+        <button id="btnDoLogout" class="btn primary"><i class='bx bx-log-out'></i> 로그아웃</button>
+        <button class="btn ghost" data-action="cancel-logout">취소</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- 3) 최근 알림 (우측, 축소) -->
+    <div class="todo compact" id="notifSection">
+      <div class="head">
+        <h3>최근 알림</h3>
+      </div>
+      <ul class="todo-list" id="notifList"><!-- JS 채움 --></ul>
+      <div class="todo-footer">
+        <a href="#/notifications" class="link-sm">전체 알림 보기</a>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- /MAIN -->
   </section>
   <!-- /CONTENT -->
+  <!-- ✅ JS 분리: 아래 두 파일을 새로 추가 -->
+<script type="module" src="/js/mypage-core.js"></script>
+<script type="module" src="/js/mypage-panels.js"></script>
 
-  <script src="/js/mypage.js"></script>
+<!--   <script src="/js/mypage.js"></script> -->
 </body>
 </html>
