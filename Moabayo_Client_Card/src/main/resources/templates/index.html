@@ -259,15 +259,15 @@ body {
 	<div id="footer"></div>
 
 	<script>
-		function go(code) {
-			const map = {
-				'N07-01' : '/card/allcardList.html',
-				'N08-01' : '/card/newcard.html',
-				'N09-01' : '/card/writecard.html'
-			};
-			const page = map[code];
-			if (!page)
-				return alert('연결할 페이지가 정의되지 않았습니다.');
+	  function go(code){
+	    const map = {
+	      'N07-01': '/usercard/allcardList',
+	      'N08-01': '/card/newcard.html',
+	      'N09-01': '/card/writecard.html'
+	    };
+	    const page = map[code];
+	    if (!page) return alert('연결할 페이지가 정의되지 않았습니다.');
+
 
 			// 현재 파일과 같은 폴더 기준으로 이동
 			const next = new URL(page, location.href).toString();

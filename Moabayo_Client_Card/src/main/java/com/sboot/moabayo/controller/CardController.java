@@ -55,12 +55,45 @@ public class CardController {
 	public String showDashboard() {
 	    return "index";  // templates/index.html
 	}
+	
+	@GetMapping("/allcardList")
+	public String allCardList(Model model) {
+	    List<CardProductVO> cards = service.findAll();
+	    model.addAttribute("cards", cards);
+	    return "allcardList"; // JSP나 Thymeleaf 템플릿
+	}
+	
+	@GetMapping("/newcard")
+	public String newCard(@RequestParam(required = false) Long cardId, Model model) {
+	    List<CardProductVO> cards = service.findAll();
+
+	    // 만약 cardId가 있으면 해당 카드만 선택
+	    CardProductVO selectedCard = null;
+	    if (cardId != null) {
+	        selectedCard = cards.stream()
+	                .filter(c -> c.getCardId().equals(cardId))
+	                .findFirst()
+	                .orElse(null);
+	    }
+
+	    // 기본적으로 첫 번째 카드 사용
+	    if (selectedCard == null && !cards.isEmpty()) {
+	        selectedCard = cards.get(0);
+	    }
+
+	    model.addAttribute("cardImgUrl", selectedCard != null ? selectedCard.getImg() : null);
+	    return "newcard"; // newcard.html
+	}
 
 	
-	@GetMapping("/recommendcards")
-	public String recommendCards(Model model) {
-	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
-	    return "card-recommendation"; // cardList.html 렌더링
-	}
+	
+
+
+	
+//	@GetMapping("/recommendcards")
+//	public String recommendCards(Model model) {
+//	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
+////	    model.addAttribute("cardList", cardList);
+//	    return "card-recommendation"; // cardList.html 렌더링
+//	}
 }

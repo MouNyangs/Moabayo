@@ -16,7 +16,12 @@ public class CardProductService {
         this.mapper = mapper;
     }
 
-    public List<CardProductVO> getRecommendCards() {
-        return mapper.getRecommendCards();
+//    public List<CardProductVO> getRecommendCards() {
+//        return mapper.getRecommendCards();
+//    }
+//    
+
+    public List<CardProductVO> findAll() {
+        return mapper.selectAll();
     }
 }

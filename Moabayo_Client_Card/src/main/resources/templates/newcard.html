@@ -1,19 +1,40 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8" />
-<title>Moenyangs Card – Yellow Theme</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" href="http://localhost:8810/images/cat.ico" />
-<link rel="stylesheet" href="/css/newcard-yellow.css" />
-<!-- GSAP (필수) -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<!-- 앱 스크립트 -->
-<script defer src="/js/newcard-yellow.js"></script>
+  <meta charset="utf-8" />
+  <title>Moenyangs Card – Yellow Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 파비콘 / CSS -->
+  <link rel="icon" href="http://localhost:8810/images/cat.ico" />
+  <link rel="stylesheet" href="/css/newcard-yellow.css" />
+
+  <!-- GSAP (애니메이션) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+
+  <!-- DB에서 전달된 카드 이미지 URL을 JS 변수로 주입 -->
+  <!-- th:inline="javascript" 를 써야 /*[[...]]*/ 구문이 치환됨 -->
+  <script th:inline="javascript">
+    // 서버에서 넘어온 URL (없을 수도 있으니 null 허용)
+    const SERVER_CARD_IMG_URL = /*[[${cardImgUrl}]]*/ null;
+
+    // 전역 변수로 노출: 외부 JS에서 사용
+    // 값이 없으면 플레이스홀더 이미지로 대체
+    window.CARD_ART_URL = (typeof SERVER_CARD_IMG_URL === 'string' && SERVER_CARD_IMG_URL.trim().length)
+      ? SERVER_CARD_IMG_URL
+      : '/images/placeholder-card.png';
+  </script>
+
+  <!-- 페이지 전용 스크립트 (이 파일에서 window.CARD_ART_URL 사용) -->
+  <script defer src="/js/newcard-yellow.js"></script>
 </head>
 <body>
 
-	<svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg">
+<!--
+  노랑 테마 카드 SVG
+  - 카드 면 이미지는 .card-art 요소(xlink:href)에 newcard-yellow.js가 주입
+-->
+<svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <!-- 🔶 메인 배경 그라디언트(옐로우) -->
     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="65%">
@@ -81,9 +102,8 @@
       <rect fill="none" stroke="#F8F2E6" stroke-width="3" width="341" height="541" rx="31" ry="31" opacity="0.95" />
 
       <!-- 텍스트/칩 -->
-      <text class="numTxt outline" fill="#fff" font-size="23">4678 9743 6489 9721</text>
-<text class="nameTxt outline" fill="#fffde8" font-size="15">MOENYANGS OWNER</text>
-
+      <text class="numTxt outline"  fill="#fff" font-size="23">4678 9743 6489 9721</text>
+      <text class="nameTxt outline" fill="#fffde8" font-size="15">MOENYANGS OWNER</text>
 
       <!-- ✅ 칩(유심) 회로선 포함 -->
       <g class="chip">
