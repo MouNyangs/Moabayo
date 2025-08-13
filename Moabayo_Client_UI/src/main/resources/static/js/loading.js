@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (progress >= 100) {
 			clearInterval(interval);
 			// ✅ 메인 페이지로 자동 이동
-			window.location.href = "mainpage";
+			window.location.href = "http://localhost:8812/mainpage";
 		} else {
 			progress += 2;
 			progressBar.style.width = `${progress}%`;

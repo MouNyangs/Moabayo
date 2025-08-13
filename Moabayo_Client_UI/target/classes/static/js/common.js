@@ -112,6 +112,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
+function goToMainService() {
+	window.location.href = "http://localhost:8812/mainpage";
+}
+
+function goToTransactions() {
+	window.location.href = "http://localhost:8812/transactions"
+}
+
 function logout() {
 	localStorage.clear();
 	alert("로그아웃 되었습니다.");
