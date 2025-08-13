@@ -2,7 +2,6 @@
 
 /* Footer */
 .site-footer {
-	position: fixed; /* 고정 */
 	bottom: 0; /* 하단에 고정 */
 	left: 0;
 	width: 100%; /* 전체 너비 */
@@ -22,9 +21,4 @@
 
 .site-footer a:hover {
 	color: #333;
-}
-
-/* 페이지 내용이 푸터 위로 밀리지 않도록 여백 추가 */
-body {
-	padding-bottom: 50px; /* 푸터 높이 만큼 여백 추가 */
 }
