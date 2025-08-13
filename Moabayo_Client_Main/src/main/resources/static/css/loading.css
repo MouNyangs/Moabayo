@@ -1,46 +1,25 @@
-@charset "UTF-8";
-
 body {
-	text-align: center;
-	padding-top: 100px;
-	background-color: #fff8f0;
-	font-family: sans-serif;
+	background-color: #FFD54F;
+	margin: 0;
+}
+svg {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
-/* 로딩창 */
-#loading-screen {
-	position: fixed;
-	inset: 0;
-	background-color: #fff8dc;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	z-index: 9999;
-}
+/* 각 글자 stroke 애니메이션 */
+.draw-m { stroke-dasharray: 800; stroke-dashoffset: 800; animation: dash 2s linear forwards; animation-delay: 0s; }
+.draw-o { stroke-dasharray: 340; stroke-dashoffset: 340; animation: dash 2s linear forwards; animation-delay: 1.0s; }
+.draw-e { stroke-dasharray: 520; stroke-dashoffset: 520; animation: dash 2s linear forwards; animation-delay: 1.8s; }
+.draw-n { stroke-dasharray: 780; stroke-dashoffset: 780; animation: dash 2s linear forwards; animation-delay: 2.6s; }
+.draw-y { stroke-dasharray: 450; stroke-dashoffset: 450; animation: dash 2s linear forwards; animation-delay: 3.4s; }
+.draw-a { stroke-dasharray: 600; stroke-dashoffset: 600; animation: dash 2s linear forwards; animation-delay: 4.2s; }
+.draw-n2 { stroke-dasharray: 780; stroke-dashoffset: 780; animation: dash 2s linear forwards; animation-delay: 5.0s; }
+.draw-g { stroke-dasharray: 620; stroke-dashoffset: 620; animation: dash 2s linear forwards; animation-delay: 5.8s; }
+.draw-s { stroke-dasharray: 500; stroke-dashoffset: 500; animation: dash 2s linear forwards; animation-delay: 6.6s; }
 
-#loading-screen img {
-	margin-bottom: 16px;
-}
-
-/* 로딩 진행 바 */
-.progress-container {
-	width: 80%;
-	height: 16px;
-	background-color: #eee;
-	border-radius: 10px;
-	overflow: hidden;
-	margin-top: 10px;
-}
-
-.progress-bar {
-	height: 100%;
-	width: 0%;
-	background-color: #FFB300;
-	transition: width 0.2s ease;
-}
-
-#progress-text {
-	margin-top: 8px;
-	font-weight: bold;
+@keyframes dash {
+  to { stroke-dashoffset: 0; }
 }
