@@ -44,6 +44,17 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+// /js/mypage-core.js (하단 어디든)
+document.addEventListener('click', (e)=>{
+  const qa = e.target.closest('.qa');
+  if (!qa) return;
+  // 실시간 패널로 보내던 옛 로직을 쓰지 않게, 라우트 전용 데이터 속성만 쓴다면:
+  const route = qa.getAttribute('data-route'); // 예: bank/cards/security
+  if (route) {
+    e.preventDefault();
+    location.hash = `#/${route}`;
+  }
+});
 /* 
 주의!
 - 빠른 실행 → 실시간 전환 로직은 전부 /js/mypage-panels.js에서 처리합니다.

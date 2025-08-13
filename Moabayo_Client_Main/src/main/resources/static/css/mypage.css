@@ -438,6 +438,48 @@ html[data-theme="light"] #content nav .swith-lm .bxs-moon{ opacity: .5; }
 html[data-theme="light"] #content nav .swith-lm .bx-sun  { opacity: 1; }
 
 
+/* === Toggle switch (reusable) === */
+.swith-lm{
+  /* 사이즈 변수 */
+  --w: 52px; --h: 26px; --p: 3px; --ball: 20px;
+  --dx: calc(var(--w) - var(--ball) - (var(--p) * 2));
+  position: relative; display: inline-flex; align-items: center;
+  width: var(--w); height: var(--h); padding: var(--p);
+  border-radius: 999px; background: var(--grey); cursor: pointer;
+}
+.swith-lm .ball{
+  position: absolute; top: var(--p); left: var(--p);
+  width: var(--ball); height: var(--ball);
+  border-radius: 50%; background: var(--blue);
+  transition: transform .2s linear;
+}
+/* 다크일 때 공 이동 */
+html[data-theme="dark"] .swith-lm .ball{ transform: translateX(var(--dx)); }
+/* 기존 다크 테마 블록에 추가/수정 */
+html[data-theme="dark"]{
+  --ink: #e5e7eb;      /* ✅ 폼/본문 글자색 밝게 */
+  --sub: #a6adbb;      /* (선택) 보조 텍스트도 살짝 밝게 */
+  --line: #2a2133;     /* (선택) 경계선 톤 다운 */
+}
+
+.swith-lm i{
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 14px; pointer-events: none;
+}
+.swith-lm .bxs-moon{ left: 7px;  color: var(--yellow); }
+.swith-lm .bx-sun  { right: 7px; color: var(--orange); }
+
+/* 상태에 따른 아이콘 가시성(옵션) */
+html[data-theme="dark"]  .swith-lm .bxs-moon{ opacity: 1; }
+html[data-theme="dark"]  .swith-lm .bx-sun  { opacity: .5; }
+html[data-theme="light"] .swith-lm .bxs-moon{ opacity: .5; }
+html[data-theme="light"] .swith-lm .bx-sun  { opacity: 1; }
+
+/* 크기 변형 */
+.swith-lm.sm{ --w: 44px; --h: 22px; --p: 2px; --ball: 18px; }
+.swith-lm.xs{ --w: 36px; --h: 20px; --p: 2px; --ball: 16px; }
+
+
 /* MAIN */
 #content main {
 	width: 100%;

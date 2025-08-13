@@ -151,14 +151,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* ====== 섹션 네비 버튼: 해당 섹션으로 스크롤 (선택) ====== */
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.section-nav button');
-  if (!btn) return;
-  const sel = btn.getAttribute('data-section');
-  const el = sel && document.querySelector(sel);
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-});
+
 
 /* ====== 폼/버튼 목업 ====== */
 document.addEventListener('submit', (e) => {

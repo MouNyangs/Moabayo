@@ -11,7 +11,9 @@
   <!-- Layout CSS -->
 <link rel="stylesheet" href="/css/mypage.css">
 <link rel="stylesheet" href="/css/mypage-realtime.css?v=20250813">
+<link rel="stylesheet" href="/css/mypage-sections.css?v=20250813"><!-- ⬅️ 추가 -->
 <script src="/js/theme.js?v=1"></script>
+<script type="module" src="/js/mypagesections/index.js?v=20250813"></script>
 
 </head>
 <body>
@@ -23,7 +25,7 @@
 
     <ul class="side-menu top">
       <li class="active"><a href="#/mypage"><i class='bx bxs-dashboard bx-sm'></i><span class="text">Overview</span></a></li>
-      <li><a href="#/accounts"><i class='bx bxs-bank bx-sm'></i><span class="text">계좌</span></a></li>
+<li><a href="#/bank"><i class='bx bxs-bank bx-sm'></i><span class="text">모으냥은행</span></a></li>
       <li><a href="#/cards"><i class='bx bxs-credit-card bx-sm'></i><span class="text">카드</span></a></li>
       <li><a href="#/security"><i class='bx bxs-shield bx-sm'></i><span class="text">보안</span></a></li>
       <li><a href="#/settings"><i class='bx bxs-cog bx-sm'></i><span class="text">설정</span></a></li>
@@ -107,15 +109,6 @@
         </li>
       </ul>
 
-  <!-- ✅ 하단 3컬럼: 빠른실행 | 실시간 패널 | 알림(축소) -->
-  
-  <!-- (NEW) 섹션 네비게이션: 원하는 위치에 추가 (보통 KPI 아래) -->
-<nav class="section-nav" aria-label="섹션 이동">
-  <button data-section="#qaSection"><i class='bx bxs-bolt'></i> 빠른 실행</button>
-  <button data-section="#realtimeSection"><i class='bx bxs-time'></i> 실시간</button>
-  <button data-section="#notifSection"><i class='bx bxs-bell'></i> 알림</button>
-</nav>
-
   <div class="table-data layout-3col">
     <!-- 1) 빠른 실행 (좌측 그대로) -->
     <div class="order" id="qaSection">
@@ -149,6 +142,8 @@
         </button>
       </div>
     </div>
+
+
 
     <!-- 2) 실시간 패널 (가운데, 신규) -->
 <section class="realtime" id="realtimeSection">
@@ -257,6 +252,115 @@
       </div>
     </div>
   </div>
+  
+  <!-- 섹션 스택 신설 합니당 -->
+
+<!-- ==== SECTION STACK (Bank / Cards / Security) ==== -->
+<section class="section-stack" id="mainSections">
+  <!-- Bank -->
+  <div class="section-view" data-section="bank">
+    <div class="section-head">
+      <h3>모으냥은행</h3><span class="sub">적금 · 투자 · 내 계좌</span>
+    </div>
+    <ul class="mini-kpis">
+      <li><div class="icon"><i class="bx bxs-piggy-bank"></i></div><div class="meta"><div class="label">적금 합계</div><div class="val" id="bk-sum-savings">₩ 0</div></div></li>
+      <li><div class="icon"><i class="bx bxs-trending-up"></i></div><div class="meta"><div class="label">투자 평가액</div><div class="val" id="bk-sum-invest">₩ 0</div></div></li>
+      <li><div class="icon"><i class="bx bxs-bank"></i></div><div class="meta"><div class="label">계좌 수</div><div class="val" id="bk-acc-count">0</div></div></li>
+    </ul>
+
+    <div class="section-grid cols-2">
+      <div class="panel">
+        <div class="panel-title">적금</div>
+        <div class="table-wrap">
+          <table class="table" id="tbl-savings">
+            <thead><tr><th>상품명</th><th class="right">금리</th><th class="right">잔액</th><th>만기</th><th>상태</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">투자</div>
+        <div class="table-wrap">
+          <table class="table" id="tbl-invest">
+            <thead><tr><th>종목</th><th class="right">평가액</th><th class="right">손익</th><th class="right">수익률</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">내 계좌</div>
+        <div class="table-wrap">
+          <table class="table" id="tbl-bank-accounts">
+            <thead><tr><th>별칭</th><th>계좌번호</th><th class="right">잔액</th><th>상태</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="section-view" data-section="cards">
+    <div class="section-head">
+      <h3>카드</h3><span class="sub">내 카드 · 추천 카드 · 혜택</span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">이번달 혜택 요약</div>
+      <div class="mini-kpis">
+        <li><div class="icon"><i class="bx bxs-coin-stack"></i></div><div class="meta"><div class="label">사용액</div><div class="val" id="benefit-spend">₩ 0</div></div></li>
+        <li><div class="icon"><i class="bx bxs-gift"></i></div><div class="meta"><div class="label">예상 혜택</div><div class="val" id="benefit-est">₩ 0</div></div></li>
+      </div>
+      <div class="progress"><div class="bar" id="benefit-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">나의 카드</div>
+      <div id="my-card-grid" class="grid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">추천 카드</div>
+      <div id="reco-card-grid" class="grid"></div>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="section-view" data-section="security">
+    <div class="section-head">
+      <h3>보안</h3><span class="sub">최근 로그인 · 등록 기기</span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">최근 로그인</div>
+      <div class="table-wrap">
+        <table class="table" id="tbl-logins">
+          <thead><tr><th>시간</th><th>IP</th><th>환경</th><th>상태</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">등록 기기</div>
+      <div class="table-wrap">
+        <table class="table" id="tbl-devices">
+          <thead><tr><th>기기명</th><th>브라우저/앱</th><th>등록일</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings -->
+<div class="section-view" data-section="settings">
+</div>
+  
+  
+</section>
+  
 </main>
 <!-- /MAIN -->
   </section>
