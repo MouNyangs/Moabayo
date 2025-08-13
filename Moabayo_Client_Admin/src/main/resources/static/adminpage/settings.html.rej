@@ -59,7 +59,6 @@ diff a/Moabayo_Client_Admin/src/main/resources/static/adminpage/settings.html b/
 +			</ul>
 +		</div>
  
-+<<<<<<< Updated upstream
      <div class="card">
        <h3>알림 채널</h3>
        <div class="toolbar">
