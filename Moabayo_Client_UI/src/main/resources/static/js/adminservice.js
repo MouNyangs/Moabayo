@@ -17,8 +17,8 @@ function goAdmin() {
 		.then(res => {
 			if (res.ok) {
 				// ✅ 인증 성공 시 브라우저 이동 (진짜 이동)
-				const cardUrl = `http://localhost:8815/admin/cusumer?token=${encodeURIComponent(token)}`;
-				window.location.href = cardUrl;
+					
+		       window.location.href = "http://localhost:8815/admin/cusumer";
 			} else {
 				throw new Error("인증 실패");
 			}
