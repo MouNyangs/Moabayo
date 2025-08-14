@@ -1,57 +1,180 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-<meta charset="UTF-8">
-<title>모으냥즈</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>모으냥즈 — 메인페이지 목업</title>
 <link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
-<!-- CSS -->
-<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/mainpage.css" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+	rel="stylesheet" />
+	
+	
+<link rel="stylesheet" th:href="@{/css/mainpage2.css}" />
 <link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/token.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<!-- ✅ 외부 JS defer로 로딩 -->
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
 <script defer src="http://localhost:8810/js/common.js"></script>
 <script defer src="http://localhost:8810/js/adminservice.js"></script>
 <script defer src="http://localhost:8810/js/bankservice.js"></script>
 <script defer src="http://localhost:8810/js/cardservice.js"></script>
 
-</head>
-<body>
-	<!-- ✅ Header -->
-	<div id="header"></div>
 
-	<!-- ✅ 메인 섹션 -->
+
+</head>
+<body class="site-layout">
+
+	<!-- ✅ 헤더 불러오기 -->
+	<div th:replace="fragments/header :: site-header"></div>
+
+
+	<!-- ===== Hero ===== -->
 	<section class="hero">
-		<img src="http://localhost:8810/images/cat.png" alt="동전 든 고양이" class="hero-img" />
-		<h1>오늘도 귀엽게 모으냥~</h1>
-		<button class="cta-btn" onclick="goToCardService()">계좌 & 카드 등록</button>
-		<a href="recommendcards">
-			<button class="cta-btn">저축 시작하기</button>
-		</a>
-	</section>
-	<section class="product-section">
-		<h2>지금 인기 있는 저축 상품</h2>
-		<div class="product-cards">
-			<div class="product-card">
-				<h3>단기 저축 플랜</h3>
-				<p>6개월 · 연 33.2%</p>
+		<div>
+			<h1>
+				<span style="color: var(--brand)">모으냥즈</span>와 함께 하는 즐거운 적금 라이프
+			</h1>
+			<p>고양이 캐릭터와 함께 목표를 세우고, 소비 습관을 분석해 똑똑하게 모아봐요.</p>
+			<div class="hero-cta">
+				<button class="btn primary">지금 시작하기</button>
+				<button class="btn">가이드 보기</button>
 			</div>
-			<div class="product-card">
-				<h3>고양이 장학적금</h3>
-				<p>1년 · 연 14.0%</p>
-			</div>
-			<div class="product-card">
-				<h3>자동 저금통</h3>
-				<p>자투리 자동저장</p>
+		</div>
+		<div class="hero-card">
+			<div class="hero-grid">
+				<div class="mcard">
+					<h4>오늘의 목표</h4>
+					<strong>₩ 20,000 적립</strong> <span class="sub">냥초(초보) 미션</span>
+				</div>
+				<div class="mcard">
+					<h4>저축 진행률</h4>
+					<strong>68%</strong> <span class="sub">Saving Orbit</span>
+				</div>
+				<div class="mcard">
+					<h4>리워드</h4>
+					<strong>배지 2개</strong> <span class="sub">냥코인 +120</span>
+				</div>
+				<div class="mcard">
+					<h4>소비 인사이트</h4>
+					<strong>카페 지출 ↑</strong> <span class="sub">주 3회 → 1회</span>
+				</div>
+				<div class="mcard">
+					<h4>추천 플랜</h4>
+					<strong>냥청년 적금</strong> <span class="sub">청년 전용 금리</span>
+				</div>
+				<div class="mcard">
+					<h4>알림</h4>
+					<strong>3건</strong> <span class="sub">오늘 할 일 확인</span>
+				</div>
 			</div>
 		</div>
 	</section>
-	<!-- ✅ Footer -->
-	<div id="footer"></div>
+
+	<!-- ===== Quick Actions ===== -->
+	<section class="section" id="shop">
+		<h2>빠른 실행</h2>
+		<div class="quick-grid">
+			<div class="qcard" th:onclick="|location.href='@{/plans}'|">
+				<div class="qicon">
+					<i class='bx bx-target-lock'></i>
+				</div>
+				<div>
+					<b>목표/플랜 만들기</b><br />
+					<span>저축/지출 캡 설정</span>
+				</div>
+			</div>
+			<div class="qcard" th:onclick="|location.href='@{/store}'|">
+				<div class="qicon">
+					<i class='bx bx-store-alt'></i>
+				</div>
+				<div>
+					<b>스토어</b><br />
+					<span>굿즈 & 배지</span>
+				</div>
+			</div>
+			<div class="qcard" th:onclick="|location.href='@{/present}'|">
+				<div class="qicon">
+					<i class='bx bx-gift'></i>
+				</div>
+				<div>
+					<b>선물함</b><br />
+					<span>받은 보상 확인</span>
+				</div>
+			</div>
+			<div class="qcard" th:onclick="|location.href='@{/mypage}'|">
+				<div class="qicon">
+					<i class='bx bx-user-circle'></i>
+				</div>
+				<div>
+					<b>마이페이지</b><br />
+					<span>프로필/설정</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== Featured ===== -->
+	<section class="section" id="features">
+		<h2>주요 컨텐츠</h2>
+		<div class="feature-grid">
+			<article class="fcard">
+				<div class="fimg">
+					<span class="cat-placeholder">🐱</span>
+				</div>
+				<div class="fbody">
+					<h3>냥청년 적금</h3>
+					<p>청년 우대 금리와 출석 미션으로 금리 부스트.</p>
+					<div style="margin-top: 6px; display: flex; gap: 8px">
+						<button class="btn">상세보기</button>
+						<button class="btn primary">가입하기</button>
+					</div>
+				</div>
+			</article>
+			<article class="fcard">
+				<div class="fimg">
+					<span class="cat-placeholder">😼</span>
+				</div>
+				<div class="fbody">
+					<h3>소비패턴 리포트</h3>
+					<p>카테고리별 지출 트렌드와 절약 팁 제공.</p>
+					<div style="margin-top: 6px; display: flex; gap: 8px">
+						<button class="btn">리포트 보기</button>
+						<button class="btn primary">캘린더</button>
+					</div>
+				</div>
+			</article>
+			<article class="fcard">
+				<div class="fimg">
+					<span class="cat-placeholder">🐾</span>
+				</div>
+				<div class="fbody">
+					<h3>미션 & 배지</h3>
+					<p>연속 적립·무지출 데이 등 재미있는 도전 과제.</p>
+					<div style="margin-top: 6px; display: flex; gap: 8px">
+						<button class="btn">도전하기</button>
+						<button class="btn primary">배지함</button>
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+
+	<!-- ===== CTA ===== -->
+	<section class="cta">
+		<div class="cta-inner">
+			<div>
+				<strong style="font-size: 18px">지금 가입하면 스타트 보너스 1,000 냥코인</strong>
+				<div style="opacity: .9">미션 첫 주차 완료 시 추가 보상</div>
+			</div>
+			<button class="btn"
+				style="background: var(--brand-ink); color: var(--brand); border: none;">회원가입</button>
+		</div>
+	</section>
+
+	<!-- ✅ 푸터 불러오기 -->
+	<div th:replace="fragments/footer :: site-footer"></div>
+
+
+	<!-- Scripts -->
+	<script th:src="@{/js/theme.js}"></script>
+	<script th:src="@{/js/mainpage2.js}"></script>
 </body>
 </html>
