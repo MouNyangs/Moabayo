@@ -9,10 +9,11 @@
 	rel="stylesheet" />
 	
 	
-<link rel="stylesheet" th:href="@{/css/mainpage2.css}" />
+<link rel="stylesheet" href="http://localhost:8810/css/mainpage2.css" />
+<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
 <link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
-<script defer src="http://localhost:8810/js/common.js"></script>
+<script defer src="http://localhost:8810/js/common.js"></script> <!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
 <script defer src="http://localhost:8810/js/adminservice.js"></script>
 <script defer src="http://localhost:8810/js/bankservice.js"></script>
 <script defer src="http://localhost:8810/js/cardservice.js"></script>
@@ -22,8 +23,8 @@
 </head>
 <body class="site-layout">
 
-	<!-- ✅ 헤더 불러오기 -->
-	<div th:replace="fragments/header :: site-header"></div>
+<!-- ✅ Header -->
+	<div id="header"></div>
 
 
 	<!-- ===== Hero ===== -->
@@ -169,12 +170,12 @@
 		</div>
 	</section>
 
-	<!-- ✅ 푸터 불러오기 -->
-	<div th:replace="fragments/footer :: site-footer"></div>
+	<!-- ✅ Footer -->
+	<div id="footer"></div>
 
 
 	<!-- Scripts -->
 	<script th:src="@{/js/theme.js}"></script>
-	<script th:src="@{/js/mainpage2.js}"></script>
+	<script src="http://localhost:8810/js/mainpage2.js"></script>
 </body>
 </html>
