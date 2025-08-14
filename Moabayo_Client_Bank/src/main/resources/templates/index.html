@@ -66,7 +66,7 @@
               </div>
               <span class="badge nyang-badge">보유 현황</span>
             </div>
-            <div class="display-6 mt-3" th:if="${NyangCoin != null}" th:text="${#numbers.formatInteger(NyangCoin.money, 3, 'COMMA')} + ' 원'">0 원</div>
+            <div class="display-6 mt-3" th:if="${NyangCoin != null}" th:text="${#numbers.formatInteger(NyangCoin.balance, 3, 'COMMA')} + ' 원'">0 원</div>
             <div class="text-muted" th:if="${NyangCoin != null}" th:text="'코인 ID: ' + ${NyangCoin.nyangCoinId}">코인 ID: -</div>
             <div class="text-muted" th:if="${NyangCoin == null}">보유한 냥코인이 없습니다.</div>
             <div class="mt-3 d-flex gap-2">
@@ -115,19 +115,17 @@
                 <th scope="col">구분</th>
                 <th scope="col" class="text-end">금액(원)</th>
                 <th scope="col" class="text-end">잔액(원)</th>
-                <th scope="col">메모</th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="h : ${NyangCoinHistory}">
-                <td th:text="${#temporals.format(h.createdAt, 'yyyy-MM-dd HH:mm')}">2025-08-14 14:20</td>
+                <td th:text="${h.createdAt != null ? #dates.format(h.createdAt, 'yyyy-MM-dd HH:mm') : ''}">-</td>
                 <td>
                   <span class="badge rounded-pill" th:classappend=" ${h.type}=='CHARGE' ? 'text-bg-success' : (${h.type}=='PAY' ? 'text-bg-danger' : 'text-bg-secondary') "
                         th:text="${h.type}">TYPE</span>
                 </td>
                 <td class="text-end" th:text="${#numbers.formatInteger(h.amount, 3, 'COMMA')}">10,000</td>
                 <td class="text-end" th:text="${#numbers.formatInteger(h.balanceAfter, 3, 'COMMA')}">50,000</td>
-                <td th:text="${h.memo}">-</td>
               </tr>
             </tbody>
           </table>

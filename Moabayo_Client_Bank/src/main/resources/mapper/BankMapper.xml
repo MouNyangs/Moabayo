@@ -25,41 +25,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <!-- 유저의 냥코인 계정 -->
-    <select id="findNyangCoinByUserId" parameterType="long" resultType="com.sboot.moabayo.vo.NyangCoinVO">
-        SELECT
-            nyang_id     AS nyangId,
-            create_date  AS createDate,
-            money,
-            user_id      AS userId
-        FROM nyang_coin
-        WHERE user_id = #{userId}
-    </select>
+	<select id="findNyangCoinByUserId" resultType="com.sboot.moabayo.vo.NyangCoinVO">
+	  SELECT
+	    nyang_id    AS nyangCoinId,  -- ★ VO와 동일
+	    user_id     AS userId,
+	    money       AS balance,
+	    create_date AS createdAt
+	  FROM nyang_coin
+	  WHERE user_id = #{userId}
+	</select>
 
     <!-- 히스토리 카운트 -->
-    <select id="countHistoryByNyangId" parameterType="long" resultType="int">
-        SELECT COUNT(*) FROM coin_history
-        WHERE nyang_id = #{nyangId}
-    </select>
+	<select id="countHistoryByNyangId" resultType="int">
+	  SELECT COUNT(*) FROM coin_history WHERE nyang_id = #{nyangId}
+	</select>
 
 	<!-- CoinMapper.xml -->
-	<select id="findHistoryByNyangIdPaged" resultType="com.sboot.moabayo.vo.NyangCoinHistoryVO">
-	  SELECT *
-	  FROM (
-	    SELECT t.*, ROWNUM AS rnum
-	    FROM (
-	      SELECT
-	        history_id   AS historyId,
-	        create_date  AS createDate,
-	        total_amt    AS totalAmt,
-	        trans_amt    AS transAmt,
-	        trans_type   AS transType,
-	        nyang_id     AS nyangId
-	      FROM coin_history
-	      WHERE nyang_id = #{nyangId}
-	      ORDER BY create_date DESC, history_id DESC
-	    ) t
-	    WHERE ROWNUM &lt;= #{endRow}
-	  )
-	  WHERE rnum &gt;= #{startRow}
-	</select>
+<select id="findHistoryByNyangIdPaged" resultType="com.sboot.moabayo.vo.NyangCoinHistoryVO">
+  SELECT *
+  FROM (
+    SELECT t.*, ROWNUM AS rnum
+    FROM (
+      SELECT
+        history_id  AS historyId,
+        create_date AS createdAt,
+        trans_amt   AS amount,
+        total_amt   AS balanceAfter,
+        trans_type  AS type,
+        nyang_id    AS nyangCoinId
+      FROM coin_history
+      WHERE nyang_id = #{nyangId}
+      ORDER BY create_date DESC, history_id DESC
+    ) t
+    WHERE ROWNUM &lt;= #{endRow}
+  )
+  WHERE rnum &gt;= #{startRow}
+</select>
 </mapper>
