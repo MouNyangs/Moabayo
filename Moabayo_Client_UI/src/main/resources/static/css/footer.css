@@ -1,24 +1,65 @@
 @charset "UTF-8";
 
-/* Footer */
-.site-footer {
-	bottom: 0; /* 하단에 고정 */
-	left: 0;
-	width: 100%; /* 전체 너비 */
-	background-color: #FFF3C0;
-	padding: 10px;
+footer {
+	background: #fafafa;
+	border-top: 1px solid #eee;
+	padding: 40px 0;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size: 14px;
+	color: #555;
+}
+
+.footer-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	text-align: center;
-	font-size: 0.9rem;
-	color: #666;
-	z-index: 1000; /* 다른 요소 위에 표시 */
+	gap: 10px;
 }
 
-.site-footer a {
-	color: #666;
+.footer-inner h4 {
+	font-size: 20px;
+	font-weight: bold;
+	color: #6a4de4; /* 포인트 보라색 */
+	margin: 0;
+}
+
+.footer-inner .desc {
+	color: #888;
+	margin-bottom: 8px;
+}
+
+.footer-inner p {
+	margin: 3px 0;
+}
+
+.footer-links {
+	display: inline-flex; /* 한 줄로 붙임 */
+	align-items: center;
+	gap: 6px; /* | 양옆 간격 */
+	white-space: nowrap;
+}
+
+.footer-links a {
+	color: #6a4de4;
 	text-decoration: none;
-	margin: 0 5px;
+	margin: 6px;
+	transition: color 0.2s ease;
 }
 
-.site-footer a:hover {
-	color: #333;
+.footer-links a:hover {
+	color: #ff7f50;
+}
+
+.footer-links span {
+	color: #ccc; /* | 색상 */
+}
+
+.cat-icon {
+	width: 28px;
+	height: 28px;
+	margin-bottom: 8px;
 }
