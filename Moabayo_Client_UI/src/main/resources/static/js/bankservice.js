@@ -3,7 +3,7 @@ function goToBankService() {
 
 	if (!token) {
 		alert("로그인이 필요합니다.");
-		window.location.href = "loginpage";
+		window.location.href = "http://localhost:8812/loginpage";
 		return;
 	}
 
@@ -24,14 +24,14 @@ function goToBankService() {
 				throw new Error("인증 실패");
 			}
 		})
-/*		.then(html => {
-			document.open();
-			document.write(html);
-			document.close();
-		})*/
+		/*		.then(html => {
+					document.open();
+					document.write(html);
+					document.close();
+				})*/
 		.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
-			window.location.href = "loginpage";
+			window.location.href = "http://localhost:8812/loginpage";
 		});
 }

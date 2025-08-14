@@ -52,7 +52,7 @@ window.addEventListener("DOMContentLoaded", () => {
             <span class="welcome-message">${userName} 님</span>
             ${createRotatingMenu([
 						{ icon: "fa-sign-out-alt", label: "로그아웃", href: "#", id: "logoutBtn" },
-						{ icon: "fa-user-circle", label: "마이페이지", href: "mypage" }
+						{ icon: "fa-user-circle", label: "마이페이지", href: "http://localhost:8812/mypage" }
 					])}
           `;
 
@@ -65,8 +65,8 @@ window.addEventListener("DOMContentLoaded", () => {
 					}
 				} else {
 					authSection.innerHTML = createRotatingMenu([
-						{ icon: "fa-user-plus", label: "회원가입", href: "registerpage" },
-						{ icon: "fa-sign-in-alt", label: "로그인", href: "loginpage" }
+						{ icon: "fa-user-plus", label: "회원가입", href: "http://localhost:8812/registerpage" },
+						{ icon: "fa-sign-in-alt", label: "로그인", href: "http://localhost:8812/loginpage" }
 					]);
 				}
 			}

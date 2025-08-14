@@ -4,7 +4,7 @@ function goToCardService() {
 
 	if (!token) {
 		alert("로그인이 필요합니다.");
-		window.location.href = "loginpage";
+		window.location.href = "http://localhost:8812/loginpage";
 		return;
 	}
 
@@ -28,6 +28,6 @@ function goToCardService() {
 		.catch(err => {
 			console.error("❌ 인증 에러:", err);
 			alert("인증되지 않았습니다. 다시 로그인해주세요.");
-			window.location.href = "loginpage";
+			window.location.href = "http://localhost:8812/loginpage";
 		});
 };
