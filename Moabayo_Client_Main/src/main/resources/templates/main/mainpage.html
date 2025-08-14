@@ -5,15 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>모으냥즈 — 메인페이지 목업</title>
 <link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-	rel="stylesheet" />
-	
-	
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="http://localhost:8810/css/mainpage2.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
 <link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
-<script defer src="http://localhost:8810/js/common.js"></script> <!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+<script defer src="http://localhost:8810/js/common.js"></script>
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
 <script defer src="http://localhost:8810/js/adminservice.js"></script>
 <script defer src="http://localhost:8810/js/bankservice.js"></script>
 <script defer src="http://localhost:8810/js/cardservice.js"></script>
@@ -23,7 +20,7 @@
 </head>
 <body class="site-layout">
 
-<!-- ✅ Header -->
+	<!-- ✅ Header -->
 	<div id="header"></div>
 
 
@@ -78,8 +75,7 @@
 					<i class='bx bx-target-lock'></i>
 				</div>
 				<div>
-					<b>목표/플랜 만들기</b><br />
-					<span>저축/지출 캡 설정</span>
+					<b>목표/플랜 만들기</b><br /> <span>저축/지출 캡 설정</span>
 				</div>
 			</div>
 			<div class="qcard" th:onclick="|location.href='@{/store}'|">
@@ -87,8 +83,7 @@
 					<i class='bx bx-store-alt'></i>
 				</div>
 				<div>
-					<b>스토어</b><br />
-					<span>굿즈 & 배지</span>
+					<b>스토어</b><br /> <span>굿즈 & 배지</span>
 				</div>
 			</div>
 			<div class="qcard" th:onclick="|location.href='@{/present}'|">
@@ -96,8 +91,7 @@
 					<i class='bx bx-gift'></i>
 				</div>
 				<div>
-					<b>선물함</b><br />
-					<span>받은 보상 확인</span>
+					<b>선물함</b><br /> <span>받은 보상 확인</span>
 				</div>
 			</div>
 			<div class="qcard" th:onclick="|location.href='@{/mypage}'|">
@@ -105,8 +99,7 @@
 					<i class='bx bx-user-circle'></i>
 				</div>
 				<div>
-					<b>마이페이지</b><br />
-					<span>프로필/설정</span>
+					<b>마이페이지</b><br /> <span>프로필/설정</span>
 				</div>
 			</div>
 		</div>
@@ -165,8 +158,7 @@
 				<strong style="font-size: 18px">지금 가입하면 스타트 보너스 1,000 냥코인</strong>
 				<div style="opacity: .9">미션 첫 주차 완료 시 추가 보상</div>
 			</div>
-			<button class="btn"
-				style="background: var(--brand-ink); color: var(--brand); border: none;">회원가입</button>
+			<button class="btn" style="background: var(--brand-ink); color: var(--brand); border: none;">회원가입</button>
 		</div>
 	</section>
 

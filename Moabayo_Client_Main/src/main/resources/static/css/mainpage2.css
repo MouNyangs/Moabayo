@@ -1,89 +1,839 @@
 @charset "UTF-8";
 
+:root {
+	/* Light */
+	--bg: #ffffff;
+	--ink: #111827;
+	--sub: #6b7280;
+	--line: #e5e7eb;
+	--brand: #7c3aed; /* 보라(라일락) */
+	--brand-ink: #f5f3ff;
+	--card: #ffffff;
+	--muted: #f8fafc;
+	--shadow: 0 10px 20px rgba(17, 24, 39, .08);
+	--accent: #f59e0b; /* 포인트(고양이 노란 방울) */
+}
 
-    :root{
-      /* Light */
-      --bg:#ffffff; --ink:#111827; --sub:#6b7280; --line:#e5e7eb; 
-      --brand:#7c3aed; /* 보라(라일락) */
-      --brand-ink:#f5f3ff; --card:#ffffff; --muted:#f8fafc; --shadow:0 10px 20px rgba(17,24,39,.08);
-      --accent:#f59e0b; /* 포인트(고양이 노란 방울) */
-    }
-    [data-theme="dark"]{
-      --bg:#0b0f14; --ink:#e5e7eb; --sub:#a0a9b6; --line:#1f2937; 
-      --brand:#a78bfa; --brand-ink:#0b0f14; --card:#0f151c; --muted:#0b1016; --shadow:0 10px 24px rgba(0,0,0,.45);
-      --accent:#fbbf24;
-    }
-    html,body{height:100%}
-    body{margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif; background:var(--bg); color:var(--ink); display:flex; flex-direction:column; min-height:100vh}
+[data-theme="dark"] {
+	--bg: #0b0f14;
+	--ink: #e5e7eb;
+	--sub: #a0a9b6;
+	--line: #1f2937;
+	--brand: #a78bfa;
+	--brand-ink: #0b0f14;
+	--card: #0f151c;
+	--muted: #0b1016;
+	--shadow: 0 10px 24px rgba(0, 0, 0, .45);
+	--accent: #fbbf24;
+}
 
-    /* ===== Header ===== */
-    .site-header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(12px); background:color-mix(in oklab, var(--bg) 86%, transparent); border-bottom:1px solid var(--line)}
-    .header-inner{max-width:1200px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; gap:16px}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px}
-    .brand-badge{width:36px; height:36px; border-radius:12px; background:conic-gradient(from 180deg at 50% 50%, var(--brand), color-mix(in oklab, var(--brand) 65%, #00d4ff)); display:grid; place-items:center; color:var(--brand-ink); box-shadow:var(--shadow)}
-    .brand-txt{display:flex; flex-direction:column; line-height:1}
-    .brand-txt b{font-size:18px}
-    .brand-txt span{font-size:11px; color:var(--sub)}
+html, body {
+	height: 100%
+}
 
-    .nav{margin-left:auto; display:flex; align-items:center; gap:8px}
-    .nav a{padding:8px 12px; color:var(--sub); border-radius:10px; text-decoration:none; font-weight:600}
-    .nav a:hover{background:var(--muted); color:var(--ink)}
-    .toggle{margin-left:8px; display:inline-flex; align-items:center; gap:8px}
-    .toggle-btn{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink); cursor:pointer; box-shadow:var(--shadow)}
+body {
+	margin: 0;
+	font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+		"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+	background: var(--bg);
+	color: var(--ink);
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh
+}
 
-    /* ===== Hero ===== */
-    .hero{max-width:1200px; margin:0 auto; padding:64px 20px 28px; display:grid; grid-template-columns:1.2fr 1fr; gap:24px; align-items:center}
-    .hero h1{font-size:clamp(28px,3.6vw,48px); line-height:1.05; margin:0 0 10px}
-    .hero p{margin:0 0 20px; color:var(--sub)}
-    .hero-cta{display:flex; gap:12px}
-    .btn{appearance:none; border:1px solid var(--line); padding:12px 16px; border-radius:12px; background:var(--card); color:var(--ink); font-weight:700; cursor:pointer}
-    .btn.primary{border:none; background:linear-gradient(135deg, var(--brand), color-mix(in oklab, var(--brand) 60%, #00d4ff)); color:var(--brand-ink)}
+/* ===== Header ===== */
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	backdrop-filter: saturate(180%) blur(12px);
+	background: color-mix(in oklab, var(--bg) 86%, transparent);
+	border-bottom: 1px solid var(--line)
+}
 
-    .hero-card{position:relative; background:radial-gradient(1200px 500px at 10% -20%, color-mix(in oklab, var(--brand) 16%, transparent), transparent 45%), var(--card); border:1px solid var(--line); border-radius:20px; padding:20px; min-height:260px; box-shadow:var(--shadow); overflow:hidden}
-    .hero-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    .mcard{border:1px solid var(--line); background:var(--bg); border-radius:14px; padding:16px; min-height:90px; display:flex; flex-direction:column; gap:6px}
-    .mcard h4{margin:0; font-size:14px; color:var(--sub); font-weight:700}
-    .mcard strong{font-size:20px}
+.header-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 14px 20px;
+	display: flex;
+	align-items: center;
+	gap: 16px
+}
 
-    /* ===== Quick Actions ===== */
-    .section{max-width:1200px; margin:0 auto; padding:24px 20px}
-    .section h2{margin:8px 0 16px; font-size:18px; color:var(--sub); font-weight:800; letter-spacing:.2px}
-    .quick-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
-    .qcard{display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--card); box-shadow:var(--shadow); cursor:pointer}
-    .qicon{width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:var(--muted); position:relative}
-    .qicon::after{content:""; position:absolute; bottom:-3px; right:-3px; width:10px; height:10px; border-radius:50%; background:var(--accent)}
-    .qcard b{font-size:15px}
-    .qcard span{color:var(--sub); font-size:13px}
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 800;
+	letter-spacing: .3px
+}
 
-    /* ===== Featured ===== */
-    .feature-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-    .fcard{border:1px solid var(--line); border-radius:16px; background:var(--card); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column}
-    .fimg{aspect-ratio:16/9; display:grid; place-items:center; background:linear-gradient(135deg, var(--muted), color-mix(in oklab, var(--muted) 60%, #e9d5ff))}
-    .cat-placeholder{font-size:40px}
-    .fbody{padding:16px; display:flex; flex-direction:column; gap:8px}
-    .fbody h3{margin:0; font-size:18px}
-    .fbody p{margin:0; color:var(--sub)}
+.brand-badge {
+	width: 36px;
+	height: 36px;
+	border-radius: 12px;
+	background: conic-gradient(from 180deg at 50% 50%, var(--brand),
+		color-mix(in oklab, var(--brand) 65%, #00d4ff));
+	display: grid;
+	place-items: center;
+	color: var(--brand-ink);
+	box-shadow: var(--shadow)
+}
 
-    /* ===== CTA Band ===== */
-    .cta{margin:24px 0 40px; background:linear-gradient(90deg, color-mix(in oklab, var(--brand) 40%, #00d4ff), var(--brand)); color:var(--brand-ink)}
-    .cta-inner{max-width:1200px; margin:0 auto; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px}
+.brand-txt {
+	display: flex;
+	flex-direction: column;
+	line-height: 1
+}
 
-    /* ===== Footer ===== */
-    footer{margin-top:auto; border-top:1px solid var(--line); background:var(--muted); color:var(--sub)}
-    .footer-inner{max-width:1200px; margin:0 auto; padding:28px 20px; display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:16px}
-    .f-col h4{margin:0 0 10px; color:var(--ink)}
-    .f-col a{color:var(--sub); text-decoration:none; display:block; padding:6px 0}
-    .f-col a:hover{color:var(--ink)}
+.brand-txt b {
+	font-size: 18px
+}
 
-    /* ===== Responsive ===== */
-    @media (max-width:1024px){
-      .hero{grid-template-columns:1fr}
-      .feature-grid{grid-template-columns:repeat(2,1fr)}
-      .quick-grid{grid-template-columns:repeat(2,1fr)}
-      .footer-inner{grid-template-columns:1fr 1fr}
-    }
-    @media (max-width:640px){
-      .feature-grid{grid-template-columns:1fr}
-      .hero-cta{flex-direction:column; align-items:flex-start}
-      .footer-inner{grid-template-columns:1fr}
-    }
+.brand-txt span {
+	font-size: 11px;
+	color: var(--sub)
+}
+
+.nav {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: 8px
+}
+
+.nav a {
+	padding: 8px 12px;
+	color: var(--sub);
+	border-radius: 10px;
+	text-decoration: none;
+	font-weight: 600
+}
+
+.nav a:hover {
+	background: var(--muted);
+	color: var(--ink)
+}
+
+.toggle {
+	margin-left: 8px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px
+}
+
+.toggle-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--card);
+	color: var(--ink);
+	cursor: pointer;
+	box-shadow: var(--shadow)
+}
+
+/* 오른쪽 섹션 - 닉네임 + 토큰 박스 + 메뉴 */
+.right-section {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start; /* 왼쪽 정렬 */
+	position: absolute;
+	right: 20px; /* 오른쪽 여백 조정 (기존 80px → 20px) */
+	top: 50%;
+	transform: translateY(-50%);
+	gap: 12px;
+	z-index: 200; /* 닉네임과 UI 요소 항상 위로 */
+}
+
+/* 닉네임은 항상 메뉴보다 위에 보이도록 */
+.user-nickname {
+	position: relative;
+	z-index: 201;
+}
+
+/* 남은 시간 박스 */
+.token-box {
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+	padding: 6px 10px;
+	border: 1px solid #eee;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background-color: #cce5ff;
+	margin-left: 10px;
+}
+
+#remainTime {
+	font-weight: 700;
+}
+
+/* 햄버거 메뉴 컨테이너 */
+.menu {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 60px;
+	height: 60px;
+	margin-left: 8px; /* 닉네임과 간격 */
+	z-index: 100; /* 닉네임보다 아래 */
+}
+
+/* 버튼 기본 */
+.menu .btn {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: transparent; /* 배경 제거 */
+	opacity: 1; /* 아이콘 보이게 설정 */
+	z-index: 0; /* 아이콘이 보이도록 z-index 조정 */
+	cursor: pointer;
+	transition: opacity 1s, z-index 0.3s, transform 1s;
+	padding: 0;
+	border-radius: 0; /* 원형 테두리 제거 */
+	border: none; /* 테두리 제거 */
+}
+
+/* 버튼 아이콘 스타일 */
+.menu .btn-icon {
+	opacity: 1; /* 아이콘 항상 보이게 */
+	transition: transform 0.5s ease, opacity 0.5s ease;
+	background-color: transparent; /* 배경 제거 */
+	border-radius: 0; /* 원형 모양 제거 */
+	width: 50px;
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #333; /* 아이콘 색상 */
+	margin: 0;
+}
+
+/* 메뉴 항목 기본적으로 숨기기 */
+.menu .menu-items {
+	display: none; /* 메뉴 항목 숨기기 */
+	position: absolute; /* 메뉴가 햄버거 아이콘 위에 나타나도록 */
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #fff; /* 배경색 */
+	border-radius: 5px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 50; /* 메뉴가 아이콘 위에 오도록 */
+	width: 200px; /* 메뉴의 너비 */
+	padding: 10px;
+}
+
+/* 메뉴가 활성화되면 표시 */
+.menu.active .menu-items {
+	display: block; /* 메뉴 항목 보이기 */
+}
+
+/* 트리거 버튼 */
+.menu .btn.trigger {
+	opacity: 1;
+	z-index: 100;
+	cursor: pointer;
+	transition: transform 0.3s;
+	background-color: transparent;
+}
+
+.menu .btn.trigger:hover {
+	transform: scale(1.1);
+}
+
+.menu .btn.trigger .line {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 60%;
+	height: 4px;
+	background: #000;
+	border-radius: 6px;
+	transform: translate(-50%, -50%);
+	transition: background-color 0.3s, height 0.3s, top 0.3s;
+}
+
+.menu .btn.trigger .line:before, .menu .btn.trigger .line:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: #000;
+	border-radius: 6px;
+	transition: background-color 0.3s, transform 0.3s;
+}
+
+.menu .btn.trigger .line:before {
+	top: -10px;
+	transform-origin: center;
+}
+
+.menu .btn.trigger .line:after {
+	top: 10px;
+	transform-origin: center;
+}
+
+/* X 모양 변형 */
+.menu.active .trigger .line {
+	height: 0;
+	top: 50%;
+}
+
+.menu.active .trigger .line:before {
+	transform: rotate(45deg);
+	top: 0;
+}
+
+.menu.active .trigger .line:after {
+	transform: rotate(-45deg);
+	top: 0;
+}
+
+/* 아이콘 컨테이너 */
+.menu .icons {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	overflow: visible;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* 회전 축 */
+.menu .rotater {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transform-origin: 50% 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.menu .rotater i {
+	font-size: 20px;
+	align-items: center;
+}
+
+/* 메뉴 열렸을 때 아이콘 보이기 */
+.menu.active .btn-icon {
+	opacity: 1;
+	z-index: 50;
+}
+
+/* 각 아이콘 위치 */
+.menu .rotater:nth-child(1) {
+	transform: rotate(-45deg);
+}
+
+.menu .rotater:nth-child(2) {
+	transform: rotate(45deg);
+}
+
+/* ✅ 아이콘 이동 범위 줄여서 닉네임 침범 방지 */
+.menu.active .rotater:nth-child(1) .btn-icon {
+	transform: translate(calc(-50% - 20px), calc(80% - 10px)) rotate(45deg);
+}
+
+.menu.active .rotater:nth-child(2) .btn-icon {
+	transform: translate(calc(-50% - 5px), calc(80% + 5px)) rotate(-45deg);
+}
+/* 오른쪽 섹션 - 닉네임 + 토큰 박스 + 메뉴 */
+.right-section {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start; /* 왼쪽 정렬 */
+	position: absolute;
+	right: 20px; /* 오른쪽 여백 조정 (기존 80px → 20px) */
+	top: 50%;
+	transform: translateY(-50%);
+	gap: 12px;
+	z-index: 200; /* 닉네임과 UI 요소 항상 위로 */
+}
+
+/* 닉네임은 항상 메뉴보다 위에 보이도록 */
+.user-nickname {
+	position: relative;
+	z-index: 201;
+}
+
+/* 남은 시간 박스 */
+.token-box {
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+	padding: 6px 10px;
+	border: 1px solid #eee;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background-color: #cce5ff;
+	margin-left: 10px;
+}
+
+#remainTime {
+	font-weight: 700;
+}
+
+/* 햄버거 메뉴 컨테이너 */
+.menu {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 60px;
+	height: 60px;
+	margin-left: 8px; /* 닉네임과 간격 */
+	z-index: 100; /* 닉네임보다 아래 */
+}
+
+/* 버튼 기본 */
+.menu .btn {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: transparent; /* 배경 제거 */
+	opacity: 1; /* 아이콘 보이게 설정 */
+	z-index: 0; /* 아이콘이 보이도록 z-index 조정 */
+	cursor: pointer;
+	transition: opacity 1s, z-index 0.3s, transform 1s;
+	padding: 0;
+	border-radius: 0; /* 원형 테두리 제거 */
+	border: none; /* 테두리 제거 */
+}
+
+/* 버튼 아이콘 스타일 */
+.menu .btn-icon {
+	opacity: 1; /* 아이콘 항상 보이게 */
+	transition: transform 0.5s ease, opacity 0.5s ease;
+	background-color: transparent; /* 배경 제거 */
+	border-radius: 0; /* 원형 모양 제거 */
+	width: 50px;
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #333; /* 아이콘 색상 */
+	margin: 0;
+}
+
+/* 메뉴 항목 기본적으로 숨기기 */
+.menu .menu-items {
+	display: none; /* 메뉴 항목 숨기기 */
+	position: absolute; /* 메뉴가 햄버거 아이콘 위에 나타나도록 */
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #fff; /* 배경색 */
+	border-radius: 5px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 50; /* 메뉴가 아이콘 위에 오도록 */
+	width: 200px; /* 메뉴의 너비 */
+	padding: 10px;
+}
+
+/* 메뉴가 활성화되면 표시 */
+.menu.active .menu-items {
+	display: block; /* 메뉴 항목 보이기 */
+}
+
+/* 트리거 버튼 */
+.menu .btn.trigger {
+	opacity: 1;
+	z-index: 100;
+	cursor: pointer;
+	transition: transform 0.3s;
+	background-color: transparent;
+}
+
+.menu .btn.trigger:hover {
+	transform: scale(1.1);
+}
+
+.menu .btn.trigger .line {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 60%;
+	height: 4px;
+	background: #000;
+	border-radius: 6px;
+	transform: translate(-50%, -50%);
+	transition: background-color 0.3s, height 0.3s, top 0.3s;
+}
+
+.menu .btn.trigger .line:before, .menu .btn.trigger .line:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: #000;
+	border-radius: 6px;
+	transition: background-color 0.3s, transform 0.3s;
+}
+
+.menu .btn.trigger .line:before {
+	top: -10px;
+	transform-origin: center;
+}
+
+.menu .btn.trigger .line:after {
+	top: 10px;
+	transform-origin: center;
+}
+
+/* X 모양 변형 */
+.menu.active .trigger .line {
+	height: 0;
+	top: 50%;
+}
+
+.menu.active .trigger .line:before {
+	transform: rotate(45deg);
+	top: 0;
+}
+
+.menu.active .trigger .line:after {
+	transform: rotate(-45deg);
+	top: 0;
+}
+
+/* 아이콘 컨테이너 */
+.menu .icons {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	overflow: visible;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* 회전 축 */
+.menu .rotater {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transform-origin: 50% 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.menu .rotater i {
+	font-size: 20px;
+	align-items: center;
+}
+
+/* 메뉴 열렸을 때 아이콘 보이기 */
+.menu.active .btn-icon {
+	opacity: 1;
+	z-index: 50;
+}
+
+/* 각 아이콘 위치 */
+.menu .rotater:nth-child(1) {
+	transform: rotate(-45deg);
+}
+
+.menu .rotater:nth-child(2) {
+	transform: rotate(45deg);
+}
+
+/* ✅ 아이콘 이동 범위 줄여서 닉네임 침범 방지 */
+.menu.active .rotater:nth-child(1) .btn-icon {
+	transform: translate(calc(-50% - 20px), calc(80% - 10px)) rotate(45deg);
+}
+
+.menu.active .rotater:nth-child(2) .btn-icon {
+	transform: translate(calc(-50% - 5px), calc(80% + 5px)) rotate(-45deg);
+}
+/* ===== Hero ===== */
+.hero {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 64px 20px 28px;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	gap: 24px;
+	align-items: center
+}
+
+.hero h1 {
+	font-size: clamp(28px, 3.6vw, 48px);
+	line-height: 1.05;
+	margin: 0 0 10px
+}
+
+.hero p {
+	margin: 0 0 20px;
+	color: var(--sub)
+}
+
+.hero-cta {
+	display: flex;
+	gap: 12px
+}
+
+.btn {
+	appearance: none;
+	border: 1px solid var(--line);
+	padding: 12px 16px;
+	border-radius: 12px;
+	background: var(--card);
+	color: var(--ink);
+	font-weight: 700;
+	cursor: pointer
+}
+
+.btn.primary {
+	border: none;
+	background: linear-gradient(135deg, var(--brand),
+		color-mix(in oklab, var(--brand) 60%, #00d4ff));
+	color: var(--brand-ink)
+}
+
+.hero-card {
+	position: relative;
+	background: radial-gradient(1200px 500px at 10% -20%, color-mix(in oklab, var(--brand
+		) 16%, transparent), transparent 45%), var(--card);
+	border: 1px solid var(--line);
+	border-radius: 20px;
+	padding: 20px;
+	min-height: 260px;
+	box-shadow: var(--shadow);
+	overflow: hidden
+}
+
+.hero-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px
+}
+
+.mcard {
+	border: 1px solid var(--line);
+	background: var(--bg);
+	border-radius: 14px;
+	padding: 16px;
+	min-height: 90px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px
+}
+
+.mcard h4 {
+	margin: 0;
+	font-size: 14px;
+	color: var(--sub);
+	font-weight: 700
+}
+
+.mcard strong {
+	font-size: 20px
+}
+
+/* ===== Quick Actions ===== */
+.section {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 24px 20px
+}
+
+.section h2 {
+	margin: 8px 0 16px;
+	font-size: 18px;
+	color: var(--sub);
+	font-weight: 800;
+	letter-spacing: .2px
+}
+
+.quick-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 14px
+}
+
+.qcard {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px;
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	background: var(--card);
+	box-shadow: var(--shadow);
+	cursor: pointer
+}
+
+.qicon {
+	width: 42px;
+	height: 42px;
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	background: var(--muted);
+	position: relative
+}
+
+.qicon::after {
+	content: "";
+	position: absolute;
+	bottom: -3px;
+	right: -3px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--accent)
+}
+
+.qcard b {
+	font-size: 15px
+}
+
+.qcard span {
+	color: var(--sub);
+	font-size: 13px
+}
+
+/* ===== Featured ===== */
+.feature-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px
+}
+
+.fcard {
+	border: 1px solid var(--line);
+	border-radius: 16px;
+	background: var(--card);
+	overflow: hidden;
+	box-shadow: var(--shadow);
+	display: flex;
+	flex-direction: column
+}
+
+.fimg {
+	aspect-ratio: 16/9;
+	display: grid;
+	place-items: center;
+	background: linear-gradient(135deg, var(--muted),
+		color-mix(in oklab, var(--muted) 60%, #e9d5ff))
+}
+
+.cat-placeholder {
+	font-size: 40px
+}
+
+.fbody {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px
+}
+
+.fbody h3 {
+	margin: 0;
+	font-size: 18px
+}
+
+.fbody p {
+	margin: 0;
+	color: var(--sub)
+}
+
+/* ===== CTA Band ===== */
+.cta {
+	margin: 24px 0 40px;
+	background: linear-gradient(90deg, color-mix(in oklab, var(--brand) 40%,
+		#00d4ff), var(--brand));
+	color: var(--brand-ink)
+}
+
+.cta-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 22px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px
+}
+
+/* ===== Footer ===== */
+footer {
+	margin-top: auto;
+	border-top: 1px solid var(--line);
+	background: var(--muted);
+	color: var(--sub)
+}
+
+.footer-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 28px 20px;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr 1fr;
+	gap: 16px
+}
+
+.f-col h4 {
+	margin: 0 0 10px;
+	color: var(--ink)
+}
+
+.f-col a {
+	color: var(--sub);
+	text-decoration: none;
+	display: block;
+	padding: 6px 0
+}
+
+.f-col a:hover {
+	color: var(--ink)
+}
+
+/* ===== Responsive ===== */
+@media ( max-width :1024px) {
+	.hero {
+		grid-template-columns: 1fr
+	}
+	.feature-grid {
+		grid-template-columns: repeat(2, 1fr)
+	}
+	.quick-grid {
+		grid-template-columns: repeat(2, 1fr)
+	}
+	.footer-inner {
+		grid-template-columns: 1fr 1fr
+	}
+}
+
+@media ( max-width :640px) {
+	.feature-grid {
+		grid-template-columns: 1fr
+	}
+	.hero-cta {
+		flex-direction: column;
+		align-items: flex-start
+	}
+	.footer-inner {
+		grid-template-columns: 1fr
+	}
+}
