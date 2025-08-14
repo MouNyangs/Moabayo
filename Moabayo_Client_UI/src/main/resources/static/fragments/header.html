@@ -1,7 +1,8 @@
 <div th:fragment="site-header">
 	<header class="site-header">
 		<div class="header-inner">
-			<div class="brand" onclick="goToMainService()" style="cursor: pointer">
+			<div class="brand" onclick="goToMainService()"
+				style="cursor: pointer">
 				<div class="brand-badge">
 					<i class='bx bxs-cat'></i>
 				</div>
@@ -11,29 +12,28 @@
 			</div>
 
 			<nav class="nav">
-				<a href="javascript:void(0);" onclick="goToMainService()">홈</a>
-				<a href="javascript:void(0);" onclick="goToBankService()">저축상품</a>
-				<a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
-				<a href="javascript:void(0);" onclick="goToTransactions()">계좌조회</a>
-				<a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
+				<a href="javascript:void(0);" onclick="goToMainService()">홈</a> <a
+					href="javascript:void(0);" onclick="goToBankService()">저축상품</a> <a
+					href="javascript:void(0);" onclick="goToCardService()">카드조회</a> <a
+					href="javascript:void(0);" onclick="goToTransactions()">계좌조회</a> <a
+					href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
 
-				<span class="toggle"> <!-- ✅ theme.js가 감지하는 토글 대상 (숨김) --> <input type="checkbox" id="switch-mode" hidden aria-hidden="true" /> <label for="switch-mode" id="switchLabel" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;"> 테마 전환 </label> <!-- 기존 보이는 토글 버튼 -->
-					<button id="themeToggle" class="toggle-btn" type="button" aria-pressed="false" title="다크모드 토글">
-						<i class='bx bx-moon'></i> <span id="themeLabel">다크모드</span>
-					</button>
-				</span>
-          <!-- 기존 보이는 토글 버튼 -->
-          <button id="themeToggle" class="toggle-btn" type="button" aria-pressed="false" title="다크모드 토글">
-            <i class='bx bx-moon'></i>
-            <span id="themeLabel">다크모드</span>
-          </button>
-        </span>
+<span class="toggle">
+  <input type="checkbox" id="switch-mode" hidden aria-label="테마 전환">
+  <label class="swith-lm admin-switch" for="switch-mode">
+    <i class="bx bxs-moon"></i>
+    <i class="bx bx-sun"></i>
+    <span class="ball"></span>
+  </label>
+</span>
 
-        <div class="token-box" id="tokenBox" style="display:none;">
-          <div>남은 시간: <span id="remainTime">-</span></div>
-          <div class="right-section" id="authSection"></div>
-        </div>
-      </nav>
-    </div>
-  </header>
+
+				<!-- (선택) 남은시간 박스 -->
+				<div class="token-box" id="tokenBox" style="display: none;">
+					남은 시간: <span id="remainTime">-</span>
+				</div>
+			</nav>
+		</div>
+
+	</header>
 </div>
