@@ -120,11 +120,9 @@ public class BankController {
 		return "index";
 	}
 	
-	@GetMapping("/account/List")
+	@GetMapping("/account/list")
 	public String showAccountList(Model model) {
-//	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
-	    return "accountList"; // cardList.html 렌더링
+	    return "accountList"; // accountList.html 렌더링
 	}
 	
 	@GetMapping("/recommend")
