@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class NyangCoinVO {
 
-	private String nyangCoinId;
+	private long nyangCoinId;
 	private String createDate;
 	private String money;
 	private String userId;
