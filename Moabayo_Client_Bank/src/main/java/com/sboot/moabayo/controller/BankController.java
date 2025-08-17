@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.sboot.moabayo.jwt.BankJwtGenerate;
+import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
@@ -32,9 +33,11 @@ public class BankController {
     // \\\\\\\\\\\\\\\\ 종료 ///////////////
 	
     private final BankService bankService;
+    private final BankProductService bankProductService;
 
-    public BankController(BankService bankService) {
+    public BankController(BankService bankService, BankProductService bankProductService) {
         this.bankService = bankService;
+        this.bankProductService = bankProductService;
     }
 	
 	@GetMapping("/verify")
@@ -134,6 +137,7 @@ public class BankController {
 	
 	@GetMapping("/product/list")
 	public String bankProduct(Model model) {
+		model.addAttribute("products", bankProductService.findAll());
 //	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
 	    return "bankProductList"; // cardList.html 렌더링
