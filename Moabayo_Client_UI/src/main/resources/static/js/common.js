@@ -112,9 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
-function goToMainService() {
+/*function goToMainService() {
 	window.location.href = "http://localhost:8812/mainpage";
-}
+}*/
 
 function goToTransactions() {
 	window.location.href = "http://localhost:8812/transactions"
