@@ -7,15 +7,17 @@
 <link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/mainpage2.css" />
+
+
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
 <link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
 <script defer src="http://localhost:8810/js/common.js"></script>
-<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
 <script defer src="http://localhost:8810/js/adminservice.js"></script>
 <script defer src="http://localhost:8810/js/bankservice.js"></script>
 <script defer src="http://localhost:8810/js/cardservice.js"></script>
-
-<!-- toggle switch 만들기 -->
+<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
 <link rel="stylesheet" href="http://localhost:8810/css/theme.css">
 <link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
 <script defer src="http://localhost:8810/js/theme.js"></script>
@@ -65,45 +67,6 @@
 				<div class="mcard">
 					<h4>알림</h4>
 					<strong>3건</strong> <span class="sub">오늘 할 일 확인</span>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== Quick Actions ===== -->
-	<section class="section" id="shop">
-		<h2>빠른 실행</h2>
-		<div class="quick-grid">
-			<div class="qcard" th:onclick="|location.href='@{/plans}'|">
-				<div class="qicon">
-					<i class='bx bx-target-lock'></i>
-				</div>
-				<div>
-					<b>목표/플랜 만들기</b><br /> <span>저축/지출 캡 설정</span>
-				</div>
-			</div>
-			<div class="qcard" th:onclick="|location.href='@{/store}'|">
-				<div class="qicon">
-					<i class='bx bx-store-alt'></i>
-				</div>
-				<div>
-					<b>스토어</b><br /> <span>굿즈 & 배지</span>
-				</div>
-			</div>
-			<div class="qcard" th:onclick="|location.href='@{/present}'|">
-				<div class="qicon">
-					<i class='bx bx-gift'></i>
-				</div>
-				<div>
-					<b>선물함</b><br /> <span>받은 보상 확인</span>
-				</div>
-			</div>
-			<div class="qcard" th:onclick="|location.href='@{/mypage}'|">
-				<div class="qicon">
-					<i class='bx bx-user-circle'></i>
-				</div>
-				<div>
-					<b>마이페이지</b><br /> <span>프로필/설정</span>
 				</div>
 			</div>
 		</div>
