@@ -1,3 +1,6 @@
+-- 다이어그램 링크: https://drawsql.app/teams/khs/diagrams/mounyangsdb
+SELECT SYSDATE AS "SQL START " FROM DUAL;
+
 --삭제문
 DROP TABLE account_transaction CASCADE CONSTRAINTS;
 DROP TABLE region_stats CASCADE CONSTRAINTS;
@@ -68,24 +71,7 @@ CREATE TABLE nyang_coin (
     CONSTRAINT fk_nyang_coin_user FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
--- 5. card_transaction (users, card_product 참조)
-CREATE TABLE card_transaction (
-    card_transaction_id NUMBER(20,0) PRIMARY KEY,
-    approved_amount NUMBER(20,2),
-    approved_num VARCHAR2(255),
-    card_history_id NUMBER(20,0),
-    card_id NUMBER(20,0),
-    card_type VARCHAR2(255),
-    category VARCHAR2(255),
-    date_time DATE,
-    shop_name VARCHAR2(255),
-    shop_number VARCHAR2(255),
-    user_id NUMBER(20,0),
-    CONSTRAINT fk_card_transaction_user FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT fk_card_transaction_card_product FOREIGN KEY (card_id) REFERENCES card_product(card_id)
-);
-
--- 6. coin_history (nyang_coin 참조)
+-- 5. coin_history (nyang_coin 참조)
 CREATE TABLE coin_history (
     history_id NUMBER(20,0) PRIMARY KEY,
     create_date DATE,
@@ -96,10 +82,10 @@ CREATE TABLE coin_history (
     CONSTRAINT fk_coin_history_nyang_coin FOREIGN KEY (nyang_id) REFERENCES nyang_coin(nyang_id)
 );
 
--- 7. admin (users 참조)
+-- 6. admin (users 참조)
 CREATE TABLE admin (
     admin_id NUMBER(20,0) PRIMARY KEY,
-    user_id NUMBER(20,0),
+    user_id NUMBER(20,0) NOT NULL,
     role VARCHAR2(50),
     create_date DATE,
     CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES users(user_id)
@@ -107,10 +93,10 @@ CREATE TABLE admin (
 
 CREATE UNIQUE INDEX admin_user_id_unique ON admin(user_id);
 
--- 8. user_account (users, bank_product 참조)
+-- 7. user_account (users, bank_product 참조)
 CREATE TABLE user_account (
-    user_account_id NUMBER(8,0) PRIMARY KEY,
-    user_id NUMBER(8,0) NOT NULL,
+    user_account_id NUMBER(20,0) PRIMARY KEY,
+    user_id NUMBER(20,0) NOT NULL,
     account_id NUMBER(8,0) NOT NULL,
     account_number VARCHAR2(30) NOT NULL UNIQUE,
     account_name VARCHAR2(100),
@@ -118,22 +104,59 @@ CREATE TABLE user_account (
     CONSTRAINT fk_user_account_bank_product FOREIGN KEY (account_id) REFERENCES bank_product(account_id)
 );
 
+-- 8. account_transaction (users, bank_product 를 참조한 user_account 를 참조)
+CREATE TABLE account_transaction (
+    account_transaction_id NUMBER(20,0) PRIMARY KEY,
+    user_account_id NUMBER(20,0) NOT NULL,
+    approved_amount NUMBER(20,2),
+    approved_num VARCHAR2(255),
+--    account_history_id NUMBER(20,0), -- 이건 어디서 들고오는거야? 제거.
+--    account_id NUMBER(20,0), -- 제거.
+    account_type VARCHAR2(255),
+    category VARCHAR2(255),
+    date_time DATE,
+    shop_name VARCHAR2(255),
+    shop_number VARCHAR2(255),
+--    user_id NUMBER(20,0), -- 제거.
+    CONSTRAINT fk_account_transaction_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id)
+    -- CONSTRAINT fk_account_transaction_user FOREIGN KEY (user_id) REFERENCES users(user_id),
+    -- CONSTRAINT fk_account_transaction_bank_product FOREIGN KEY (account_id) REFERENCES bank_product(account_id)
+);
+
 -- 9. user_card (users, card_product 참조)
 CREATE TABLE user_card (
-    user_card_id NUMBER(8,0) PRIMARY KEY,
-    user_id NUMBER(8,0) NOT NULL,
+    user_card_id NUMBER(20,0) PRIMARY KEY,
+    user_id NUMBER(20,0) NOT NULL,
     card_id NUMBER(8,0) NOT NULL,
     CONSTRAINT fk_user_card_user FOREIGN KEY (user_id) REFERENCES users(user_id),
     CONSTRAINT fk_user_card_card_product FOREIGN KEY (card_id) REFERENCES card_product(card_id)
 );
 
--- 10. industry_codes
+-- 10. card_transaction (users, card_product 를 참조한 user_card 를 참조)
+CREATE TABLE card_transaction (
+    card_transaction_id NUMBER(20,0) PRIMARY KEY,
+    user_card_id NUMBER(20,0) NOT NULL,
+    approved_amount NUMBER(20,2),
+    approved_num VARCHAR2(255),
+--    card_history_id NUMBER(20,0), -- 이건 뭐임? 어디서 이어지는거야? 일단 제거.
+--    card_id NUMBER(20,0), - 제거.
+    card_type VARCHAR2(255),
+    category VARCHAR2(255),
+    date_time DATE,
+    shop_name VARCHAR2(255),
+    shop_number VARCHAR2(255),
+--    user_id NUMBER(20,0), -- 제거.
+    CONSTRAINT fk_card_transaction_user_card FOREIGN KEY (user_card_id) REFERENCES user_card(user_card_id)
+);
+
+-- 머신러닝용 데이터베이스
+-- 11. industry_codes
 CREATE TABLE industry_codes (
     upjong_code VARCHAR2(20) PRIMARY KEY,
     upjong VARCHAR2(100)
 );
 
--- 11. gender_stats (industry_codes 참조)
+-- 12. gender_stats (industry_codes 참조)
 CREATE TABLE gender_stats (
     gender_stats_id NUMBER(10) PRIMARY KEY,
     upjong_code VARCHAR2(20),
@@ -143,7 +166,7 @@ CREATE TABLE gender_stats (
     CONSTRAINT fk_gender_stats_industry_codes FOREIGN KEY (upjong_code) REFERENCES industry_codes(upjong_code)
 );
 
--- 12. age_stats (industry_codes 참조)
+-- 13. age_stats (industry_codes 참조)
 CREATE TABLE age_stats (
     age_stats_id NUMBER(10) PRIMARY KEY,
     upjong_code VARCHAR2(20),
@@ -153,7 +176,7 @@ CREATE TABLE age_stats (
     CONSTRAINT fk_age_stats_industry_codes FOREIGN KEY (upjong_code) REFERENCES industry_codes(upjong_code)
 );
 
--- 13. micro_payment_stats (industry_codes 참조)
+-- 14. micro_payment_stats (industry_codes 참조)
 CREATE TABLE micro_payment_stats (
     payments_stats_id NUMBER(10) PRIMARY KEY,
     upjong_code VARCHAR2(20),
@@ -163,7 +186,7 @@ CREATE TABLE micro_payment_stats (
     CONSTRAINT fk_micro_payment_stats_industry_codes FOREIGN KEY (upjong_code) REFERENCES industry_codes(upjong_code)
 );
 
--- 14. region_stats (industry_codes 참조)
+-- 15. region_stats (industry_codes 참조)
 CREATE TABLE region_stats (
     region_stats_id NUMBER(10) PRIMARY KEY,
     upjong_code VARCHAR2(20),
@@ -174,23 +197,6 @@ CREATE TABLE region_stats (
     total_address_code VARCHAR2(20),
     card_total NUMBER(12,2),
     CONSTRAINT fk_region_stats_industry_codes FOREIGN KEY (upjong_code) REFERENCES industry_codes(upjong_code)
-);
-
--- 15. account_transaction (users, bank_product 참조)
-CREATE TABLE account_transaction (
-    account_transaction_id NUMBER(20,0) PRIMARY KEY,
-    approved_amount NUMBER(20,2),
-    approved_num VARCHAR2(255),
-    account_history_id NUMBER(20,0),
-    account_id NUMBER(20,0),
-    account_type VARCHAR2(255),
-    category VARCHAR2(255),
-    date_time DATE,
-    shop_name VARCHAR2(255),
-    shop_number VARCHAR2(255),
-    user_id NUMBER(20,0),
-    CONSTRAINT fk_account_transaction_user FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT fk_account_transaction_bank_product FOREIGN KEY (account_id) REFERENCES bank_product(account_id)
 );
 
 --더미 데이터
@@ -206,6 +212,12 @@ INSERT INTO users VALUES
 INSERT INTO users VALUES
 (5, TO_DATE('2025-08-05','YYYY-MM-DD'), 'ACC127', 'Daejeon', 'Yuseong-gu', '34055', 'user5@example.com', 'Jung Minjae', 'minjae5', 'pass567', '010-5678-9012', 'token5', 'simple5', 0);
 
+-- User ID Sequence.
+CREATE SEQUENCE user_seq
+START WITH 6
+INCREMENT BY 1
+NOCACHE;
+
 --bank_product
 INSERT INTO bank_product (account_id, name, img, description, category, benefits, interest, type) VALUES
 (101, 'Standard Savings', NULL, 'Basic savings account', 'Savings', 'No fees', 1.2, 'Savings');
@@ -217,6 +229,36 @@ INSERT INTO bank_product VALUES
 (104, 'Business Checking', NULL, 'Account for small business', 'Checking', 'Business tools', 0.3, 'Checking');
 INSERT INTO bank_product VALUES
 (105, 'Fixed Deposit', NULL, 'Fixed deposit account', 'Deposit', 'Higher interest', 3.5, 'Deposit');
+
+--user_account
+INSERT INTO user_account (user_account_id, user_id, account_id, account_number, account_name) VALUES
+(801, 1, 101, '111-222-333', 'Minsoo Account');
+INSERT INTO user_account VALUES
+(802, 2, 102, '222-333-444', 'Jihye Account');
+INSERT INTO user_account VALUES
+(803, 3, 103, '333-444-555', 'Daeho Account');
+INSERT INTO user_account VALUES
+(804, 4, 104, '444-555-666', 'Hana Account');
+INSERT INTO user_account VALUES
+(805, 5, 105, '555-666-777', 'Minjae Account');
+
+-- account_transaction (수정본)
+INSERT INTO account_transaction (account_transaction_id, user_account_id, approved_amount, approved_num, account_type, category, date_time, shop_name, shop_number) VALUES
+(1001, 801, 500000, 'ACC56789', 'Savings', 'Utilities', TO_DATE('2025-08-01 14:00','YYYY-MM-DD HH24:MI'), 'Electric Company', '02-1234-5678');
+
+INSERT INTO account_transaction VALUES
+(1002, 802, 150000, 'ACC56790', 'Checking', 'Rent', TO_DATE('2025-08-02 09:30','YYYY-MM-DD HH24:MI'), 'Landlord', '02-2345-6789');
+
+INSERT INTO account_transaction VALUES
+(1003, 803, 200000, 'ACC56791', 'Savings', 'Groceries', TO_DATE('2025-08-03 18:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '02-3456-7890');
+
+INSERT INTO account_transaction VALUES
+(1004, 804, 75000, 'ACC56792', 'Checking', 'Dining', TO_DATE('2025-08-04 12:10','YYYY-MM-DD HH24:MI'), 'Cafe', '02-4567-8901');
+
+INSERT INTO account_transaction VALUES
+(1005, 805, 300000, 'ACC56793', 'Deposit', 'Investment', TO_DATE('2025-08-05 16:45','YYYY-MM-DD HH24:MI'), 'Investment Firm', '02-5678-9012');
+
+
 
 --card_product
 INSERT INTO card_product (card_id, img, name, brand, description, category, benefits, interest, type) VALUES
@@ -230,6 +272,34 @@ INSERT INTO card_product VALUES
 INSERT INTO card_product VALUES
 (205, NULL, 'Master Cashback', 'MasterCard', 'Cashback card', 'Credit', 'Cashback rewards', 1.8, 'Credit');
 
+--user_card
+INSERT INTO user_card (user_card_id, user_id, card_id) VALUES
+(901, 1, 201);
+INSERT INTO user_card VALUES
+(902, 2, 202);
+INSERT INTO user_card VALUES
+(903, 3, 203);
+INSERT INTO user_card VALUES
+(904, 4, 204);
+INSERT INTO user_card VALUES
+(905, 5, 205);
+
+-- card_transaction (수정본)
+INSERT INTO card_transaction (card_transaction_id, user_card_id, approved_amount, approved_num, card_type, category, date_time, shop_name, shop_number) VALUES
+(401, 901, 120000, 'APR12345', 'Credit', 'Shopping', TO_DATE('2025-08-01 10:00','YYYY-MM-DD HH24:MI'), 'ABC Store', '010-0000-1111');
+
+INSERT INTO card_transaction VALUES
+(402, 902, 45000, 'APR12346', 'Credit', 'Dining', TO_DATE('2025-08-02 12:30','YYYY-MM-DD HH24:MI'), 'XYZ Restaurant', '010-0000-2222');
+
+INSERT INTO card_transaction VALUES
+(403, 903, 78000, 'APR12347', 'Credit', 'Travel', TO_DATE('2025-08-03 15:45','YYYY-MM-DD HH24:MI'), 'Travel Agency', '010-0000-3333');
+
+INSERT INTO card_transaction VALUES
+(404, 904, 23000, 'APR12348', 'Debit', 'Groceries', TO_DATE('2025-08-04 09:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '010-0000-4444');
+
+INSERT INTO card_transaction VALUES
+(405, 905, 67000, 'APR12349', 'Credit', 'Entertainment', TO_DATE('2025-08-05 20:10','YYYY-MM-DD HH24:MI'), 'Cinema', '010-0000-5555');
+
 --nyang_coin
 INSERT INTO nyang_coin (nyang_id, create_date, money, user_id) VALUES
 (301, TO_DATE('2025-07-20','YYYY-MM-DD'), 1000, 1);
@@ -241,18 +311,6 @@ INSERT INTO nyang_coin VALUES
 (304, TO_DATE('2025-07-23','YYYY-MM-DD'), 2000, 4);
 INSERT INTO nyang_coin VALUES
 (305, TO_DATE('2025-07-24','YYYY-MM-DD'), 1200, 5);
-
---card_transaction
-INSERT INTO card_transaction (card_transaction_id, approved_amount, approved_num, card_history_id, card_id, card_type, category, date_time, shop_name, shop_number, user_id) VALUES
-(401, 120000, 'APR12345', 501, 201, 'Credit', 'Shopping', TO_DATE('2025-08-01 10:00','YYYY-MM-DD HH24:MI'), 'ABC Store', '010-0000-1111', 1);
-INSERT INTO card_transaction VALUES
-(402, 45000, 'APR12346', 502, 202, 'Credit', 'Dining', TO_DATE('2025-08-02 12:30','YYYY-MM-DD HH24:MI'), 'XYZ Restaurant', '010-0000-2222', 2);
-INSERT INTO card_transaction VALUES
-(403, 78000, 'APR12347', 503, 203, 'Credit', 'Travel', TO_DATE('2025-08-03 15:45','YYYY-MM-DD HH24:MI'), 'Travel Agency', '010-0000-3333', 3);
-INSERT INTO card_transaction VALUES
-(404, 23000, 'APR12348', 504, 204, 'Debit', 'Groceries', TO_DATE('2025-08-04 09:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '010-0000-4444', 4);
-INSERT INTO card_transaction VALUES
-(405, 67000, 'APR12349', 505, 205, 'Credit', 'Entertainment', TO_DATE('2025-08-05 20:10','YYYY-MM-DD HH24:MI'), 'Cinema', '010-0000-5555', 5);
 
 --coin_history
 INSERT INTO coin_history (history_id, create_date, total_amt, trans_amt, trans_type, nyang_id) VALUES
@@ -277,42 +335,6 @@ INSERT INTO admin VALUES
 (704, 1, 'support', TO_DATE('2025-04-01','YYYY-MM-DD'));
 INSERT INTO admin VALUES
 (705, 2, 'admin', TO_DATE('2025-05-01','YYYY-MM-DD'));
-
---user_account
-INSERT INTO user_account (user_account_id, user_id, account_id, account_number, account_name) VALUES
-(801, 1, 101, '111-222-333', 'Minsoo Account');
-INSERT INTO user_account VALUES
-(802, 2, 102, '222-333-444', 'Jihye Account');
-INSERT INTO user_account VALUES
-(803, 3, 103, '333-444-555', 'Daeho Account');
-INSERT INTO user_account VALUES
-(804, 4, 104, '444-555-666', 'Hana Account');
-INSERT INTO user_account VALUES
-(805, 5, 105, '555-666-777', 'Minjae Account');
-
---user_card
-INSERT INTO user_card (user_card_id, user_id, card_id) VALUES
-(901, 1, 201);
-INSERT INTO user_card VALUES
-(902, 2, 202);
-INSERT INTO user_card VALUES
-(903, 3, 203);
-INSERT INTO user_card VALUES
-(904, 4, 204);
-INSERT INTO user_card VALUES
-(905, 5, 205);
-
---account_transaction
-INSERT INTO account_transaction (account_transaction_id, approved_amount, approved_num, account_history_id, account_id, account_type, category, date_time, shop_name, shop_number, user_id) VALUES
-(1001, 500000, 'ACC56789', 1101, 101, 'Savings', 'Utilities', TO_DATE('2025-08-01 14:00','YYYY-MM-DD HH24:MI'), 'Electric Company', '02-1234-5678', 1);
-INSERT INTO account_transaction VALUES
-(1002, 150000, 'ACC56790', 1102, 102, 'Checking', 'Rent', TO_DATE('2025-08-02 09:30','YYYY-MM-DD HH24:MI'), 'Landlord', '02-2345-6789', 2);
-INSERT INTO account_transaction VALUES
-(1003, 200000, 'ACC56791', 1103, 103, 'Savings', 'Groceries', TO_DATE('2025-08-03 18:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '02-3456-7890', 3);
-INSERT INTO account_transaction VALUES
-(1004, 75000, 'ACC56792', 1104, 104, 'Checking', 'Dining', TO_DATE('2025-08-04 12:10','YYYY-MM-DD HH24:MI'), 'Cafe', '02-4567-8901', 4);
-INSERT INTO account_transaction VALUES
-(1005, 300000, 'ACC56793', 1105, 105, 'Deposit', 'Investment', TO_DATE('2025-08-05 16:45','YYYY-MM-DD HH24:MI'), 'Investment Firm', '02-5678-9012', 5);
 
 commit;
 
