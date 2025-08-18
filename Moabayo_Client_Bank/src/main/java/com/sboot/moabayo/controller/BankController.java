@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -17,7 +16,6 @@ import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
 import com.sboot.moabayo.vo.UserVO;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpSession;
 
@@ -124,8 +122,11 @@ public class BankController {
 	}
 	
 	@GetMapping("/account/list")
-	public String showAccountList(Model model) {
-	    return "accountList"; // accountList.html 렌더링
+	public String showAccountList(HttpSession session, Model model) {
+		String loginId = (String) session.getAttribute("loginId");
+		model.addAttribute("loginId", loginId);
+		
+	    return "account-list"; // accountList.html 렌더링
 	}
 	
 	@GetMapping("/recommend")
