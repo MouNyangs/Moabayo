@@ -3,346 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>모으냥즈 | 은행 상품 목록 (프론트엔드 검색)</title>
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
-  <style>
-    :root {
-      --cat-primary: #f4d06f;
-      --cat-accent:  #ffe8a0;
-      --cat-dark:    #1f1f28;
-      --cat-light:   #fffdfa;
-      --radius-xl:   1.25rem;
-    }
-    body { background: var(--cat-light); }
-    .navbar-cat { background: linear-gradient(90deg, var(--cat-primary), var(--cat-accent)); box-shadow: 0 6px 24px rgba(0,0,0,.08); }
-    .navbar-brand{ font-weight: 800; color: var(--cat-dark); letter-spacing: .2px; }
-
-    .filter-bar { background: #fff; border-radius: var(--radius-xl); padding: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.06); }
-
-    .product-card { border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius-xl); overflow: hidden; background: #fff; transition: transform .12s ease, box-shadow .12s ease; }
-    .product-card:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,.08); }
-
-    .type-pill { display:inline-block; font-size:.8rem; padding:.25rem .6rem; border-radius:999px; background: var(--cat-accent); color:#5b4904; font-weight:700; }
-    .img-wrap { background: linear-gradient(180deg, #fff, #faf7ef); }
-    .img-wrap img { object-fit: contain; height: 140px; }
-
-    .rate-badge { font-weight: 800; }
-    .benefit-item { font-size: .92rem; }
-
-    .empty-state { color: #8b8b8b; }
-
-    /* Dark mode */
-    .dark body{ background: #0f1115; }
-    .dark .filter-bar, .dark .product-card { background: #121826; border-color: #1b2132; }
-    .dark .navbar-cat { background: linear-gradient(90deg, #5b4e1f, #7c6c2a); }
-    .dark .navbar-brand { color: #f0e8cf; }
-    .dark .type-pill { background: #3a3321; color: #e7d99e; }
-    .dark .empty-state { color: #a9a9a9; }
-  </style>
+  <title>모으냥즈 | 은행 상품 추천</title>
+  <link rel="icon" href="/images/cat.ico" type="image/x-icon" />
+  <!-- Page CSS -->
+  <link rel="stylesheet" th:href="@{/css/bank-products.css}" />
+  
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+<script defer src="http://localhost:8810/js/token-exp-display.js"></script>
+<script defer src="http://localhost:8810/js/common.js"></script>
+<script defer src="http://localhost:8810/js/adminservice.js"></script>
+<script defer src="http://localhost:8810/js/bankservice.js"></script>
+<script defer src="http://localhost:8810/js/cardservice.js"></script>
+<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
+<link rel="stylesheet" href="http://localhost:8810/css/theme.css">
+<link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
+<script defer src="http://localhost:8810/js/theme.js"></script>
+  
 </head>
 <body>
-  <!-- Top Nav -->
-  <nav class="navbar navbar-cat navbar-expand-lg py-3">
-    <div class="container">
-      <a class="navbar-brand" href="#">🐾 모으냥즈 은행상품</a>
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <small class="text-dark"><span id="shownCount">0</span>/<span id="totalCount">0</span> 표시</small>
-        <button id="toggleDark" class="btn btn-sm btn-light">다크모드</button>
-        <a href="/" class="btn btn-sm btn-outline-dark">메인으로</a>
-      </div>
-    </div>
-  </nav>
+  <!-- 헤더/푸터는 외부에서 주입 -->
+<div id="header"></div>
 
-  <main class="container my-4">
-    <!-- Filter Bar (완전 프론트엔드 검색용) -->
-    <section class="filter-bar mb-4">
-      <div class="row g-3 align-items-end">
-        <div class="col-12 col-lg-4">
-          <label for="searchInput" class="form-label">검색 (이름/카테고리/타입)</label>
-          <input id="searchInput" type="text" class="form-control" placeholder="예: Savings, Checking, Fixed" />
-        </div>
-        <div class="col-6 col-lg-2">
-          <label for="typeSelect" class="form-label">타입</label>
-          <select id="typeSelect" class="form-select">
-            <option value="">전체</option>
-            <option value="Savings">Savings</option>
-            <option value="Checking">Checking</option>
-            <option value="Deposit">Deposit</option>
-            <option value="Loan">Loan</option>
-          </select>
-        </div>
-        <div class="col-6 col-lg-2">
-          <label for="categorySelect" class="form-label">카테고리</label>
-          <select id="categorySelect" class="form-select">
-            <option value="">전체</option>
-            <!-- 서버 제공 필요 없음: DOM 스캔으로 동적 생성 -->
-          </select>
-        </div>
-        <div class="col-6 col-lg-2">
-          <label for="minRate" class="form-label">최소 이율(%)</label>
-          <input id="minRate" type="number" step="0.01" min="0" class="form-control" placeholder="예: 0.50">
-        </div>
-        <div class="col-6 col-lg-2">
-          <label for="maxRate" class="form-label">최대 이율(%)</label>
-          <input id="maxRate" type="number" step="0.01" min="0" class="form-control" placeholder="예: 5.00">
-        </div>
-        <div class="col-6 col-lg-2">
-          <label for="sortSelect" class="form-label">정렬</label>
-          <select id="sortSelect" class="form-select">
-            <option value="default">기본</option>
-            <option value="name-asc">이름 ↑</option>
-            <option value="name-desc">이름 ↓</option>
-            <option value="rate-asc">이율 ↑</option>
-            <option value="rate-desc">이율 ↓</option>
-          </select>
-        </div>
-        <div class="col-6 col-lg-2 text-end">
-          <button id="resetBtn" class="btn btn-outline-secondary w-100">초기화</button>
-        </div>
+  <main class="bank-products">
+    <!-- Hero -->
+    <section class="nx-hero">
+      <div class="nx-hero__copy">
+        <p class="hello">추천 상품</p>
+        <h1 class="title">당신에게 맞는 은행 상품을 찾아보세요</h1>
+        <p class="lead">검색 · 타입/카테고리 · 이율 범위 · 정렬 · 최대 6개 비교</p>
+      </div>
+      <div class="nx-hero__stats">
+        <div class="stat"><div class="label">표시 상품</div><div class="value" id="stat-visible">0</div></div>
+        <div class="stat"><div class="label">평균 이율</div><div class="value" id="stat-avg">-</div></div>
+        <div class="stat"><div class="label">카테고리</div><div class="value" id="stat-cats">-</div></div>
       </div>
     </section>
 
-    <!-- Grid: 서버는 전체 products만 내려주면 됨 -->
-    <!-- 모델: List<BankProductVO> products -->
-    <section>
-      <div id="productGrid" class="row g-3 g-md-4">
-        <div id="emptyState" class="col-12 text-center py-5 d-none">
-          <h5 class="empty-state">조건에 맞는 은행 상품이 없어요 😿</h5>
-        </div>
-
-        <div class="col-12 col-sm-6 col-lg-4 col-xxl-3" th:each="p : ${products}"
-             th:data-name="${p.name}" th:data-type="${p.type}" th:data-category="${p.category}"
-             th:data-rate="${p.interest}">
-          <article class="card product-card h-100">
-            <div class="img-wrap d-flex align-items-center justify-content-center p-3">
-              <img th:if="${p.img != null}" th:src="${p.img}" class="w-100" alt="상품 이미지"/>
-              <img th:if="${p.img == null}" src="/images/account-placeholder.svg" class="w-50" alt="이미지 없음"/>
-            </div>
-            <div class="card-body d-flex flex-column gap-2">
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="type-pill" th:text="${p.type}">Savings</span>
-                <span class="rate-badge text-dark" th:text="${#numbers.formatDecimal(p.interest, 1, 'POINT', 2, 'NONE')} + '%'">1.20%</span>
-              </div>
-              <h5 class="card-title mb-1" th:text="${p.name}">Standard Savings</h5>
-              <div class="text-muted small" th:text="${p.category}">Savings</div>
-              <p class="card-text" th:text="${p.description}">기본 예금 상품 설명…</p>
-              <ul class="list-unstyled mb-0">
-                <li class="benefit-item" th:each="b : ${#strings.arraySplit(p.benefits, ',')}">
-                  <i class="bi bi-check2-circle me-1"></i><span th:text="${#strings.trim(b)}">무이자 수수료</span>
-                </li>
-              </ul>
-            </div>
-            <div class="card-footer bg-transparent border-0 pb-3 px-3">
-              <div class="d-flex gap-2">
-                <a class="btn btn-dark flex-grow-1" th:href="@{'/bank/product/' + ${p.accountId}}">자세히</a>
-                <button class="btn btn-outline-dark" type="button" onclick="addCompare(this)">비교</button>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
+    <!-- Filters -->
+    <section class="filter-bar">
+      <form class="filters" onsubmit="return false;">
+        <input id="q" type="search" placeholder="이름/타입/카테고리/설명/혜택…" aria-label="검색" />
+        <select id="typeSel" aria-label="타입">
+          <option value="">타입 전체</option>
+          <option>Savings</option><option>Checking</option><option>Deposit</option><option>Loan</option>
+        </select>
+        <select id="catSel" aria-label="카테고리">
+          <option value="">카테고리 전체</option>
+          <!-- 서버에서 categories 제공 시 아래 라인 유지 -->
+          <option th:each="c : ${categories}" th:value="${c}" th:text="${c}">Savings</option>
+        </select>
+        <input id="minRate" type="number" step="0.01" min="0" placeholder="최소 이율(%)" aria-label="최소 이율">
+        <input id="maxRate" type="number" step="0.01" min="0" placeholder="최대 이율(%)" aria-label="최대 이율">
+        <select id="sortSel" aria-label="정렬">
+          <option value="default">정렬: 기본</option>
+          <option value="name-asc">이름 ↑</option>
+          <option value="name-desc">이름 ↓</option>
+          <option value="rate-asc">이율 ↑</option>
+          <option value="rate-desc">이율 ↓</option>
+        </select>
+        <button id="resetBtn" class="btn btn-outline" type="button">초기화</button>
+        <!-- 🔥 다크 토글/버튼 제거: 헤더에서 제어 -->
+      </form>
     </section>
 
-    <!-- Compare Drawer -->
-    <section id="compareBar" class="position-fixed bottom-0 start-0 end-0 translate-y-100" style="transition: transform .2s ease;">
-      <div class="container">
-        <div class="bg-dark text-white rounded-top-4 p-3 shadow-lg">
-          <div class="d-flex justify-content-between align-items-center">
-            <strong>비교함</strong>
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-outline-light" onclick="clearCompare()">비우기</button>
-              <button class="btn btn-sm btn-light" onclick="openCompare()">비교하기</button>
-            </div>
+    <!-- Grid -->
+    <!-- 기대 모델: products: List<BankProductVO{accountId,img,name,description,category,benefits,interest,type}> -->
+    <section class="grid" id="grid">
+      <div class="empty" id="empty" hidden>조건에 맞는 은행 상품이 없어요 😿</div>
+
+      <div class="card-wrap" th:each="p : ${products}"
+           th:data-id="${p.accountId}"
+           th:data-name="${p.name}"
+           th:data-type="${p.type}"
+           th:data-category="${p.category}"
+           th:data-rate="${p.interest}">
+        <article class="product-card">
+          <div class="img">
+            <img th:if="${p.img != null}" th:src="${p.img}" alt="">
+            <img th:if="${p.img == null}" src="/images/account-placeholder.svg" alt="">
           </div>
-          <div id="compareItems" class="d-flex gap-2 mt-2 flex-wrap"></div>
-        </div>
+
+          <div class="body">
+            <div class="top">
+              <span class="pill" th:text="${p.type}">Savings</span>
+              <span class="rate" th:text="${#numbers.formatDecimal(p.interest,1,'POINT',2,'NONE')} + '%'">1.20%</span>
+            </div>
+            <h3 class="name" th:text="${p.name}">Standard Savings</h3>
+            <div class="cat" th:text="${p.category}">Savings</div>
+            <p class="desc" th:text="${p.description}">기본 예금 상품 설명…</p>
+            <ul class="benefits">
+              <li th:each="b : ${#strings.arraySplit(p.benefits, ',')}">
+                <i>✔</i><span th:text="${#strings.trim(b)}">무이자 수수료</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="foot">
+            <a class="btn btn-dark flex" th:href="@{'/bank/product/' + ${p.accountId}}">자세히</a>
+            <button class="btn btn-outline" type="button" data-act="compare">비교</button>
+          </div>
+        </article>
       </div>
     </section>
+
+    <!-- Compare bar -->
+    <aside id="compareBar" class="compare">
+      <div class="inner">
+        <strong>비교함</strong>
+        <div id="compareChips" class="chips"></div>
+        <div class="ops">
+          <button class="btn btn-ghost btn-sm" data-act="clear">비우기</button>
+          <button class="btn btn-accent btn-sm" data-act="open">비교하기</button>
+        </div>
+      </div>
+    </aside>
   </main>
 
-  <!-- Compare Modal -->
-  <div class="modal fade" id="compareModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">은행 상품 비교</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="table-responsive">
-            <table class="table align-middle">
-              <thead>
-                <tr>
-                  <th>이름</th><th>타입</th><th>카테고리</th><th>이율</th>
-                </tr>
-              </thead>
-              <tbody id="compareTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+  <!-- Compare modal (vanilla) -->
+  <div class="modal" id="compareModal" hidden role="dialog" aria-modal="true" aria-labelledby="cmpTitle">
+    <div class="modal-dim" data-act="close"></div>
+    <div class="modal-box">
+      <header class="modal-head">
+        <h3 id="cmpTitle">은행 상품 비교</h3>
+        <button class="btn btn-ghost btn-sm" data-act="close">닫기</button>
+      </header>
+      <div class="modal-body">
+        <div class="table-wrap">
+          <table class="ny-table">
+            <thead><tr><th>이름</th><th>타입</th><th>카테고리</th><th class="t-right">이율</th></tr></thead>
+            <tbody id="compareTbody"></tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    const grid = document.getElementById('productGrid');
-    const searchInput = document.getElementById('searchInput');
-    const typeSelect = document.getElementById('typeSelect');
-    const categorySelect = document.getElementById('categorySelect');
-    const sortSelect = document.getElementById('sortSelect');
-    const minRate = document.getElementById('minRate');
-    const maxRate = document.getElementById('maxRate');
-    const resetBtn = document.getElementById('resetBtn');
-    const emptyState = document.getElementById('emptyState');
-    const shownCount = document.getElementById('shownCount');
-    const totalCount = document.getElementById('totalCount');
-
-    const normalize = s => (s||'').toString().toLowerCase();
-
-    // 카테고리 옵션을 DOM에서 자동 생성
-    function fillCategoryOptions(){
-      const set = new Set();
-      grid.querySelectorAll('[data-category]').forEach(el => {
-        const c = (el.dataset.category || '').trim();
-        if(c) set.add(c);
-      });
-      [...set].sort().forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c; opt.textContent = c;
-        categorySelect.appendChild(opt);
-      });
-    }
-
-    function applyFilters(){
-      const q = normalize(searchInput.value);
-      const t = normalize(typeSelect.value);
-      const c = normalize(categorySelect.value);
-      const min = parseFloat(minRate.value);
-      const max = parseFloat(maxRate.value);
-
-      const items = [...grid.querySelectorAll('[data-name]')];
-      let visible = 0;
-
-      items.forEach(el => {
-        const nm = normalize(el.dataset.name);
-        const tp = normalize(el.dataset.type);
-        const ct = normalize(el.dataset.category);
-        const rate = parseFloat(el.dataset.rate || '');
-
-        const matchQ = !q || nm.includes(q) || tp.includes(q) || ct.includes(q);
-        const matchT = !t || tp === t;
-        const matchC = !c || ct === c;
-        const matchMin = isNaN(min) || (!isNaN(rate) && rate >= min);
-        const matchMax = isNaN(max) || (!isNaN(rate) && rate <= max);
-
-        const show = matchQ && matchT && matchC && matchMin && matchMax;
-        el.classList.toggle('d-none', !show);
-        if(show) visible++;
-      });
-
-      emptyState.classList.toggle('d-none', visible !== 0);
-      shownCount.textContent = visible;
-      applySort();
-    }
-
-    function applySort(){
-      const val = sortSelect.value;
-      const parent = grid;
-      const items = [...grid.querySelectorAll('[data-name]')].filter(el => !el.classList.contains('d-none'));
-      const readName = el => (el.dataset.name||'').toLowerCase();
-      const readRate = el => parseFloat(el.dataset.rate || 'NaN');
-
-      if(val === 'default') return;
-
-      items.sort((a,b)=>{
-        if(val === 'name-asc') return readName(a) > readName(b) ? 1 : -1;
-        if(val === 'name-desc') return readName(a) < readName(b) ? 1 : -1;
-        if(val === 'rate-asc') return (readRate(a)||0) - (readRate(b)||0);
-        if(val === 'rate-desc') return (readRate(b)||0) - (readRate(a)||0);
-        return 0;
-      });
-      items.forEach(el => parent.appendChild(el));
-    }
-
-    function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args), ms); }; }
-
-    searchInput.addEventListener('input', debounce(applyFilters, 120));
-    typeSelect.addEventListener('change', applyFilters);
-    categorySelect.addEventListener('change', applyFilters);
-    minRate.addEventListener('input', debounce(applyFilters, 120));
-    maxRate.addEventListener('input', debounce(applyFilters, 120));
-    sortSelect.addEventListener('change', applySort);
-    resetBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      typeSelect.value = '';
-      categorySelect.value = '';
-      minRate.value = '';
-      maxRate.value = '';
-      sortSelect.value = 'default';
-      applyFilters();
-    });
-
-    // Compare drawer logic
-    const compareBar = document.getElementById('compareBar');
-    const compareItems = document.getElementById('compareItems');
-    const compareSet = new Map(); // key: name, value: meta
-
-    window.addCompare = (btn) => {
-      const root = btn.closest('[data-name]');
-      const name = root.dataset.name;
-      if(compareSet.has(name)) return;
-      compareSet.set(name, {
-        type: root.dataset.type,
-        category: root.dataset.category,
-        rate: root.dataset.rate
-      });
-      const chip = document.createElement('span');
-      chip.className = 'badge rounded-pill text-bg-light border';
-      chip.textContent = name;
-      chip.dataset.key = name;
-      chip.style.cursor = 'pointer';
-      chip.onclick = () => { compareSet.delete(name); chip.remove(); toggleCompareBar(); };
-      compareItems.appendChild(chip);
-      toggleCompareBar();
-    }
-
-    function toggleCompareBar(){
-      compareBar.style.transform = compareSet.size ? 'translateY(0)' : 'translateY(100%)';
-    }
-    window.clearCompare = () => { compareSet.clear(); compareItems.innerHTML = ''; toggleCompareBar(); }
-    window.openCompare = () => {
-      const tbody = document.getElementById('compareTableBody');
-      tbody.innerHTML = '';
-      [...compareSet.entries()].forEach(([name, v]) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${name}</td><td>${v.type}</td><td>${v.category}</td><td>${v.rate}%</td>`;
-        tbody.appendChild(tr);
-      });
-      const modal = new bootstrap.Modal(document.getElementById('compareModal'));
-      modal.show();
-    }
-
-    // Dark mode toggle
-    document.getElementById('toggleDark').addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-    });
-
-    // 초기화: 총 개수/카테고리/필터 반영
-    document.addEventListener('DOMContentLoaded', () => {
-      const total = grid.querySelectorAll('[data-name]').length;
-      totalCount.textContent = total;
-      fillCategoryOptions();
-      applyFilters();
-    });
-  </script>
+<div id="footer"></div>
+  <!-- Page JS -->
+  <script defer th:src="@{/js/bank-products.js}"></script>
 </body>
 </html>

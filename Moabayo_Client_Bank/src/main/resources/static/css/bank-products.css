@@ -1,0 +1,219 @@
+@charset "UTF-8";
+/* ===== MoaNyangz – Products (scoped) ===== */
+.bank-products{
+  --maxw: 1160px;
+
+  /* Light */
+  --ink:#1f2937; --sub:#6b7280; --muted:#f8fafc;
+  --card:#ffffff; --line:#e5e7eb;
+  --accent:#7c3aed; --accent-ink:#111;
+  --pill:#F2C14E;
+  --shadow:0 10px 24px rgba(15,23,42,.08);
+
+  color:var(--ink);
+  background: var(--muted);          /* 섹션 배경도 토큰 사용 */
+  padding:18px 0 28px;
+}
+
+/* Dark tokens (헤더 토글에만 반응) */
+html[data-theme="dark"] .bank-products,
+body.dark .bank-products{
+  --ink:#e5e7eb; --sub:#9aa5b1; --muted:#0e141b;
+  --card:#0f151c; --line:#171e28;      /* 테두리 과한 밝기 ↓ */
+  --accent:#a78bfa; --accent-ink:#0c0f14; --pill:#d9b24a;
+  --shadow:0 12px 26px rgba(0,0,0,.50); /* 그림자 톤 다운 */
+}
+
+/* 공통 래핑 */
+.bank-products .nx-hero,
+.bank-products .filter-bar,
+.bank-products .grid{
+  width:100%; max-width:var(--maxw);
+  margin:0 auto; padding:0 18px; box-sizing:border-box;
+  display: flex;                 /* 바 자체를 중앙 정렬 컨테이너로 */
+  justify-content: center;
+}
+
+/* ===== Hero ===== */
+.bank-products .nx-hero{
+  display:grid; grid-template-columns:1.1fr .9fr;
+  gap:18px; align-items:center; margin-bottom:12px;
+}
+.bank-products .hello{ color:var(--sub); font-size:.9rem; }
+.bank-products .title{ font-size:clamp(1.6rem,1.2rem + 1.6vw,2.2rem); margin:.2rem 0 .3rem; }
+.bank-products .lead{ color:var(--sub); }
+
+.bank-products .nx-hero__stats{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+}
+.bank-products .nx-hero__stats .stat{
+  background:var(--card); border:1px solid var(--line);
+  border-radius:14px; padding:12px 14px; box-shadow:var(--shadow);
+}
+.bank-products .nx-hero__stats .label{ color:var(--sub); font-size:.85rem; }
+.bank-products .nx-hero__stats .value{ font-weight:800; }
+
+/* ===== Filters (중앙 정렬) ===== */
+.bank-products .filter-bar{
+  margin:10px 0 14px;
+  display:flex; justify-content:center;  /* <- 중앙 배치 */
+}
+.bank-products .filters{
+  width:100%; max-width:980px;          /* <- 고정폭 + 중앙 */
+  margin:0 auto;
+
+  display:grid; gap:10px; align-items:center;
+  grid-template-columns:
+    minmax(320px,1fr) 150px 180px 140px 140px 150px 110px;
+}
+.bank-products .filters input,
+.bank-products .filters select{
+  padding:10px 12px; border-radius:12px;
+  background:var(--card); color:var(--ink);
+  border:1px solid var(--line);
+}
+.bank-products .filters input::placeholder{ color:var(--sub); }
+
+/* ===== Buttons ===== */
+.bank-products .btn{
+  display:inline-flex; align-items:center; gap:8px;
+  border-radius:12px; padding:10px 14px; font-weight:700;
+  border:1px solid transparent; background:transparent; color:var(--ink);
+  cursor:pointer;
+}
+.bank-products .btn-sm{ padding:8px 10px; font-size:.9rem; }
+.bank-products .btn:focus{ outline:none; box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.bank-products .btn-dark{ background:#111827; color:#fff; }
+.bank-products .btn-ghost{ border:1px solid var(--line); }
+.bank-products .btn-outline{ border:1px solid var(--line); }
+.bank-products .btn-accent{ background:var(--accent); color:var(--accent-ink); }
+.bank-products .btn:hover{ filter:brightness(1.05); transform:translateY(-1px); }
+
+/* ===== Grid (빈칸 없이) ===== */
+.bank-products .grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap:16px; align-items:stretch;
+}
+.bank-products .card-wrap{ grid-column:auto !important; }
+.bank-products .empty{ text-align:center; color:var(--sub); padding:48px 8px; }
+
+/* ===== Card ===== */
+.bank-products .product-card{
+  background:var(--card);
+  border:1px solid var(--line);          /* 다크에서도 눈부심 없음 */
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; height:100%;
+}
+.bank-products .product-card .img{
+  display:grid; place-items:center; padding:18px;
+  /* 배경 그라데이션도 토큰 기반으로 */
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--muted) 25%, transparent),
+    color-mix(in srgb, var(--muted) 55%, transparent)
+  );
+}
+.bank-products .product-card img{ width:100%; max-height:140px; object-fit:contain; }
+.bank-products .product-card .body{ padding:14px 16px; display:flex; flex-direction:column; gap:6px; flex:1 1 auto; }
+.bank-products .product-card .top{ display:flex; align-items:center; justify-content:space-between; }
+.bank-products .pill{ background:var(--pill); color:#1d1d1d; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; }
+.bank-products .rate{ font-weight:800; }
+.bank-products .name{ font-size:1.05rem; font-weight:800; margin:0; }
+.bank-products .cat,.bank-products .desc{ color:var(--sub); }
+.bank-products .benefits{ list-style:none; padding:0; margin:4px 0 0; display:grid; gap:4px; }
+.bank-products .benefits i{ margin-right:6px; }
+.bank-products .foot{ padding:14px 16px; display:flex; gap:8px; }
+.bank-products .flex{ flex:1; }
+
+/* ===== Compare bar / Modal ===== */
+.bank-products .compare{
+  position:fixed; left:0; right:0; bottom:0;
+  transform:translateY(100%); transition:transform .2s ease; z-index:60;
+}
+.bank-products .compare.show{ transform:translateY(0); }
+.bank-products .compare .inner{
+  width:100%; max-width:var(--maxw); margin:0 auto; padding:0 18px; box-sizing:border-box;
+  background:#111827; color:#fff; border-top-left-radius:16px; border-top-right-radius:16px;
+  padding:12px; box-shadow:0 -12px 24px rgba(0,0,0,.35); display:flex; align-items:center; gap:12px;
+}
+.bank-products .compare .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+.bank-products .compare .chip{ background:#1f2937; color:#e5e7eb; border:1px solid #334155; border-radius:999px; padding:6px 10px; font-weight:700; cursor:pointer; }
+
+.bank-products .modal[hidden]{ display:none; }
+.bank-products .modal-dim{ position:fixed; inset:0; background:rgba(0,0,0,.5); }
+.bank-products .modal-box{
+  position:fixed; inset:auto 0 0 0; margin:auto; max-width:var(--maxw);
+  background:var(--card); color:var(--ink); border:1px solid var(--line);
+  border-top-left-radius:16px; border-top-right-radius:16px; box-shadow:var(--shadow);
+}
+.bank-products .modal-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--line); }
+.bank-products .modal-body{ padding:14px 16px; }
+.bank-products .table-wrap{ overflow:auto; border-radius:12px; border:1px solid var(--line); }
+.bank-products .ny-table{ width:100%; border-collapse:separate; border-spacing:0; }
+.bank-products .ny-table thead th{
+  background: color-mix(in srgb, var(--muted) 70%, #fff 30%);
+  border-bottom:1px solid var(--line); text-align:left; padding:12px 14px; font-weight:800; color:var(--ink);
+}
+.bank-products .ny-table td{ padding:12px 14px; border-top:1px solid var(--line); }
+.bank-products .t-right{ text-align:right; }
+
+/* ===== Transitions ===== */
+.bank-products *, .bank-products .product-card, .bank-products .btn{
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .18s ease, box-shadow .2s ease;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px){
+  .bank-products .nx-hero{ grid-template-columns:1fr; }
+  .bank-products .filters{
+    max-width:720px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
+  }
+}
+@media (max-width: 560px){
+  .bank-products .filters{
+    max-width:100%;
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+/* .filters 를 쓰는 버전과 .row(bootstrap) 둘 다 지원 */
+.bank-products .filter-bar > .filters,
+.bank-products .filter-bar > .row{
+  max-width: 980px;              /* 컨텐츠 폭 제한 */
+  width: 100%;
+  margin: 0 auto;                /* 가운데 */
+}
+
+/* .filters 를 그리드로 배치하는 경우 */
+.bank-products .filter-bar > .filters{
+  display: grid;
+  gap: 10px;
+  align-items: end;
+  grid-template-columns:
+    minmax(320px,1fr) 150px 180px 140px 140px 150px 110px; /* 검색/타입/카테고리/최소/최대/정렬/초기화 */
+}
+
+/* .row(bootstrap)만 쓰는 경우도 중앙 유지 (열이 자동폭일 때) */
+.bank-products .filter-bar > .row{
+  justify-content: center;       /* bootstrap .row 는 flex라서 적용됨 */
+  gap: 10px;                     /* gx 대용 (외부 CSS 간섭 방지용) */
+}
+
+/* Responsive */
+@media (max-width: 960px){
+  .bank-products .filter-bar > .filters{
+    max-width: 720px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
+  }
+}
+@media (max-width: 560px){
+  .bank-products .filter-bar > .filters{
+    max-width: 100%;
+    grid-template-columns: 1fr 1fr; /* 2열로 접기 */
+  }
+}
+
+/* 혹시 이전 규칙에서 filters의 width:100%가 남아 중앙정렬을 방해하면 강제 덮어쓰기 */
+.bank-products .filter-bar > .filters{ width: auto !important; }
+
