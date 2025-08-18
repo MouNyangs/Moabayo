@@ -1,0 +1,176 @@
+@charset "UTF-8";
+/* ===== MoaNyangz Bank Index – SCOPED ===== */
+.bank-index{
+  --maxw: 960px;
+
+  /* Light tokens */
+  --ink:#1f2937;
+  --sub:#6b7280;
+  --muted:#f8fafc;
+  --card:#ffffff;
+  --line:#e5e7eb;
+  --accent:#7c3aed;      /* 보라 포인트 */
+  --accent-ink:#111;
+  --pill:#F2C14E;        /* cat amber */
+  --shadow:0 10px 24px rgba(15,23,42,.08);
+
+  color:var(--ink);
+  padding: 18px 0 28px;
+}
+
+/* Dark tokens – 차분하고 대비 과하지 않게 */
+[data-theme="dark"] .bank-index,
+body.dark .bank-index{
+  --ink:#e5e7eb;
+  --sub:#9aa5b1;
+  --muted:#0e141b;
+  --card:#0f151c;
+  --line:#1f2937;
+  --accent:#a78bfa;
+  --accent-ink:#0c0f14;
+  --pill:#d9b24a;
+  --shadow:0 12px 26px rgba(0,0,0,.45);
+}
+
+/* ✅ Hero와 Grid 공통 폭/정렬 */
+.bank-index .nx-hero,
+.bank-index .nx-grid{
+  width:100%;
+  max-width: var(--maxw, 960px);
+  margin: 0 auto;
+  padding: 0 18px;
+  box-sizing: border-box;
+}
+.bank-index .nx-hero{ margin-bottom: 16px; display:grid; grid-template-columns: 1fr; }
+
+.bank-index .nx-hero__copy .hello{ color:var(--sub); font-size:.9rem; }
+.bank-index .nx-hero__copy .username{ font-size: clamp(1.8rem, 1.2rem + 1.8vw, 2.4rem); margin:.2rem 0 .3rem; }
+.bank-index .nx-hero__copy .lead{ color:var(--sub); margin-bottom:12px; }
+.bank-index .nx-hero .cta{ display:flex; gap:10px; }
+
+/* (옵션) 아트 */
+.bank-index .nx-hero__art{ position:relative; height:160px; }
+.bank-index .nx-hero__art .orb{
+  position:absolute; border-radius:20px; filter: blur(10px);
+  background: radial-gradient(120px 60px at 80% 30%, var(--accent) 0%, transparent 70%);
+  inset:0; opacity:.3;
+}
+.bank-index .nx-hero__art .orb-1{ transform: skewX(-8deg); }
+.bank-index .nx-hero__art .orb-2{ transform: translateY(10px) skewX(6deg); opacity:.22; }
+.bank-index .nx-hero__art .cat{ position:absolute; right:-8px; bottom:-12px; font-size:56px; transform: rotate(-8deg); }
+
+/* ===== 버튼 ===== */
+.bank-index .btn{
+  display:inline-flex; align-items:center; gap:8px;
+  border-radius:12px; padding:10px 14px; font-weight:700;
+  text-decoration:none; border:1px solid transparent; transition:.2s;
+}
+.bank-index .btn-sm{ padding:8px 10px; font-size:.9rem; }
+.bank-index .btn:focus{ outline:none; box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+
+.bank-index .btn-accent{ background:var(--accent); color:var(--accent-ink); }
+.bank-index .btn-accent:hover{ filter:brightness(1.06); transform: translateY(-1px); }
+.bank-index .btn-ghost{ background:transparent; border:1px solid var(--line); color:var(--ink); }
+.bank-index .btn-ghost:hover{ background:color-mix(in srgb, var(--accent) 10%, transparent); }
+.bank-index .btn-dark{ background:#111827; color:#fff; }
+.bank-index .btn-dark:hover{ filter:brightness(1.05); }
+.bank-index .btn-outline{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+.bank-index .btn-outline:hover{ border-color:var(--ink); }
+
+/* ===== 메인 그리드 ===== */
+.bank-index .nx-grid{
+  display:grid;
+  grid-template-columns: 1fr 0.9fr;   /* 좌중심 */
+  gap:18px;
+}
+
+/* Panel 공통 */
+.bank-index .panel{
+  background:var(--card);
+  border:1px solid transparent;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+.bank-index .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.bank-index .panel-head h3{ font-weight:800; font-size:1.05rem; }
+.bank-index .pill{ background:var(--pill); color:#1d1d1d; padding:4px 10px; border-radius:999px; font-weight:700; }
+
+/* KPI */
+.bank-index .kpi .kpi-main{ margin:8px 0 10px; }
+.bank-index .kpi .balance{ font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.2rem); }
+.bank-index .kpi .empty-balance{ font-size: clamp(1.4rem, 1.0rem + 1.3vw, 1.9rem); color:var(--sub); }
+.bank-index .kpi .sub{ color:var(--sub); margin-top:4px; }
+.bank-index .kpi .actions{ display:flex; gap:8px; margin-top:10px; }
+
+/* Quick */
+.bank-index .quick .quick-list{
+  display:grid; grid-template-columns: 1fr; gap:10px;
+}
+.bank-index .quick .q{
+  display:flex; align-items:center; gap:10px; padding:12px 12px;
+  border-radius:12px; border:1px solid var(--line); color:var(--ink); text-decoration:none; transition:.2s;
+}
+.bank-index .quick .q:hover{ border-color:var(--ink); transform: translateY(-1px); }
+.bank-index .quick .q i{ font-size:20px; }
+
+/* History */
+.bank-index .history .section-head{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+}
+.bank-index .history .table-wrap{ overflow:auto; border-radius:12px; border:1px solid var(--line); }
+.bank-index .ny-table{ width:100%; border-collapse:separate; border-spacing:0; }
+.bank-index .ny-table thead th{
+  background: color-mix(in srgb, var(--muted) 70%, #fff 30%);
+  border-bottom:1px solid var(--line);
+  text-align:left; padding:12px 14px; font-weight:800; color:var(--ink);
+}
+.bank-index .ny-table td{ padding:12px 14px; border-top:1px solid var(--line); }
+.bank-index .t-right{ text-align:right; }
+
+.bank-index .badge{ display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; }
+.bank-index .b-success{ background:#10b98120; color:#0f8b67; border:1px solid #10b98155; }
+.bank-index .b-danger{  background:#ef444420; color:#b61d1d; border:1px solid #ef444455; }
+.bank-index .b-neutral{ background:#64748b20; color:#334155; border:1px solid #64748b55; }
+
+/* Empty */
+.bank-index .empty{ text-align:center; padding:48px 8px; color:var(--sub); }
+.bank-index .empty .ico{ font-size:40px; margin-bottom:10px; }
+
+/* Transitions */
+.bank-index *, .bank-index .btn, .bank-index .panel, .bank-index .q,
+.bank-index .ny-table th, .bank-index .ny-table td{
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease,
+              transform .18s ease, box-shadow .2s ease, opacity .2s ease;
+}
+
+/* ===== Dark-mode page background overrides (레이아웃 고정 배경 무시) ===== */
+html[data-theme="dark"] body,
+body.dark{
+  background:#0e141b !important;            /* 전체 페이지 배경 */
+}
+html[data-theme="dark"] .site-layout,
+body.dark .site-layout,
+html[data-theme="dark"] .site-content,
+body.dark .site-content{
+  background:#0e141b !important;            /* 레이아웃 래퍼가 따로 배경을 가질 때 */
+}
+
+/* 다크에서 카드/보더 대비 살짝 보강 */
+html[data-theme="dark"] .bank-index .panel{
+  background:#0f151c;
+  border-color:#1e293b;
+  box-shadow:0 12px 26px rgba(0,0,0,.55);
+}
+html[data-theme="dark"] .bank-index .quick .q{ border-color:#233041; }
+html[data-theme="dark"] .bank-index .ny-table thead th{ background:#131b25; }
+
+/* Responsive */
+@media (max-width: 920px){
+  .bank-index .nx-hero{ grid-template-columns: 1fr; }
+  .bank-index .nx-grid{ grid-template-columns: 1fr; }
+  .bank-index .quick .quick-list{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px){
+  .bank-index .quick .quick-list{ grid-template-columns: 1fr; }
+}
