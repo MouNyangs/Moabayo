@@ -89,7 +89,7 @@
     <!-- ===== 상단 검색/필터 ===== -->
     <section class="filters" aria-label="고급 필터">
       <div class="filters-row">
-        <input id="searchInput" class="search" type="search" placeholder="상호/메모/태그 검색" />
+        <input id="searchInput" class="search" type="search" th:value="${param.q}" placeholder="상호/메모/태그 검색" />
         <select id="catSelect" class="select">
           <option value="all" selected>카테고리 전체</option>
           <option>외식</option><option>교통</option><option>주거</option>

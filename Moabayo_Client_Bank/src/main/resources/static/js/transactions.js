@@ -91,6 +91,7 @@ const els = sel => document.querySelectorAll(sel);
 document.addEventListener("DOMContentLoaded", () => {
   bindControls();
   renderAll();
+  searchParamCheck();
 });
 
 /* ===== Bindings ===== */
@@ -339,4 +340,22 @@ function exportCSV(){
   const a = document.createElement("a");
   a.href = url; a.download = "transactions.csv"; a.click();
   URL.revokeObjectURL(url);
+}
+
+/* ===== Check frontend Query ===== */
+function searchParamCheck() {
+	// URL ?q=... 파라미터 읽기
+	const q = new URLSearchParams(location.search).get('q');
+	if (!q) return;
+
+	const input = document.getElementById('searchInput');
+	if (!input) return;
+
+	// 값 넣고 'input' 이벤트를 발생시켜 프론트 필터 즉시 적용
+	input.value = q;
+	input.dispatchEvent(new Event('input', { bubbles: true }));
+
+	// UX: 커서 끝으로, 포커스 유지
+	input.focus({ preventScroll: true });
+	try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
 }
