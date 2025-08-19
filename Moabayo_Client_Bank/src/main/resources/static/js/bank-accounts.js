@@ -1,53 +1,18 @@
-// ===== Mock Data =====
-const MOCK = {
-  accounts: [
-    {
-      id: "A-001",
-      icon: "💳",
-      name: "생활비통장",
-      number: "110-123-456789",
-      product: "모으냥즈 입출금",
-      type: "DEPOSIT",
-      balance: 1250340,
-      openedAt: "2024-08-12",
-      history: [
-        { ts: "2025-08-10 12:10", type: "입금", amount: 300000, bal: 1250340 },
-        { ts: "2025-08-04 08:31", type: "카드결제", amount: -23000, bal: 950340 },
-        { ts: "2025-07-28 18:20", type: "이체수신", amount: 500000, bal: 973340 },
-        { ts: "2025-07-21 09:15", type: "편의점", amount: -2300, bal: 473340 },
-      ],
-    },
-    {
-      id: "A-002",
-      icon: "🏦",
-      name: "냥청년 적금",
-      number: "210-456-987654",
-      product: "12개월 만기 · 자동이체",
-      type: "SAVINGS",
-      balance: 3200000,
-      openedAt: "2025-01-03",
-      history: [
-        { ts: "2025-08-01 09:00", type: "자동이체", amount: 200000, bal: 3200000 },
-        { ts: "2025-07-01 09:00", type: "자동이체", amount: 200000, bal: 3000000 },
-        { ts: "2025-06-01 09:00", type: "자동이체", amount: 200000, bal: 2800000 },
-      ],
-    },
-    {
-      id: "A-003",
-      icon: "📄",
-      name: "학자금대출",
-      number: "390-777-222222",
-      product: "변동금리 · 매월 25일 상환",
-      type: "LOAN",
-      balance: -8200000,
-      openedAt: "2023-03-11",
-      history: [
-        { ts: "2025-07-25 10:00", type: "원리금 상환", amount: 350000, bal: -8200000 },
-        { ts: "2025-06-25 10:00", type: "원리금 상환", amount: 350000, bal: -8550000 },
-      ],
-    },
-  ],
-};
+const MOCK = { accounts: [] };
+
+(function applyServerData() {
+  try {
+    if (Array.isArray(window.ACCOUNTS)) {
+      // 백엔드 type이 'Deposit' 같은 케이스면 프론트 기준 'DEPOSIT'으로 정규화
+      MOCK.accounts = window.ACCOUNTS.map(a => ({
+        ...a,
+        type: (a.type || '').toString().toUpperCase(), // Deposit -> DEPOSIT
+      }));
+    }
+  } catch (e) {
+    console.warn('Failed to apply server accounts:', e);
+  }
+})();
 
 // ===== Helpers =====
 const fmt = (n) => Number(n).toLocaleString("ko-KR");

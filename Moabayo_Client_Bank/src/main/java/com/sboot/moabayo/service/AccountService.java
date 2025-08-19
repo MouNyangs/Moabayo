@@ -15,11 +15,11 @@ public class AccountService {
 		this.accMap = accMap;
 	}
 	
-	public List<AccountVO> getUserAccountsWithHistory(int userId) {
+	public List<AccountVO> getUserAccountsWithHistory(Long userId) {
 		return accMap.findAccountsWithHistoryByUserId(userId);
 	}
 	
-	public List<AccountVO> getAccountsByUserId(int userId) {
+	public List<AccountVO> getAccountsByUserId(Long userId) {
 		return accMap.findAccountsByUserId(userId);
 	}
 }

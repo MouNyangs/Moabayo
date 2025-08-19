@@ -133,11 +133,13 @@ public class BankController {
 	public String showAccountList(HttpSession session, Model model) {
 		String loginId = (String) session.getAttribute("loginId");
 		model.addAttribute("loginId", loginId);
-		int userIdObj = (int) session.getAttribute("userIdObj");
-		System.out.println("userIdObj: " + userIdObj);
-		List<AccountVO> acclist = accountService.getUserAccountsWithHistory(userIdObj);
+		Long userId = (Long) session.getAttribute("userId");
+		
+		List<AccountVO> acclist = accountService.getUserAccountsWithHistory(userId);
+		System.out.println("acclist: " + acclist.toString());
 		
 		model.addAttribute("acclist", acclist);
+		
 		
 	    return "account-list"; // accountList.html 렌더링
 	}

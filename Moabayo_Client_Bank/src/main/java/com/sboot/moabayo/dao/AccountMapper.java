@@ -9,6 +9,6 @@ import com.sboot.moabayo.vo.AccountVO;
 
 @Mapper
 public interface AccountMapper {
-    List<AccountVO> findAccountsWithHistoryByUserId(@Param("userId") int userId);
-    List<AccountVO> findAccountsByUserId(@Param("userId") int userId);
+    List<AccountVO> findAccountsWithHistoryByUserId(@Param("userId") Long userId);
+    List<AccountVO> findAccountsByUserId(@Param("userId") Long userId);
 }
