@@ -15,8 +15,6 @@ import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
 import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
-import com.sboot.moabayo.vo.NyangCoinHistoryVO;
-import com.sboot.moabayo.vo.NyangCoinVO;
 
 import com.sboot.moabayo.vo.TxnRowVO;
 import com.sboot.moabayo.vo.UserAccountVO;
@@ -114,6 +112,11 @@ public class BankController {
 
         model.addAttribute("loginId", loginId);
 
+        AccountVO nyang = bankService.getNyangcoinAccount(userId);
+        
+        model.addAttribute("nyang", nyang);                 // null = 미보유
+        model.addAttribute("hasNyang", nyang != null);
+        
         // 코인은 user_account 에 냥코인 상품이 있을때 조회하도록 변경됨. 250819
 //        // 코인 조회
 //        NyangCoinVO ncvo = bankService.getNyangCoinByUserId(userId);

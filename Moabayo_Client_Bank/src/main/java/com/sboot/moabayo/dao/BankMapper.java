@@ -6,8 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.sboot.moabayo.vo.AccountVO;
-import com.sboot.moabayo.vo.NyangCoinHistoryVO;
-import com.sboot.moabayo.vo.NyangCoinVO;
 import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
@@ -16,6 +14,9 @@ import com.sboot.moabayo.vo.UserVO;
 public interface BankMapper {
 	// 유저 ID로 유저 반환
 	UserVO findUserByLoginId(@Param("loginId") String loginId);
+	
+	// 냥코인 계좌 찾기
+	AccountVO findNyangcoinAccountByUserId(@Param("userId") Long userId);
 	
 //	// 유저 ID로 냥코인 VO 반환
 //	NyangCoinVO findNyangCoinByUserId(@Param("userId") Long userId);

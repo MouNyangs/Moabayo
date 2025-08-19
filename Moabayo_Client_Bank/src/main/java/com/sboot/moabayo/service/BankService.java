@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.sboot.moabayo.dao.BankMapper;
-import com.sboot.moabayo.vo.NyangCoinHistoryVO;
-import com.sboot.moabayo.vo.NyangCoinVO;
+import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
@@ -20,6 +19,10 @@ public class BankService {
 
     public UserVO getUser(String loginId) {
         return bankMapper.findUserByLoginId(loginId);
+    }
+    
+    public AccountVO getNyangcoinAccount(Long userId) {
+        return bankMapper.findNyangcoinAccountByUserId(userId);
     }
 
 //    public NyangCoinVO getNyangCoinByUserId(Long userId) {

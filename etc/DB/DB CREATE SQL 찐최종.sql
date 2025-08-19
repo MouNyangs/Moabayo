@@ -95,7 +95,7 @@ CREATE TABLE user_card (
 ------------------------------------------------
 CREATE TABLE account_transaction (
     account_transaction_id NUMBER(20,0) PRIMARY KEY,
-    user_account_id NUMBER(20,0) NOT NULL,
+    user_account_id NUMBER(8,0) NOT NULL,
     approved_amount NUMBER(20,2),
     approved_num VARCHAR2(255),
     account_type VARCHAR2(255),
@@ -122,7 +122,7 @@ CREATE TABLE admin (
 ------------------------------------------------
 CREATE TABLE card_transaction (
     card_transaction_id NUMBER(20,0) PRIMARY KEY,
-    user_card_id NUMBER(20,0) NOT NULL,
+    user_card_id NUMBER(8,0) NOT NULL,
     approved_amount NUMBER(20,2),
     approved_num VARCHAR2(255),
     card_type VARCHAR2(255),
