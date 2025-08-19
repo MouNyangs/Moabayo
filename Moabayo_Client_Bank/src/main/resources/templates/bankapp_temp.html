@@ -104,7 +104,6 @@
           <li class="page-item" th:classappend="${page == 1} ? 'disabled'">
             <a class="page-link" th:href="@{|/coin/${user.userId}?page=${page-1}&size=${size}|}">이전</a>
           </li>
-
           <li class="page-item"
               th:each="p : ${#numbers.sequence(1, totalPages)}"
               th:classappend="${p == page} ? 'active'">
@@ -118,12 +117,9 @@
           </li>
         </ul>
       </nav>
-
     </div>
   </div>
-
 </div>
-
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
