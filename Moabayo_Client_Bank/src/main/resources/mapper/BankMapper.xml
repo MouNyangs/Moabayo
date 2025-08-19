@@ -41,24 +41,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<!-- CoinMapper.xml -->
-<select id="findHistoryByNyangIdPaged" resultType="com.sboot.moabayo.vo.NyangCoinHistoryVO">
-  SELECT *
-  FROM (
-    SELECT t.*, ROWNUM AS rnum
-    FROM (
-      SELECT
-        history_id  AS historyId,
-        create_date AS createdAt,
-        trans_amt   AS amount,
-        total_amt   AS balanceAfter,
-        trans_type  AS type,
-        nyang_id    AS nyangCoinId
-      FROM coin_history
-      WHERE nyang_id = #{nyangId}
-      ORDER BY create_date DESC, history_id DESC
-    ) t
-    WHERE ROWNUM &lt;= #{endRow}
-  )
-  WHERE rnum &gt;= #{startRow}
-</select>
+	<select id="findHistoryByNyangIdPaged" resultType="com.sboot.moabayo.vo.NyangCoinHistoryVO">
+	  SELECT *
+	  FROM (
+	    SELECT t.*, ROWNUM AS rnum
+	    FROM (
+	      SELECT
+	        history_id  AS historyId,
+	        create_date AS createdAt,
+	        trans_amt   AS amount,
+	        total_amt   AS balanceAfter,
+	        trans_type  AS type,
+	        nyang_id    AS nyangCoinId
+	      FROM coin_history
+	      WHERE nyang_id = #{nyangId}
+	      ORDER BY create_date DESC, history_id DESC
+	    ) t
+	    WHERE ROWNUM &lt;= #{endRow}
+	  )
+	  WHERE rnum &gt;= #{startRow}
+	</select>
 </mapper>

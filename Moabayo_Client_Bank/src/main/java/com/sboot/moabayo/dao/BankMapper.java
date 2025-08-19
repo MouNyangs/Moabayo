@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
+import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
 
@@ -27,4 +29,10 @@ public interface BankMapper {
 			@Param("startRow") int startRow, // 1-based
 			@Param("endRow") int endRow
 			);
+	
+	// 유저가 가지고 있는 예적금대출 상품 조회
+	List<UserAccountVO> findUserAccountsByUserID(@Param("userId") Long userId);
+	
+
+    
 }

@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.sboot.moabayo.jwt.BankJwtGenerate;
+import com.sboot.moabayo.service.AccountService;
 import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
+import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
+import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
@@ -32,10 +35,15 @@ public class BankController {
 	
     private final BankService bankService;
     private final BankProductService bankProductService;
+    private final AccountService accountService;
 
-    public BankController(BankService bankService, BankProductService bankProductService) {
+    public BankController(
+    		BankService bankService, 
+    		BankProductService bankProductService,
+    		AccountService accountService) {
         this.bankService = bankService;
         this.bankProductService = bankProductService;
+        this.accountService = accountService;
     }
 	
 	@GetMapping("/verify")
@@ -125,6 +133,11 @@ public class BankController {
 	public String showAccountList(HttpSession session, Model model) {
 		String loginId = (String) session.getAttribute("loginId");
 		model.addAttribute("loginId", loginId);
+		int userIdObj = (int) session.getAttribute("userIdObj");
+		System.out.println("userIdObj: " + userIdObj);
+		List<AccountVO> acclist = accountService.getUserAccountsWithHistory(userIdObj);
+		
+		model.addAttribute("acclist", acclist);
 		
 	    return "account-list"; // accountList.html 렌더링
 	}
