@@ -1,281 +1,181 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>N07-00 | 모으냥즈 카드 서비스 메인페이지</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>N07-00 | 모으냥즈 카드 서비스 메인페이지</title>
 
-<link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
-<!-- ✅ header/footer 자동삽입 스크립트 -->
+  <link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="/css/card-landing.css" />
+  <!-- 👇 애니메이션 버튼 팩 -->
+  <link rel="stylesheet" href="/css/btn-anim.css" />
+  <link rel="stylesheet" href="/css/ui-buttons.css" />
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
 <script defer src="http://localhost:8810/js/common.js"></script>
+<script defer src="http://localhost:8810/js/adminservice.js"></script>
 <script defer src="http://localhost:8810/js/bankservice.js"></script>
 <script defer src="http://localhost:8810/js/cardservice.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
+<link rel="stylesheet" href="http://localhost:8810/css/theme.css">
+<link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
+<script defer src="http://localhost:8810/js/theme.js"></script>
 
-<style>
-:root {
-	--bg: #f8f3da; /* 아이보리: 헤더/푸터 노랑과 어울림 */
-	--panel: #ffffff;
-	--text: #222;
-	--muted: #6b7280;
-	--card: #eef2f6; /* 버튼 내부 배경 */
-	--accent: #ff3b3b; /* 코드 텍스트 강조 */
-	--border: #d1d5db;
-	--highlight: #ffe59a; /* 제목 하이라이트 */
-	--circle: 230px; /* 🔵 동그라미 크기 */
-	--circle-mobile: 190px; /* 모바일 크기 */
-	--aura: #ffe59a; /* ✨ 아우라 색 */
-}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet" />
+<!-- head 안에 추가 -->
+<link rel="stylesheet" href="/css/card-grid.css" />
+<script defer src="/js/card-grid.js"></script>
 
-* {
-	box-sizing: border-box;
-}
+<link rel="stylesheet" href="/css/card-viz.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script defer src="/js/card-viz.js"></script>
 
-html, body {
-	height: 100%;
-}
 
-body {
-	margin: 0;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	font-family: "Pretendard", system-ui, -apple-system, Segoe UI, Roboto,
-		"Noto Sans KR", sans-serif;
-	background: var(--bg);
-	color: var(--text);
-}
-
-.content {
-	flex: 1;
-	display: block;
-}
-
-.title-outer {
-	max-width: 1100px; /* 살짝 넓힘 */
-	margin: 18px auto 0;
-	color: #222;
-	font-weight: 600;
-}
-
-.frame {
-	max-width: 1100px; /* 좌우 여유 확보 */
-	margin: 40px auto 0;
-	background: var(--panel);
-	border-radius: 14px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-	padding: 32px 24px 40px;
-}
-
-.inner-title {
-	font-size: 20px;
-	font-weight: 700;
-	text-align: center;
-	margin-bottom: 36px;
-	position: relative;
-}
-
-.inner-title::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	bottom: -10px;
-	width: 200px;
-	height: 6px;
-	border-radius: 3px;
-	background: var(--highlight);
-	opacity: .9;
-}
-
-/* 🔵 동그란 버튼 */
-.card-box {
-	width: var(--circle);
-	height: var(--circle);
-	border-radius: 50%;
-	background: var(--card);
-	border: 1px solid var(--border);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 0 auto;
-	position: relative; /* 아우라용 기준 */
-	transition: transform .18s ease, box-shadow .18s ease, border-color .18s
-		ease, background .18s ease;
-	cursor: pointer;
-	isolation: isolate; /* 아우라가 밖으로 깔끔하게 */
-}
-/* ✨ 아우라(빛번짐) */
-.card-box::before {
-	content: "";
-	position: absolute;
-	inset: -14px;
-	border-radius: 50%;
-	background: radial-gradient(closest-side, color-mix(in oklab, var(--aura)
-		70%, transparent) 0%, transparent 70%);
-	opacity: 0;
-	transform: scale(.9);
-	filter: blur(6px);
-	transition: opacity .2s ease, transform .2s ease, filter .2s ease;
-	z-index: -1;
-	pointer-events: none;
-}
-
-.card-box:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 10px 24px rgba(0, 0, 0, .12);
-	border-color: #c4c9d0;
-	background: #f3f7fa;
-}
-
-.card-box:hover::before {
-	opacity: 1;
-	transform: scale(1);
-	filter: blur(10px);
-}
-
-.card-content {
-	text-align: center;
-	line-height: 1.5;
-	padding: 0 10px;
-}
-
-.card-title {
-	font-size: 17px;
-	font-weight: 700;
-	letter-spacing: -0.2px;
-}
-
-.jump {
-	display: block;
-	margin-top: 10px;
-	color: var(--accent);
-	font-weight: 700;
-	text-decoration: none;
-}
-
-.jump:hover {
-	text-decoration: underline;
-}
-
-.footer-note {
-	color: var(--muted);
-	font-size: 12px;
-	text-align: center;
-	margin-top: 28px;
-}
-
-/* ⬅ 좌우 간격 넓게: 부트스트랩 거터 커스텀 */
-.wider-gutters {
-	--bs-gutter-x: 3rem;
-} /* 필요시 3.5rem로 더 늘려도 됨 */
-
-/* 모바일 튜닝 */
-@media ( max-width : 576px) {
-	.frame {
-		padding: 24px 16px 32px;
-	}
-	.card-box {
-		width: var(--circle-mobile);
-		height: var(--circle-mobile);
-	}
-	.card-title {
-		font-size: 16px;
-	}
-	.wider-gutters {
-		--bs-gutter-x: 1.5rem;
-	}
-}
-
-#footer {
-	margin-top: 0 !important;
-}
-</style>
 </head>
 <body>
+  <div id="header"></div>
 
-	<!-- Header: common.js가 /html/header.html을 주입 -->
-	<div id="header"></div>
+  <main class="card-landing">
+    <!-- HERO -->
+    <section class="hero" aria-label="카드 서비스 소개">
+      <div class="hero-bg"></div>
+      <div class="hero-inner">
+        <div class="eyebrow">
+          <span class="pill pill-event">기간 한정</span>
+          <span class="pill pill-brand">모으냥즈 카드</span>
+        </div>
+        <h1 class="hero-title">이번 주, 나에게 딱 맞는<br/><span>혜택 · 적립 · 구독</span> 카드</h1>
+        <p class="hero-desc">소비패턴 인사이트를 바탕으로 카드 혜택을 빠르게 비교하고 선택해 보세요.</p>
+        <div class="hero-ctas">
+  			<a href="#grid" class="mbtn mbtn--lg mbtn--primary is-pill">내 카드/상품 보기</a>
+ 			<a href="#insights" class="mbtn mbtn--lg mbtn--outline is-pill">소비 인사이트</a>
+		</div>
+        <div class="hero-countdown"><strong id="dday">D-7</strong><span>이벤트 종료까지</span></div>
+      </div>
+    </section>
 
-	<!-- 본문 -->
-	<div class="content">
-		<div class="title-outer px-3">N07-00 가상카드 서비스 메인페이지</div>
-
-		<main class="frame">
-			<h1 class="inner-title">🐾모으냥즈🐾</h1>
-
-			<div class="container px-0">
-				<div class="row wider-gutters gx-5 gy-4 justify-content-center">
-					<!-- 본인 소유 카드 확인 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N07-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										본인 소유<br />카드 확인
-									</div>
-									<span class="jump">→ N07-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-					<!-- 카드 상품 전체 조회 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N08-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										카드 상품<br />전체 조회
-									</div>
-									<span class="jump">→ N08-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-					<!-- 카드 추천 서비스 -->
-					<div class="col-12 col-md-4 d-flex justify-content-center">
-						<a class="text-decoration-none text-reset" href="#" onclick="go('N09-01')">
-							<div class="card-box">
-								<div class="card-content">
-									<div class="card-title">
-										카드 추천<br />서비스
-									</div>
-									<span class="jump">→ N09-01</span>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
+    <!-- KPIs (변경 없음) -->
+    <section class="kpis" aria-label="요약 지표">
+      <div class="kpi"><div class="kpi-label">보유 카드</div><div class="kpi-value" id="kpiCards">0장</div><div class="kpi-sub">본인 소유</div></div>
+      <div class="kpi"><div class="kpi-label">이번 달 결제</div><div class="kpi-value" id="kpiSpend">₩ 0</div><div class="kpi-sub">누적 금액</div></div>
+      <div class="kpi"><div class="kpi-label">적립/캐시백 예상</div><div class="kpi-value" id="kpiReward">₩ 0</div><div class="kpi-sub">예상 합계</div></div>
+      <div class="kpi"><div class="kpi-label">알림</div><div class="kpi-value" id="kpiAlerts">0건</div><div class="kpi-sub">이번 주 주요 이슈</div></div>
+    </section>
 
 
-		</main>
-	</div>
 
-	<!-- Footer: common.js가 /html/footer.html을 주입 -->
-	<div id="footer"></div>
+<!-- 본문 -->
+<section id="grid" class="feature-grid" aria-label="주요 기능">
+  <!-- 보유 카드 : 결제일 D-남은일 + 카드수 뱃지 + 링 게이지 -->
+  <article class="app-card card--glow">
+    <div class="head-row">
+      <h3 class="title">보유 카드</h3>
+      <span class="badge" id="ownedCountBadge">0장</span>
+    </div>
+    <p class="desc">이용한도·결제일 현황을 한눈에.</p>
+    <div class="viz-row">
+      <!-- SVG 링 게이지 (결제일까지 진행률) -->
+      <div class="ring" data-progress="62" data-caption="결제일 D-7">
+        <svg viewBox="0 0 120 120">
+          <circle class="track" cx="60" cy="60" r="52"></circle>
+          <circle class="bar"   cx="60" cy="60" r="52"></circle>
+        </svg>
+        <div class="ring-label"><span class="num" id="ringPct">62</span>%</div>
+        <div class="ring-sub" id="ringCaption">결제일 D-7</div>
+      </div>
+      <ul class="bullets">
+        <li>보유: <strong id="ownedCount">0장</strong></li>
+        <li>다음 결제일: <strong id="nextBilling">–</strong></li>
+      </ul>
+    </div>
+    <button class="mbtn mbtn--sm mbtn--primary is-pill" data-go="N07-01">바로가기</button>
+  </article>
 
-	<script>
-		function go(code) {
-			const map = {
-				'N07-01' : '/usercard/allcardList',
-				'N08-01' : '/card/newcard.html',
-				'N09-01' : '/card/writecard.html'
-			};
-			const page = map[code];
-			if (!page)
-				return alert('연결할 페이지가 정의되지 않았습니다.');
+  <!-- 카드 상품 전체 조회 : 카테고리 아이콘 모자이크 + 미니 바차트 -->
+  <article class="app-card card--draw">
+    <h3 class="title">카드 상품 전체 조회</h3>
+    <p class="desc">브랜드/혜택별 필터로 빠르게 비교.</p>
+    <div class="mosaic">
+      <span class="chip">외식</span><span class="chip">교통</span><span class="chip">구독</span>
+      <span class="chip">해외</span><span class="chip">편의점</span><span class="chip">주유</span>
+    </div>
+    <div class="mini-chart">
+      <canvas id="barCatalog"></canvas>
+    </div>
+    <button class="mbtn mbtn--sm mbtn--outline is-pill" data-go="N08-01">전체 보기</button>
+  </article>
 
-			// 현재 파일과 같은 폴더 기준으로 이동
-			const next = new URL(page, location.href).toString();
-			location.href = next;
-		}
-	</script>
+  <!-- 카드 추천 서비스 : 적합도 도넛 + 핵심 인사이트 텍스트 한 줄 -->
+  <article class="app-card card--fill">
+    <h3 class="title">카드 추천 서비스</h3>
+    <p class="desc">소비패턴 기반 ML 추천.</p>
+    <div class="mini-chart center">
+      <canvas id="donutFit"></canvas>
+      <div class="donut-center"><b id="fitScore">84</b>%<span>적합도</span></div>
+    </div>
+    <div class="delta">점심 외식 비중 <b>+18%</b></div>
+    <button class="mbtn mbtn--sm mbtn--soft is-pill" data-go="N09-01">추천 받기</button>
+  </article>
 
+  <!-- 혜택 캘린더 : 7일 미니 히트바 -->
+  <article class="app-card card--flip">
+    <div class="flip-wrap">
+      <div class="front">
+        <h3 class="title">혜택 캘린더</h3>
+        <p class="desc">이번 주 행사 강도</p>
+        <div class="mini-chart">
+          <canvas id="barCalendar"></canvas>
+        </div>
+        <p class="hint">강할수록 진한 색</p>
+      </div>
+      <div class="back">
+        <ul class="bullets tight">
+          <li>9/21 편의점 10% 적립</li>
+          <li>9/24 주유 5% 캐시백</li>
+          <li>9/28 영화 1+1</li>
+        </ul>
+        <button class="mbtn mbtn--sm mbtn--primary is-pill" data-go="N08-01">행사 보기</button>
+      </div>
+    </div>
+  </article>
+
+  <!-- 알림/보안 : 펄스 애니메이션 + 리스트 2줄 -->
+  <article class="app-card card--soft">
+    <div class="pulse-icon">
+      <div class="dot"></div>
+    </div>
+    <h3 class="title">알림 & 보안</h3>
+    <ul class="bullets tight" id="alertsList">
+      <li>이번 주 해외 승인 1건</li>
+      <li>모바일 결제 한도 상향 가능</li>
+    </ul>
+    <button class="mbtn mbtn--sm mbtn--outline is-pill" data-go="N07-01">자세히</button>
+  </article>
+
+  <!-- 포인트/적립 : 숫자 카운트업 + 스파크라인 -->
+  <article class="app-card card--lift">
+    <h3 class="title">포인트/적립</h3>
+    <p class="desc">현재 포인트 & 최근 추이</p>
+    <div class="big-num"><span id="pointNow">0</span> P</div>
+    <div class="mini-chart">
+      <canvas id="sparkPoints"></canvas>
+    </div>
+    <button class="mbtn mbtn--sm mbtn--outline is-pill" data-go="N07-01">적립 내역</button>
+  </article>
+</section>
+
+
+    <section id="insights" class="banner">
+      <strong>점심(11–14) 외식 비중이 높아요</strong>
+      <p>점심 적립형 ‘야식냥 체크카드’가 잘 맞습니다. 이번 주 추가 적립 이벤트 진행 중!</p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
 </body>
 </html>
