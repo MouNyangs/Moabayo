@@ -1,385 +1,170 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>N09-01 | 추천 카드</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>N09-01 | 모으냥즈 카드 추천</title>
 
-<link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="http://localhost:8810/css/header.css" />
-<link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
-<script defer src="http://localhost:8810/js/common.js"></script>
+  <!-- 기존 테마/헤더·푸터(네 환경 기준) -->
+  <link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+  <link rel="stylesheet" href="http://localhost:8810/css/theme.css" />
+  <link rel="stylesheet" href="http://localhost:8810/css/toggle.css" />
+  <script defer src="http://localhost:8810/js/theme.js"></script>
+  <script defer src="http://localhost:8810/js/common.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<style>
-:root {
-	--bg: #f8f3da;
-	--mint: #e9f6ea;
-	--panel: #ffffff;
-	--text: #1f2937;
-	--muted: #6b7280;
-	--brand: #28c2a0;
-	--border: #e5e7eb;
-	--rank1: #f59e0b;
-	--rank2: #9ca3af;
-	--rank3: #d97706;
-}
+  <!-- 프로젝트 공통 버튼 팩(이전 파일) -->
+  <link rel="stylesheet" href="/css/ui-buttons.css" />
 
-* {
-	box-sizing: border-box;
-}
+  <!-- 이 페이지 전용 -->
+  <link rel="stylesheet" href="/css/card-reco.css" />
 
-html, body {
-	height: 100%;
-}
+  <!-- 차트 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script defer src="/js/card-reco.js"></script>
 
-body {
-	margin: 0;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	background: var(--bg);
-	color: var(--text);
-	font-family: -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
-}
-
-.content {
-	flex: 1;
-}
-
-.hero {
-	max-width: 1200px;
-	margin: 28px auto 0;
-	padding: 36px 24px;
-	border-radius: 20px;
-	background: var(--mint);
-	text-align: center;
-	position: relative;
-	overflow: hidden;
-}
-
-.hero h1 {
-	font-size: 28px;
-	font-weight: 900;
-	margin: 0 0 8px;
-	letter-spacing: -0.3px;
-}
-
-.hero p {
-	margin: 0;
-	color: var(--muted);
-}
-
-.hero .underline {
-	width: 180px;
-	height: 3px;
-	background: #cfe9d1;
-	border-radius: 2px;
-	margin: 14px auto 0;
-}
-
-.section {
-	max-width: 1200px;
-	margin: 18px auto 40px;
-	padding: 0 6px;
-	position: relative;
-	z-index: 1;
-}
-
-.toolbar {
-	display: flex;
-	gap: 8px;
-	align-items: center;
-	justify-content: flex-end;
-	margin: 8px 6px 12px;
-}
-
-.toolbar .btn-filter {
-	border: 1px solid var(--border);
-	background: #fff;
-	padding: .45rem .8rem;
-	border-radius: 999px;
-	font-weight: 700;
-	font-size: 14px;
-	color: #111827;
-}
-
-/* 캐러셀 */
-.carousel {
-	position: relative;
-	overflow: visible;
-}
-
-.track {
-	display: grid;
-	grid-auto-flow: column;
-	grid-auto-columns: minmax(280px, 1fr);
-	gap: 18px;
-	overflow-x: auto;
-	overflow-y: visible;
-	scroll-snap-type: x mandatory;
-	padding: 20px 44px 6px; /* ↑ 배지가 위로 튀어나와도 안잘리게 여유 */
-}
-
-.track::-webkit-scrollbar {
-	height: 10px;
-}
-
-.track::-webkit-scrollbar-thumb {
-	background: #e5e7eb;
-	border-radius: 999px;
-}
-
-.slide {
-	scroll-snap-align: center;
-}
-
-/* 카드 래퍼: 배지가 바깥으로 보이도록 overflow를 visible 로 */
-.card-wrap {
-	position: relative;
-	background: #fff;
-	border: 1px solid var(--border);
-	border-radius: 18px;
-	overflow: visible;
-	box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
-	transition: transform .15s ease, box-shadow .15s ease, border-color .15s
-		ease;
-}
-
-.card-wrap:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 16px 28px rgba(0, 0, 0, .10);
-	border-color: #dfe3ea;
-}
-
-.pick {
-	position: absolute;
-	top: 10px;
-	left: 16px;
-	z-index: 2;
-	font-weight: 800;
-	font-size: 14px;
-	color: #0f172a;
-	background: rgba(255, 255, 255, .85);
-	padding: .2rem .5rem;
-	border-radius: 8px;
-}
-
-/* 랭크 배지: 완전 밖으로 ‘툭’ */
-.rank {
-	position: absolute;
-	top: -16px;
-	left: -16px;
-	z-index: 5;
-	width: 38px;
-	height: 38px;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-weight: 900;
-	color: #fff;
-	box-shadow: 0 8px 16px rgba(0, 0, 0, .18);
-	pointer-events: none;
-}
-
-.rank.r1 {
-	background: var(--rank1);
-}
-
-.rank.r2 {
-	background: var(--rank2);
-}
-
-.rank.r3 {
-	background: var(--rank3);
-}
-
-.rank.r4 {
-	background: #64748b;
-}
-
-/* 이미지는 상단만 둥글게 (부모가 더 이상 자르지 않음) */
-.thumb {
-	width: 100%;
-	aspect-ratio: 16/10;
-	background: #f5f7fa center/cover no-repeat;
-	border-top-left-radius: 18px;
-	border-top-right-radius: 18px;
-}
-
-.meta {
-	padding: 14px 16px 16px;
-}
-
-.name {
-	font-size: 16px;
-	font-weight: 900;
-	line-height: 1.3;
-	margin-bottom: 6px;
-}
-
-.issuer {
-	color: #6b7280;
-	font-size: 12px;
-	margin-bottom: 8px;
-}
-
-.saving {
-	color: #0f172a;
-	font-size: 14px;
-}
-
-.saving strong {
-	font-size: 18px;
-	font-weight: 900;
-}
-
-/* 좌우 네비 */
-.nav {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	border: 1px solid var(--border);
-	background: #fff;
-	display: grid;
-	place-items: center;
-	box-shadow: 0 8px 16px rgba(0, 0, 0, .08);
-	cursor: pointer;
-}
-
-.nav:hover {
-	background: #f9fafb;
-}
-
-.nav.prev {
-	left: 6px;
-}
-
-.nav.next {
-	right: 6px;
-}
-
-.nav svg {
-	width: 18px;
-	height: 18px;
-}
-
-@media ( max-width :600px) {
-	.track {
-		grid-auto-columns: 85%;
-		padding: 20px 48px 6px;
-	}
-}
-</style>
-
-
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-	<div id="header"></div>
+  <div id="header"></div>
 
-	<div class="content">
-		<section class="hero">
-			<h1>
-				<span id="userName">고객</span> 님에게 <strong>꼭 맞는 카드</strong>
-			</h1>
-			<p>최근 3개월 소비 패턴을 기반으로 추천했어요. 카드를 눌러 상세 혜택을 확인해보세요!</p>
-			<div class="underline"></div>
-		</section>
+  <main class="reco">
+    <!-- HERO: 이벤트 느낌, 안전한 글로우/입자 -->
+    <section class="hero">
+      <canvas id="fx"></canvas>
+      <div class="bg-glow"></div>
+      <div class="inner">
+        <div class="eyebrow">
+          <span class="pill pill-event">이번주 한정</span>
+          <span class="pill pill-brand">모으냥즈 카드</span>
+        </div>
+        <h1 class="title">소비패턴 기반<br><span>맞춤 카드 추천</span></h1>
+        <p class="sub">ML 분석으로 혜택·적립·구독을 한 번에 최적화.</p>
+        <div class="cta">
+          <a href="#picks" class="mbtn mbtn--lg mbtn--primary is-pill">내 추천 보기</a>
+          <a href="#insights" class="mbtn mbtn--lg mbtn--outline is-pill">인사이트</a>
+        </div>
+        <div class="count"><b id="dday">D-7</b> 이벤트 종료까지</div>
+      </div>
+    </section>
 
-		<section class="section">
-			<div class="toolbar">
-				<button class="btn-filter" id="btnBenefit">할인 + 적립</button>
-			</div>
+    <!-- 필터(세그먼트) -->
+    <section class="filters">
+      <div class="chips">
+        <button class="chip is-active" data-k="age" data-v="20">20대</button>
+        <button class="chip" data-k="age" data-v="30">30대</button>
+        <button class="chip" data-k="age" data-v="40">40대</button>
+        <button class="chip" data-k="age" data-v="50">50+</button>
 
-			<div class="carousel">
-				<button class="nav prev" id="prevBtn" aria-label="이전">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-				</button>
-				<div class="track" id="track"></div>
-				<button class="nav next" id="nextBtn" aria-label="다음">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-				</button>
-			</div>
-		</section>
-	</div>
+        <span class="spacer"></span>
 
-	<div id="footer"></div>
+        <button class="chip is-active" data-k="sex" data-v="F">여성</button>
+        <button class="chip" data-k="sex" data-v="M">남성</button>
 
-	<script>
-    // 1) 사용자 이름 (header.js에서 로컬스토리지에 저장했다면 활용)
-    (function setUserName(){
-      const name = localStorage.getItem('userName') || '고객';
-      document.getElementById('userName').textContent = name;
-    })();
+        <span class="spacer"></span>
 
-    // 2) DB 연동 자리: /api/cards/recommend 호출 예제 (없으면 로컬 더미 사용)
-    async function fetchRecommendedCards(){
-      try{
-        // 실제 API가 준비되면 주석 해제:
-        // const res = await fetch('/api/cards/recommend?limit=4');
-        // if(res.ok) return await res.json();
-        // throw new Error('API 실패');
-      }catch(e){ /* 폴백으로 더미 반환 */ }
+        <select class="select" id="region">
+          <option>서울</option><option>경기</option><option>부산</option><option>대구</option>
+        </select>
+        <select class="select" id="timeband">
+          <option>점심(11–14)</option><option>저녁(18–21)</option><option>심야(22–02)</option>
+        </select>
 
-      // ▶ 더미 데이터 (이미지는 /cardimg/ 폴더의 4개 사용)
-      return [
-        { id:'sc', name:'스페이스캣 클래식', issuer:'Moenyangs', img:'/cardimg/spacecat-card.png', pickRate:4.44, saving:67927 },
-        { id:'gr', name:'그린캣 에코',        issuer:'Moenyangs', img:'/cardimg/card-green.png',  pickRate:2.57, saving:39430 },
-        { id:'hl', name:'할로윈캣',           issuer:'Moenyangs', img:'/cardimg/holloweencat.png', pickRate:2.44, saving:37435 },
-        { id:'sm', name:'서머캣 카드',        issuer:'Moenyangs', img:'/cardimg/summercat.png',    pickRate:2.10, saving:31210 }
-      ];
-    }
+        <span class="sample">유사 이용자 <b id="peer">7,582</b>명</span>
+      </div>
+    </section>
 
-    // 3) 렌더링
-    function renderSlides(list){
-      const $track = document.getElementById('track');
-      $track.innerHTML = list.map((c, i)=>{
-        const rankClass = i===0 ? 'r1' : i===1 ? 'r2' : i===2 ? 'r3' : 'r4';
-        return `
-          <div class="slide">
-            <div class="card-wrap" onclick="viewDetail('${c.id}')">
-              <div class="pick">피킹률 약 ${c.pickRate.toFixed(2)} %</div>
-              <div class="rank ${rankClass}">${i+1}</div>
-              <div class="thumb" style="background-image:url('${c.img}')"></div>
-              <div class="meta">
-                <div class="name">${c.name}</div>
-                <div class="issuer">${c.issuer || ''}</div>
-                <div class="saving">▼ 한 달에 약 <strong>${c.saving.toLocaleString('ko-KR')}</strong>원 절약 가능!</div>
-              </div>
+    <!-- 인사이트(도넛/바/라인) -->
+    <section id="insights" class="insights">
+      <article class="panel">
+        <h3>적합도</h3>
+        <div class="donut-wrap">
+          <canvas id="fitChart"></canvas>
+          <div class="donut-center"><b id="fitVal">84</b><span>적합도</span></div>
+        </div>
+      </article>
+      <article class="panel">
+        <h3>시간대별 결제</h3>
+        <div class="mini"><canvas id="timeBar"></canvas></div>
+      </article>
+      <article class="panel">
+        <h3>주간 소비 추이</h3>
+        <div class="mini"><canvas id="weekLine"></canvas></div>
+      </article>
+    </section>
+
+    <!-- 추천 카드 슬라이더 -->
+    <section id="picks" class="picks">
+      <header class="picks-head">
+        <h2>이번 주 추천 카드</h2>
+        <span class="hint">혜택 이벤트 적용 중 · 스와이프/스크롤로 더 보기</span>
+      </header>
+
+      <div class="slider" id="slider">
+        <!-- 카드 1 -->
+        <article class="card3d">
+          <div class="poster poster--a"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>92</b>%</div>
+            <h3 class="name">야식냥 체크카드</h3>
+            <ul class="pros">
+              <li>외식 7% 적립 (점심 추가 +3%)</li>
+              <li>배달앱 10% 캐시백</li>
+              <li>모으냥즈 페이 5% 적립</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+              <button class="mbtn mbtn--outline is-pill">상세</button>
             </div>
-          </div>`
-      }).join('');
-    }
+          </div>
+        </article>
 
-    // 4) 이동/네비
-    function attachCarousel(){
-      const track = document.getElementById('track');
-      const prev = document.getElementById('prevBtn');
-      const next = document.getElementById('nextBtn');
-      const step = () => track.clientWidth * 0.8; // 한 번에 살짝씩
-      prev.addEventListener('click', ()=> track.scrollBy({ left: -step(), behavior:'smooth' }));
-      next.addEventListener('click', ()=> track.scrollBy({ left:  step(), behavior:'smooth' }));
-    }
+        <!-- 카드 2 -->
+        <article class="card3d">
+          <div class="poster poster--b"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>88</b>%</div>
+            <h3 class="name">커뮤냥 플래티넘</h3>
+            <ul class="pros">
+              <li>교통/편의점 10% 캐시백</li>
+              <li>OTT 구독 매월 3,000P</li>
+              <li>해외 2% 적립</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+              <button class="mbtn mbtn--outline is-pill">상세</button>
+            </div>
+          </div>
+        </article>
 
-    // 5) 상세 이동(원하는 라우팅으로 바꾸세요)
-    function viewDetail(id){
-      // 예: location.href = `/card/detail.html?id=${id}`;
-      console.log('view card:', id);
-    }
-    window.viewDetail = viewDetail; // 인라인에서 접근
+        <!-- 카드 3 -->
+        <article class="card3d">
+          <div class="poster poster--c"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>85</b>%</div>
+            <h3 class="name">글로벌냥 카드</h3>
+            <ul class="pros">
+              <li>해외 결제 3% 적립</li>
+              <li>공항 라운지 연 2회</li>
+              <li>여행 보험 포함</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+              <button class="mbtn mbtn--outline is-pill">상세</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-    // 초기화
-    (async function init(){
-      const data = await fetchRecommendedCards();
-      renderSlides(data);
-      attachCarousel();
-    })();
-  </script>
+    <!-- 이벤트 배너 -->
+    <section class="event">
+      <div class="glow"></div>
+      <h3>이번 주 추가 적립 + 캐시백 부스트</h3>
+      <p>추천 카드 신규/전환 시 최대 <b>12,000P</b> + 외식 <b>+3%</b> 추가적립 (D-<span id="dday2">7</span>)</p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
 </body>
 </html>
