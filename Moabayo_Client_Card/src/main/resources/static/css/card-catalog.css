@@ -1,0 +1,141 @@
+/* ===== Theme tokens (Dark white-border fix) ===== */
+:root{
+  --bg:#ffffff; --ink:#111827; --sub:#6b7280; --line:#e5e7eb;
+  --card:#ffffff; --muted:#f8fafc; --shadow:0 10px 20px rgba(15,23,42,.08);
+}
+[data-theme="dark"]{
+  --bg:#0b0f14; --ink:#e5e7eb; --sub:#9aa5b1; --line:#1f2937;
+  --card:#0f151c; --muted:#0b1016; --shadow:0 14px 28px rgba(0,0,0,.45);
+}
+
+html,body{margin:0;background:var(--bg);color:var(--ink);}
+.catalog{font-family:"Pretendard",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR";}
+
+/* ===== Page head ===== */
+.head{max-width:1160px;margin:26px auto 8px;padding:0 24px}
+.head h1{margin:0 0 2px;font-weight:900;letter-spacing:-.02em}
+.head .sub{margin:0 0 10px;color:var(--sub)}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700}
+.chip.is-active{background:color-mix(in oklab, var(--card) 70%, var(--muted) 30%); border-color:color-mix(in oklab, var(--line) 60%, var(--ink) 40%);}
+.search{margin-left:auto}
+.search input{height:34px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);padding:0 10px}
+
+/* ===== Grid ===== */
+.grid{
+  max-width:1160px;margin:8px auto 40px;padding:0 24px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+}
+@media (max-width:1100px){ .grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:720px){  .grid{grid-template-columns:1fr;} }
+
+/* ===== Card (3D flip base) ===== */
+.kcard{ --accent:#7c3aed; position:relative; perspective:1200px; }
+.kcard .inner{
+  position:relative; transform-style:preserve-3d;
+  border:1px solid var(--line); border-radius:18px; background:var(--card);
+  box-shadow:var(--shadow); transition:transform .2s ease, box-shadow .2s ease;
+  height:280px; /* desktop base height */
+}
+@media (max-width:1100px){ .kcard .inner{height:260px;} }
+@media (max-width:720px){  .kcard .inner{height:240px;} }
+
+.kcard:hover .inner{ transform:translateY(-4px); }
+
+.kcard .face{
+  position:absolute; inset:0; padding:12px 12px 14px;
+  border-radius:18px; backface-visibility:hidden;
+  display:flex; flex-direction:column; gap:10px; overflow:hidden;
+}
+.kcard .front{ z-index:2; }
+.kcard .back{ transform:rotateY(180deg); z-index:3; }
+
+.kcard.is-flipped .inner{ transform:rotateY(180deg); }
+
+/* Thumb + meta */
+.kcard .thumb{
+  height:62%; width:100%; border-radius:12px; border:1px solid var(--line);
+  background:
+    radial-gradient(100% 140% at 0% 0%, color-mix(in oklab, var(--accent) 26%, transparent), transparent 60%),
+    radial-gradient(120% 120% at 100% 0%, rgba(59,130,246,.30), transparent 60%),
+    linear-gradient(135deg, rgba(167,139,250,.15), rgba(236,72,153,.12));
+  background-size:cover; background-position:center;
+}
+.kcard .meta{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:8px; }
+.kcard .name{ margin:0; font-size:16px; font-weight:800; letter-spacing:-.01em; }
+.kcard .tags{display:flex;gap:6px;flex-wrap:wrap}
+.kcard .tags span{font-size:12px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:2px 8px;background:var(--muted)}
+
+/* Back content */
+.kcard .back h4{margin:0 0 4px;font-weight:900}
+.kcard .benefits{margin:0 0 10px;padding-left:18px}
+.kcard .actions{display:flex;gap:8px;margin-top:auto}
+
+/* ===== Effects ===== */
+/* 1) Glow */
+.fx-glow .inner{position:relative}
+.fx-glow .inner::after{
+  content:""; position:absolute; inset:-1px; border-radius:18px; pointer-events:none;
+  background:conic-gradient(from 180deg, color-mix(in oklab,var(--accent) 70%, transparent), transparent 40%, color-mix(in oklab,#60a5fa 60%, transparent));
+  filter:blur(12px); opacity:.25; transition:opacity .2s ease, filter .2s ease; z-index:1;
+}
+.fx-glow:hover .inner::after{opacity:.45; filter:blur(16px)}
+
+/* 2) Sheen */
+.kcard .sheen{position:absolute; inset:0; border-radius:18px; pointer-events:none; overflow:hidden}
+.kcard .sheen::before{
+  content:""; position:absolute; top:0; left:-120%; width:60%; height:100%;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.28) 50%, transparent 100%);
+  transform:skewX(-20deg); filter:blur(2px); transition:transform .6s ease; opacity:.35;
+}
+.fx-sheen:hover .sheen::before{ transform:translateX(260%) skewX(-20deg) }
+
+/* 3) Gradient border run */
+.fx-gradient .inner{
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(135deg, color-mix(in oklab,var(--accent) 70%, transparent), transparent) border-box;
+  border:1px solid transparent;
+}
+.fx-gradient:hover .inner{ box-shadow:0 16px 32px rgba(0,0,0,.18) }
+
+/* 4) Neon */
+.fx-neon .inner{
+  box-shadow:0 0 0 1px color-mix(in oklab,var(--accent) 60%, var(--line)),
+             0 0 20px color-mix(in oklab,var(--accent) 30%, transparent);
+}
+.fx-neon:hover .inner{
+  box-shadow:0 0 0 1px color-mix(in oklab,var(--accent) 80%, var(--line)),
+             0 0 36px color-mix(in oklab,var(--accent) 42%, transparent);
+}
+
+/* 5) Slice */
+.fx-slice .front::after{
+  content:""; position:absolute; right:-10%; top:-10%; width:50%; height:40%;
+  background:linear-gradient(135deg, color-mix(in oklab,var(--accent) 30%, transparent), transparent);
+  border-radius:24px; filter:blur(10px); opacity:.25; transition:transform .25s ease, opacity .25s ease;
+}
+.fx-slice:hover .front::after{ transform:translate(-6px,6px) rotate(2deg); opacity:.4 }
+
+/* 6) Float */
+.fx-float:hover .thumb{ transform:translateY(-2px); transition:transform .2s ease }
+
+/* ===== Sparkle/Ripple FX (CTA) ===== */
+.fx-overlay{position:fixed;inset:0;pointer-events:none;z-index:9999}
+.fx-burst{position:absolute;left:0;top:0;transform:translate(-50%,-50%)}
+.fx-ripple{
+  position:absolute;left:0;top:0;transform:translate(-50%,-50%);
+  width:14px;height:14px;border:2px solid var(--accent);border-radius:999px;opacity:.7;
+  animation:ripple .7s ease-out forwards
+}
+@keyframes ripple{from{transform:translate(-50%,-50%) scale(.3);opacity:.7} to{transform:translate(-50%,-50%) scale(6);opacity:0}}
+.fx-spark{position:absolute;left:0;top:0;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;will-change:transform,opacity;filter:drop-shadow(0 0 6px rgba(0,0,0,.25))}
+.fx-spark.star{width:10px;height:10px;background:currentColor;clip-path:polygon(50% 0,61% 35%,100% 38%,69% 57%,80% 92%,50% 72%,20% 92%,31% 57%,0 38%,39% 35%)}
+.fx-spark.dot{background:currentColor;border-radius:999px}
+
+/* ===== A11y focus ===== */
+.kcard :is(button,a):focus-visible{
+  outline:2px solid color-mix(in oklab, var(--accent) 70%, #fff);
+  outline-offset:2px; border-radius:10px;
+}
