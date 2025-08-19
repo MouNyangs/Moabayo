@@ -17,8 +17,10 @@ import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
+
 import com.sboot.moabayo.vo.TxnRowVO;
 import com.sboot.moabayo.vo.UserAccountVO;
+
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
@@ -131,7 +133,7 @@ public class BankController {
         }
         
         // \\\\\\\\\\\\\\\\ 뱅크 메인 페이지 DB 연결 부분 종료 ///////////////
-		return "index";
+		return "/index";
 	}
 	
 	@GetMapping("/account/list")
@@ -153,7 +155,7 @@ public class BankController {
 	public String recommendAccounts(Model model) {
 //	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
-	    return "recommend"; // cardList.html 렌더링
+	    return "/recommend"; // cardList.html 렌더링
 	}
 	
 	@GetMapping("/product/list")
@@ -161,7 +163,7 @@ public class BankController {
 		model.addAttribute("products", bankProductService.findAll());
 //	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
 //	    model.addAttribute("cardList", cardList);
-	    return "bankProductList"; // cardList.html 렌더링
+	    return "/bankProductList"; // cardList.html 렌더링
 	}
 	
 	@GetMapping("/history")
