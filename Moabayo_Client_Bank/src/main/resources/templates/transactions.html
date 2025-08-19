@@ -11,8 +11,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
-  <!-- Scripts -->
-  <script defer src="/js/transactions.js"></script>
+
   
   <!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
 <link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
@@ -156,4 +155,12 @@
   <div id="footer"></div>
   
 </body>
+<!-- 데이터 가져오는 부분 -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  window.TX_ALL = /*[[${txnlist}]]*/ [];
+  /*]]>*/
+</script>
+  <!-- Scripts -->
+  <script defer src="/js/transactions.js"></script>
 </html>

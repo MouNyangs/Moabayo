@@ -13,9 +13,14 @@ import com.sboot.moabayo.jwt.BankJwtGenerate;
 import com.sboot.moabayo.service.AccountService;
 import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
+import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
+
+import com.sboot.moabayo.vo.TxnRowVO;
+import com.sboot.moabayo.vo.UserAccountVO;
+
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
@@ -35,14 +40,17 @@ public class BankController {
     private final BankService bankService;
     private final BankProductService bankProductService;
     private final AccountService accountService;
+    private final TransactionService transactionService;
 
     public BankController(
     		BankService bankService, 
     		BankProductService bankProductService,
-    		AccountService accountService) {
+    		AccountService accountService,
+    		TransactionService transactionService) {
         this.bankService = bankService;
         this.bankProductService = bankProductService;
         this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 	
 	@GetMapping("/verify")
@@ -159,7 +167,12 @@ public class BankController {
 	}
 	
 	@GetMapping("/history")
-	public String bankhistory(Model model) {
-		return "/transactions";
+	public String bankhistory(HttpSession session, Model model) {
+	    Long userId = (Long) session.getAttribute("userId");
+	    List<TxnRowVO> txnlist = transactionService.search(userId);
+	    System.out.println(txnlist.toString());
+	    model.addAttribute("txnlist", txnlist);
+		
+		return "transactions";
 	}
 }
