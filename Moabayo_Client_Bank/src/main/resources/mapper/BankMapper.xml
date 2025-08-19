@@ -23,11 +23,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM users
         WHERE login_Id = #{loginId}
     </select>
-
-    <!-- 유저의 냥코인 계정 -->
+<!-- 
+    유저의 냥코인 계정
 	<select id="findNyangCoinByUserId" resultType="com.sboot.moabayo.vo.NyangCoinVO">
 	  SELECT
-	    nyang_id    AS nyangCoinId,  -- ★ VO와 동일
+	    nyang_id    AS nyangCoinId,  ★ VO와 동일
 	    user_id     AS userId,
 	    money       AS balance,
 	    create_date AS createdAt
@@ -35,12 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  WHERE user_id = #{userId}
 	</select>
 
-    <!-- 히스토리 카운트 -->
+    히스토리 카운트
 	<select id="countHistoryByNyangId" resultType="int">
 	  SELECT COUNT(*) FROM coin_history WHERE nyang_id = #{nyangId}
 	</select>
 
-	<!-- CoinMapper.xml -->
+	CoinMapper.xml
 	<select id="findHistoryByNyangIdPaged" resultType="com.sboot.moabayo.vo.NyangCoinHistoryVO">
 	  SELECT *
 	  FROM (
@@ -60,5 +60,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    WHERE ROWNUM &lt;= #{endRow}
 	  )
 	  WHERE rnum &gt;= #{startRow}
-	</select>
+	</select> -->
 </mapper>

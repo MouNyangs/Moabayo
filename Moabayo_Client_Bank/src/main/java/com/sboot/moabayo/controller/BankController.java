@@ -114,23 +114,24 @@ public class BankController {
 
         model.addAttribute("loginId", loginId);
 
-        // 코인 조회
-        NyangCoinVO ncvo = bankService.getNyangCoinByUserId(userId);
-        model.addAttribute("NyangCoin", ncvo);
-        
-        // 히스토리 조회 (페이지는 1-based로 가정)
-        
-        if (ncvo != null) {
-            int page = 1; // 첫 페이지
-            int size = 10; // 한 페이지 10개 등
-            List<NyangCoinHistoryVO> history = bankService.getHistoryPage(ncvo.getNyangCoinId(), page, size);
-            System.out.println("history size: " + history.size());
-            System.out.println("coinId = " + ncvo.getNyangCoinId()); // null이면 ①번 확정
-            System.out.println("count = " + bankService.countHistory(ncvo.getNyangCoinId()));
-            model.addAttribute("NyangCoinHistory", history);
-        } else {
-            model.addAttribute("NyangCoinHistory", List.of());
-        }
+        // 코인은 user_account 에 냥코인 상품이 있을때 조회하도록 변경됨. 250819
+//        // 코인 조회
+//        NyangCoinVO ncvo = bankService.getNyangCoinByUserId(userId);
+//        model.addAttribute("NyangCoin", ncvo);
+//        
+//        // 히스토리 조회 (페이지는 1-based로 가정)
+//        
+//        if (ncvo != null) {
+//            int page = 1; // 첫 페이지
+//            int size = 10; // 한 페이지 10개 등
+//            List<NyangCoinHistoryVO> history = bankService.getHistoryPage(ncvo.getNyangCoinId(), page, size);
+//            System.out.println("history size: " + history.size());
+//            System.out.println("coinId = " + ncvo.getNyangCoinId()); // null이면 ①번 확정
+//            System.out.println("count = " + bankService.countHistory(ncvo.getNyangCoinId()));
+//            model.addAttribute("NyangCoinHistory", history);
+//        } else {
+//            model.addAttribute("NyangCoinHistory", List.of());
+//        }
         
         // \\\\\\\\\\\\\\\\ 뱅크 메인 페이지 DB 연결 부분 종료 ///////////////
 		return "/index";

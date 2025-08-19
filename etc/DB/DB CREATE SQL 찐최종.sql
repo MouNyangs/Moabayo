@@ -107,30 +107,6 @@ CREATE TABLE account_transaction (
 );
 
 ------------------------------------------------
--- 7. 냥코인 (nyang_coin)
-------------------------------------------------
-CREATE TABLE nyang_coin (
-    nyang_id NUMBER(20,0) PRIMARY KEY,
-    create_date DATE,
-    money NUMBER(20,2),
-    user_id NUMBER(20,0),
-    CONSTRAINT fk_nyang_coin_user FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-------------------------------------------------
--- 8. 코인 이력 (coin_history)
-------------------------------------------------
-CREATE TABLE coin_history (
-    history_id NUMBER(20,0) PRIMARY KEY,
-    create_date DATE,
-    total_amt NUMBER(20,2),
-    trans_amt NUMBER(20,2),
-    trans_type VARCHAR2(255),
-    nyang_id NUMBER(20,0),
-    CONSTRAINT fk_coin_history_nyang FOREIGN KEY (nyang_id) REFERENCES nyang_coin(nyang_id)
-);
-
-------------------------------------------------
 -- 9. 관리자 (admin)
 ------------------------------------------------
 CREATE TABLE admin (
@@ -231,6 +207,7 @@ INSERT INTO users VALUES (4, TO_DATE('2024-01-04','YYYY-MM-DD'), '444-555-666', 
 INSERT INTO users VALUES (5, TO_DATE('2024-01-05','YYYY-MM-DD'), '555-666-777', '인천시 남동구', '505호', '21555', 'user5@example.com', '최지은', 'choije', 'pw5', '010-5555-6666', 'token5', '5555', 1);
 
 -- bank_product
+INSERT INTO bank_product VALUES (100, '냥코인 입출금통장', 'img0.png', '모으냥즈 자유입출금 통장', '예금', '모으냥즈 스페셜 케어 서비스', 0.15, '입출금'); -- 기존 냥코인 테이블을 이걸로 대체
 INSERT INTO bank_product VALUES (101, '자유입출금통장', 'img1.png', '수수료 면제 통장', '예금', '인터넷뱅킹 무료', 0.10, '입출금');
 INSERT INTO bank_product VALUES (102, '청년 적금', 'img2.png', '청년 전용 적금 상품', '적금', '이자 우대', 3.20, '적금');
 INSERT INTO bank_product VALUES (103, '주택청약종합저축', 'img3.png', '내집마련 필수통장', '청약', '대출 우대', 1.50, '저축');
@@ -270,19 +247,6 @@ INSERT INTO account_transaction VALUES
 INSERT INTO account_transaction VALUES
 (1005, 305, 300000, 'ACC56793', 'Deposit', 'Investment', TO_DATE('2025-08-05 16:45','YYYY-MM-DD HH24:MI'), 'Investment Firm', '02-5678-9012');
 
--- nyang_coin
-INSERT INTO nyang_coin VALUES (601, TO_DATE('2024-01-10','YYYY-MM-DD'), 100.00, 1);
-INSERT INTO nyang_coin VALUES (602, TO_DATE('2024-01-11','YYYY-MM-DD'), 250.50, 2);
-INSERT INTO nyang_coin VALUES (603, TO_DATE('2024-01-12','YYYY-MM-DD'), 500.00, 3);
-INSERT INTO nyang_coin VALUES (604, TO_DATE('2024-01-13','YYYY-MM-DD'), 750.75, 4);
-INSERT INTO nyang_coin VALUES (605, TO_DATE('2024-01-14','YYYY-MM-DD'), 1000.00, 5);
-
--- coin_history
-INSERT INTO coin_history VALUES (701, TO_DATE('2024-01-20','YYYY-MM-DD'), 100.00, 100.00, '충전', 601);
-INSERT INTO coin_history VALUES (702, TO_DATE('2024-01-21','YYYY-MM-DD'), 200.50, 100.50, '충전', 602);
-INSERT INTO coin_history VALUES (703, TO_DATE('2024-01-22','YYYY-MM-DD'), 400.00, 100.00, '사용', 603);
-INSERT INTO coin_history VALUES (704, TO_DATE('2024-01-23','YYYY-MM-DD'), 650.75, 150.75, '충전', 604);
-INSERT INTO coin_history VALUES (705, TO_DATE('2024-01-24','YYYY-MM-DD'), 800.00, 200.00, '사용', 605);
 
 -- admin
 INSERT INTO admin VALUES (801, 1, 'SUPER_ADMIN', TO_DATE('2024-01-01','YYYY-MM-DD'));
