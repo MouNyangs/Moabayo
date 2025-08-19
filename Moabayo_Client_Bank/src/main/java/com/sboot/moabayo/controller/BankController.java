@@ -158,4 +158,9 @@ public class BankController {
 //	    model.addAttribute("cardList", cardList);
 	    return "bankProductList"; // cardList.html 렌더링
 	}
+	
+	@GetMapping("/history")
+	public String bankhistory(Model model) {
+		return "transactions";
+	}
 }
