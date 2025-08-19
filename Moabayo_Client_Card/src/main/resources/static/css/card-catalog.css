@@ -139,3 +139,40 @@ html,body{margin:0;background:var(--bg);color:var(--ink);}
   outline:2px solid color-mix(in oklab, var(--accent) 70%, #fff);
   outline-offset:2px; border-radius:10px;
 }
+
+
+/* ===== Back v2 ===== */
+.kcard .back{display:flex;flex-direction:column;gap:12px}
+.back-hero{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;
+  background:
+    radial-gradient(60% 120% at 0% 0%, color-mix(in oklab,var(--accent) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in oklab, var(--muted) 70%, transparent), transparent);
+  border:1px solid var(--line);
+}
+.back-hero .fit{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+.fit-ring{--p:84;--ringBg:rgba(128,128,128,.18); position:relative;width:56px;height:56px;border-radius:999px;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--ringBg) 0);
+}
+.fit-ring::after{content:"";position:absolute;inset:6px;border-radius:999px;background:var(--card)}
+.fit-ring span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.back-hero em{font-style:normal;color:var(--sub);font-size:12px}
+.back-hero .info{flex:1;min-width:0}
+.back-hero .b-name{margin:0 0 4px;font-size:16px;font-weight:900;letter-spacing:-.01em}
+.back-hero .kv{display:flex;flex-wrap:wrap;gap:6px}
+.kv-chip{font-size:12px;color:var(--ink);background:color-mix(in oklab,var(--muted) 85%, transparent);
+  border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.kv-chip b{font-weight:800}
+
+.benefit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media (max-width:720px){ .benefit-grid{grid-template-columns:1fr} }
+.b-item{position:relative;padding-left:22px;line-height:1.45}
+.b-item::before{
+  content:"";position:absolute;left:0;top:.35em;width:12px;height:12px;border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%, #fff 1px, transparent 2px),
+    radial-gradient(circle at 70% 70%, #fff 1px, transparent 2px),
+    radial-gradient(closest-side, var(--accent) 98%, transparent 100%);
+  box-shadow:0 0 0 2px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+
+.kcard .actions{display:flex;gap:8px;margin-top:auto}

@@ -2,51 +2,62 @@
 function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 const COL = { brand: cssVar('--brand') || '#7c3aed' };
 
-// 이미지 주입 (data-img가 있으면 썸네일 배경으로)
-document.addEventListener('DOMContentLoaded', () => {
+/* ---------- 이미지 주입 ---------- */
+function injectThumbs(){
   document.querySelectorAll('.kcard').forEach(card=>{
     const url = card.getAttribute('data-img');
-    if(url) card.querySelector('.thumb').style.backgroundImage = `url("${url}")`;
+    if(url){
+      const th = card.querySelector('.thumb');
+      if(th) th.style.backgroundImage = `url("${url}")`;
+    }
   });
-});
+}
 
-// 필터/검색 (간단 목업)
-document.addEventListener('DOMContentLoaded', () => {
+/* ---------- 필터/검색 ---------- */
+function applyFilter(){
+  const tag = document.querySelector('.chip.is-active')?.dataset.filter || 'all';
+  const qv  = (document.getElementById('q')?.value || '').trim().toLowerCase();
+
+  document.querySelectorAll('.kcard').forEach(el=>{
+    const tags = (el.dataset.tags || '').toLowerCase();
+    const name = (el.querySelector('.name, .b-name')?.textContent || '').toLowerCase();
+    const passTag = tag === 'all' || tags.includes(tag);
+    const passQ   = !qv || tags.includes(qv) || name.includes(qv);
+    el.style.display = (passTag && passQ) ? '' : 'none';
+  });
+}
+const applyFilterDebounced = (fn=>{let t; return ()=>{clearTimeout(t); t=setTimeout(fn,150);} })(applyFilter);
+
+function setupFilter(){
   const chips = document.querySelectorAll('.chip');
   chips.forEach(ch=> ch.addEventListener('click', ()=>{
     chips.forEach(c=>c.classList.remove('is-active'));
     ch.classList.add('is-active');
     applyFilter();
   }));
-  document.getElementById('q').addEventListener('input', applyFilter);
-  function applyFilter(){
-    const tag = document.querySelector('.chip.is-active')?.dataset.filter || 'all';
-    const q = (document.getElementById('q').value||'').trim().toLowerCase();
-    document.querySelectorAll('.kcard').forEach(el=>{
-      const tags = (el.dataset.tags||'').toLowerCase();
-      const name = el.querySelector('.name')?.textContent.toLowerCase() || '';
-      const passTag = tag==='all' || tags.includes(tag);
-      const passQ = !q || tags.includes(q) || name.includes(q);
-      el.style.display = (passTag && passQ) ? '' : 'none';
-    });
-  }
-  applyFilter();
+
+  const q = document.getElementById('q');
+  if(q) q.addEventListener('input', applyFilterDebounced);
+
+  applyFilter(); // 최초 1회
+}
+
+/* ---------- 초기화 (단 한 번) ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  injectThumbs();
+  setupFilter();
 });
 
-// Flip (카드 클릭 / 뒤로 버튼)
+/* ---------- Flip / Sparkle 그대로 사용 ---------- */
 document.addEventListener('click', (e)=>{
   const backBtn = e.target.closest('.flip-back');
-  if(backBtn){
-    backBtn.closest('.kcard')?.classList.remove('is-flipped');
-    return;
-  }
+  if(backBtn){ backBtn.closest('.kcard')?.classList.remove('is-flipped'); return; }
   const card = e.target.closest('.kcard');
   const cta  = e.target.closest('.apply-btn');
-  if(cta){ sparkleBurstFrom(cta); return; } // CTA 클릭은 버스트만
+  if(cta){ sparkleBurstFrom(cta); return; }
   if(card){ card.classList.toggle('is-flipped'); }
 }, {passive:true});
 
-// 스파클·리플 버스트
 function sparkleBurstFrom(btn){
   const rect = btn.getBoundingClientRect();
   const x = rect.left + rect.width/2;
@@ -89,3 +100,55 @@ function sparkleBurstFrom(btn){
   }
   setTimeout(()=> overlay.remove(), 1200);
 }
+
+/* ---------- Back-face 업그레이드 (런타임 변환) ---------- */
+function upgradeBackFaces(){
+  document.querySelectorAll('.kcard').forEach(card=>{
+    const back = card.querySelector('.face.back');
+    if(!back || back.classList.contains('upgraded')) return;
+
+    // 기존 리스트에서 혜택 텍스트 수집
+    const benefitLis = back.querySelectorAll('.benefits li, ul li, .b-list li');
+    const benefits = [...benefitLis].map(li => li.textContent.trim()).filter(Boolean);
+
+    // 카드명/지표 (없으면 기본값)
+    const title = card.querySelector('.name, .b-name')?.textContent?.trim() || '추천 카드';
+    const fit   = Number(card.dataset.fit || 84);
+    const cap   = card.dataset.cap || '30,000P';
+    const fee   = card.dataset.fee || '무료';
+    const req   = card.dataset.req || '30만+';
+
+    // 새 뒷면 마크업 주입
+    back.innerHTML = `
+      <div class="back-hero">
+        <div class="fit">
+          <div class="fit-ring" style="--p:${fit}"><span>${fit}%</span></div>
+          <em>적합도</em>
+        </div>
+        <div class="info">
+          <h3 class="b-name">${title}</h3>
+          <div class="kv">
+            <span class="kv-chip">월 최대 <b>${cap}</b></span>
+            <span class="kv-chip">연회비 <b>${fee}</b></span>
+            <span class="kv-chip">전월실적 <b>${req}</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="benefit-grid">
+        ${benefits.map(t=>`<div class="b-item">${t}</div>`).join('')}
+      </div>
+      <div class="actions">
+        <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+        <button class="mbtn mbtn--outline is-pill flip-back">뒤로</button>
+      </div>
+    `;
+    back.classList.add('upgraded');
+  });
+}
+
+// ✅ 초기화 묶음 안에서 한 번만 호출
+document.addEventListener('DOMContentLoaded', () => {
+  injectThumbs();
+  setupFilter();
+  upgradeBackFaces();        // ← 이 줄 추가
+});
