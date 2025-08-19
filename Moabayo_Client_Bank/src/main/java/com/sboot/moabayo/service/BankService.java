@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.sboot.moabayo.dao.BankMapper;
 import com.sboot.moabayo.vo.NyangCoinHistoryVO;
 import com.sboot.moabayo.vo.NyangCoinVO;
+import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
 @Service
@@ -36,4 +37,5 @@ public class BankService {
         int offset = (safePage - 1) * safeSize;
         return bankMapper.findHistoryByNyangIdPaged(nyangId, offset, safeSize);
     }
+    
 }

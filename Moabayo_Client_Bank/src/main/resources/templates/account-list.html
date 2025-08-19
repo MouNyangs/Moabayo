@@ -146,6 +146,13 @@
   </main>
 <div id="footer"></div>
 
+	<!-- bank-accounts.html (bank-accounts.js보다 먼저) -->
+	<script th:inline="javascript">
+	  /*<![CDATA[*/
+	  // Thymeleaf가 acclist를 JS 리터럴(Array<Object>)로 변환해 줍니다.
+	  window.ACCOUNTS = /*[[${acclist}]]*/'[]' ;
+	  /*]]>*/
+	</script>
   <!-- 페이지 전용 JS -->
   <script defer th:src="@{/js/bank-accounts.js}"></script>
 </body>

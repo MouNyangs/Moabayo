@@ -110,17 +110,12 @@ CREATE TABLE account_transaction (
     user_account_id NUMBER(20,0) NOT NULL,
     approved_amount NUMBER(20,2),
     approved_num VARCHAR2(255),
---    account_history_id NUMBER(20,0), -- 이건 어디서 들고오는거야? 제거.
---    account_id NUMBER(20,0), -- 제거.
     account_type VARCHAR2(255),
     category VARCHAR2(255),
     date_time DATE,
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
---    user_id NUMBER(20,0), -- 제거.
     CONSTRAINT fk_account_transaction_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id)
-    -- CONSTRAINT fk_account_transaction_user FOREIGN KEY (user_id) REFERENCES users(user_id),
-    -- CONSTRAINT fk_account_transaction_bank_product FOREIGN KEY (account_id) REFERENCES bank_product(account_id)
 );
 
 -- 9. user_card (users, card_product 참조)
@@ -138,14 +133,11 @@ CREATE TABLE card_transaction (
     user_card_id NUMBER(20,0) NOT NULL,
     approved_amount NUMBER(20,2),
     approved_num VARCHAR2(255),
---    card_history_id NUMBER(20,0), -- 이건 뭐임? 어디서 이어지는거야? 일단 제거.
---    card_id NUMBER(20,0), - 제거.
     card_type VARCHAR2(255),
     category VARCHAR2(255),
     date_time DATE,
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
---    user_id NUMBER(20,0), -- 제거.
     CONSTRAINT fk_card_transaction_user_card FOREIGN KEY (user_card_id) REFERENCES user_card(user_card_id)
 );
 
