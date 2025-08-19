@@ -13,6 +13,7 @@ const state = {
 };
 
 /* ===== Mock data (replace with API later) ===== */
+/*
 const mockTx = (() => {
   const cats = ["외식","교통","주거","통신","구독","기타"];
   const methods = ["card","transfer","auto","cash","fee","refund"];
@@ -46,6 +47,38 @@ const mockTx = (() => {
     });
   }
   return rows.sort((a,b)=>a.date>b.date?-1:1);
+})();
+*/
+
+const mockTx = (() => {
+  const init = Array.isArray(window.TX_ALL) ? window.TX_ALL : [];
+  console.log("init: ", init);
+
+  // 서버 → 프론트 구조 어댑트 (너의 모의 구조에 맞춤)
+  const adapt = (it) => {
+    // ts = "YYYY-MM-DD HH:MM" 분리
+    const ts = (it.ts || '').trim();
+    const sp = ts.indexOf(' ');
+    const date = sp > 0 ? ts.slice(0, sp) : '';
+    const time = sp > 0 ? ts.slice(sp + 1) : '';
+
+    return {
+      id: String(it.id),
+      date, time,
+      amount: Number(it.amount || 0),     // 수입 + / 지출 -
+      merchant: it.merchant || '',
+      category: it.category || '기타',
+      method: (it.method || 'transfer').toLowerCase(),
+      tags: [],                           // 필요하면 서버에서 내려도 됨
+      memo: '',                           // 필요시 컬럼 추가
+      meta: { approvalNo: it.approvedNum || '' }
+    };
+  };
+
+  const rows = init.map(adapt);
+  // 기존 mock처럼 최신 우선 정렬 유지
+  rows.sort((a,b) => (a.date === b.date ? b.time.localeCompare(a.time) : b.date.localeCompare(a.date)));
+  return rows;
 })();
 
 /* ===== Utils ===== */

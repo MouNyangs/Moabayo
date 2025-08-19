@@ -31,8 +31,5 @@ public interface BankMapper {
 			);
 	
 	// 유저가 가지고 있는 예적금대출 상품 조회
-	List<UserAccountVO> findUserAccountsByUserID(@Param("userId") Long userId);
-	
-
-    
+	List<UserAccountVO> findUserAccountsByUserID(@Param("userId") Long userId);    
 }
