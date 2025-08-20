@@ -36,24 +36,10 @@
     bp.type AS TYPE,
 
     /* 잔액: 입금계열 +, 출금계열 - */
-    NVL((
-      SELECT TRUNC(SUM(
-        CASE
-          WHEN UPPER(at.account_type) IN ('DEPOSIT','INCOME','TRANSFER_IN','입금','이체수신')
-            THEN at.approved_amount
-          ELSE -at.approved_amount
-        END
-      ))
-      FROM account_transaction at
-      WHERE at.user_account_id = ua.user_account_id
-    ), 0) AS BALANCE,
+    NVL(ua.balance, 0) AS BALANCE,
 
     /* 개설일: 첫 거래일자 (없으면 NULL) */
-    (
-      SELECT TO_CHAR(MIN(at2.date_time), 'YYYY-MM-DD')
-      FROM account_transaction at2
-      WHERE at2.user_account_id = ua.user_account_id
-    ) AS OPENED_AT
+    ua.create_date AS OPENED_AT
   </sql>
 
   <!-- 사용자 계좌 (내역 포함) -->
