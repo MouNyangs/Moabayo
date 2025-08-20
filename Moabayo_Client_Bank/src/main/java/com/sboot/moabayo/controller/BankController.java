@@ -1,24 +1,34 @@
 package com.sboot.moabayo.controller;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.sboot.moabayo.jwt.BankJwtGenerate;
 import com.sboot.moabayo.service.AccountService;
 import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
+import com.sboot.moabayo.service.KakaoApproveResponse;
+import com.sboot.moabayo.service.KakaoPayService;
+import com.sboot.moabayo.service.KakaoReadyResponse;
 import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.TxnRowVO;
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 //import com.sboot.moabayo.service.ProductService;
@@ -36,17 +46,22 @@ public class BankController {
     private final BankProductService bankProductService;
     private final AccountService accountService;
     private final TransactionService transactionService;
+    private final KakaoPayService kakaoPayService;   // ✅ 추가
 
     public BankController(
-    		BankService bankService, 
-    		BankProductService bankProductService,
-    		AccountService accountService,
-    		TransactionService transactionService) {
-        this.bankService = bankService;
-        this.bankProductService = bankProductService;
-        this.accountService = accountService;
-        this.transactionService = transactionService;
-    }
+    	    BankService bankService, 
+    	    BankProductService bankProductService,
+    	    AccountService accountService,
+    	    TransactionService transactionService,
+    	    KakaoPayService kakaoPayService   // ✅ 추가
+    	) {
+    	    this.bankService = bankService;
+    	    this.bankProductService = bankProductService;
+    	    this.accountService = accountService;
+    	    this.transactionService = transactionService;
+    	    this.kakaoPayService = kakaoPayService; // ✅ 이제 정상 인식
+    	}
+
 	
 	@GetMapping("/verify")
 	public String handleToken(@RequestParam String token, HttpSession session) {
@@ -176,9 +191,120 @@ public class BankController {
 		
 		return "/transactions";
 	}
-	
+	//카카오 금액입력란으로 가는 메소드입니다.
 	@GetMapping("/charge")
 	public String coincharge(HttpSession session, Model model) {
 		return "/coin/coin-charge";
 	}
+    /** 금액 입력 → 진행 화면 */
+    @PostMapping("/ready")
+    public String coinpay(@RequestParam int amount, Model model) {
+        model.addAttribute("amount", amount); // 진행 카드에 현재 금액 보여주기
+        return "/coin/coin-pay";
+    }
+
+    /**
+     * 진행 화면에서 호출하는 Ready API
+     * - x-www-form-urlencoded 로 amount 를 받음
+     * - 카카오 ready 호출(또는 스텁) 후 redirectUrl, tid 반환
+     */
+    @PostMapping(value = "/ready-api",
+                 consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+                 produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> readyApi(@RequestParam int amount, HttpServletRequest req) {
+        // 현재 도메인 기준 success/cancel/fail URL 생성
+        String base = baseUrl(req); // ex) http://localhost:8813
+        String success = base + "/bank/kakao/success";
+        String cancel  = base + "/bank/kakao/cancel";
+        String fail    = base + "/bank/kakao/fail";
+
+        KakaoReadyResponse ready = kakaoPayService.ready(amount, success, cancel, fail);
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("redirectUrl", ready.getNextRedirectPcUrl());
+        resp.put("tid", ready.getTid());
+        return resp;
+    }
+
+    /** 카카오 성공 redirect → Approve → 완료 페이지 */
+    @GetMapping("/kakao/success")
+    public String kakaoSuccess(@RequestParam("pg_token") String pgToken,
+                               @RequestParam(value = "tid", required = false) String tidFromQuery, // 일부 환경용
+                               HttpServletRequest req) {
+
+        KakaoApproveResponse approve = kakaoPayService.approve(pgToken, tidFromQuery);
+
+        // 승인 성공 → 완료 페이지로
+        Integer amount = (approve != null && approve.getAmount() != null)
+                ? approve.getAmount().getTotal() : null;
+
+        // 완료 페이지로 리다이렉트 (쿼리 간결히)
+        String url = String.format("/bank/complete?status=success&amount=%s&tid=%s",
+                amount != null ? amount : "",
+                approve != null ? encode(approve.getTid()) : "");
+        return "redirect:" + url;
+    }
+
+    /** 결제창에서 취소 */
+    @GetMapping("/kakao/cancel")
+    public String kakaoCancel(@RequestParam(value = "tid", required = false) String tid) {
+        return "redirect:/bank/complete?status=cancel" + (tid != null ? "&tid=" + encode(tid) : "");
+    }
+
+    /** 실패(에러 포함) */
+    @GetMapping("/kakao/fail")
+    public String kakaoFail(@RequestParam(value = "message", required = false) String message,
+                            @RequestParam(value = "tid", required = false) String tid) {
+        String url = "/bank/complete?status=fail";
+        if (message != null) url += "&errorMessage=" + encode(message);
+        if (tid != null) url += "&tid=" + encode(tid);
+        return "redirect:" + url;
+    }
+
+    @GetMapping("/complete")
+    public String complete(@RequestParam(required = false) String status,
+                           @RequestParam(required = false) String amount,
+                           @RequestParam(required = false) String tid,
+                           @RequestParam(required = false, name="errorMessage") String errorMessage,
+                           HttpSession session,
+                           Model model) {
+
+        int amountInt = 0;
+        try {
+            if (amount != null) amountInt = Integer.parseInt(amount.replaceAll("[^0-9]", ""));
+        } catch (Exception ignore) {}
+
+        Long userId = (Long) session.getAttribute("userId");
+        Long balanceAfter = null;
+        if (userId != null) {
+            var nyang = bankService.getNyangcoinAccount(userId);
+            if (nyang != null) balanceAfter = nyang.getBalance(); // 타입 맞게
+        }
+
+        model.addAttribute("status", (status == null) ? "fail" : status);
+        model.addAttribute("amount", amountInt);
+        model.addAttribute("tid", (tid == null) ? "" : tid);
+        model.addAttribute("approvedAt", LocalDateTime.now());
+        model.addAttribute("errorMessage", (errorMessage == null) ? "" : errorMessage);
+        model.addAttribute("balanceAfter", balanceAfter);
+
+        return "coin/coin-complete";
+    }
+
+
+
+    // ───────── helpers ─────────
+    private static String baseUrl(HttpServletRequest req) {
+        String scheme = req.getScheme(); // http/https
+        String host   = req.getServerName();
+        int port      = req.getServerPort();
+        String p = (("http".equals(scheme) && port==80) || ("https".equals(scheme) && port==443))
+                ? "" : ":" + port;
+        return scheme + "://" + host + p;
+    }
+    private static String encode(String s){
+        try { return java.net.URLEncoder.encode(s, java.nio.charset.StandardCharsets.UTF_8); }
+        catch(Exception e){ return s; }
+    }
 }
