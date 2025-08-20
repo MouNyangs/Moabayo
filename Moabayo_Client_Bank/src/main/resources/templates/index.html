@@ -55,16 +55,16 @@
 
         <div class="kpi-main">
           <span class="balance"
-                th:if="${NyangCoin != null}"
-                th:attr="data-balance=${NyangCoin.balance}"
-                th:text="${#numbers.formatInteger(NyangCoin.balance, 3, 'COMMA')} + ' 원'">0 원</span>
+                th:if="${hasNyang}"
+                th:attr="data-balance=${nyang.balance}"
+                th:text="${#numbers.formatInteger(nyang.balance, 3, 'COMMA')} + ' 원'">0 원</span>
 
-          <span class="empty-balance" th:if="${NyangCoin == null}">
+          <span class="empty-balance" th:if="${!hasNyang}">
             보유한 냥코인이 없습니다.
           </span>
 
-          <div class="sub" th:if="${NyangCoin != null}"
-               th:text="'코인 ID: ' + ${NyangCoin.nyangCoinId}">코인 ID: -</div>
+          <div class="sub" th:if="${hasNyang}"
+               th:text="'코인 ID: ' + ${nyang.number}">코인 ID: -</div>
         </div>
 
         <div class="actions">
@@ -86,20 +86,22 @@
         </nav>
       </aside>
 
-      <!-- 최근 거래 -->
+
+
+<!--
       <section class="panel history">
         <div class="section-head">
           <h3>최근 거래 내역</h3>
           <a href="/bank/history" class="btn btn-outline btn-sm">전체 보기</a>
         </div>
 
-        <!-- 빈 상태 -->
+
         <div class="empty" th:if="${#lists.isEmpty(NyangCoinHistory)}">
           <div class="ico">😺</div>
           <p>아직 표시할 거래 내역이 없습니다.</p>
         </div>
 
-        <!-- 테이블 -->
+ 
         <div class="table-wrap" th:if="${!#lists.isEmpty(NyangCoinHistory)}">
           <table class="ny-table">
             <thead>
@@ -125,7 +127,7 @@
           </table>
         </div>
       </section>
-
+    -->
     </section> <!-- nx-grid -->
   </main>
 
