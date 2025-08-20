@@ -129,24 +129,6 @@ public class BankController {
         model.addAttribute("nyang", nyang);                 // null = 미보유
         model.addAttribute("hasNyang", nyang != null);
         
-        // 코인은 user_account 에 냥코인 상품이 있을때 조회하도록 변경됨. 250819
-//        // 코인 조회
-//        NyangCoinVO ncvo = bankService.getNyangCoinByUserId(userId);
-//        model.addAttribute("NyangCoin", ncvo);
-//        
-//        // 히스토리 조회 (페이지는 1-based로 가정)
-//        
-//        if (ncvo != null) {
-//            int page = 1; // 첫 페이지
-//            int size = 10; // 한 페이지 10개 등
-//            List<NyangCoinHistoryVO> history = bankService.getHistoryPage(ncvo.getNyangCoinId(), page, size);
-//            System.out.println("history size: " + history.size());
-//            System.out.println("coinId = " + ncvo.getNyangCoinId()); // null이면 ①번 확정
-//            System.out.println("count = " + bankService.countHistory(ncvo.getNyangCoinId()));
-//            model.addAttribute("NyangCoinHistory", history);
-//        } else {
-//            model.addAttribute("NyangCoinHistory", List.of());
-//        }
         
         // \\\\\\\\\\\\\\\\ 뱅크 메인 페이지 DB 연결 부분 종료 ///////////////
 		return "/index";
@@ -199,6 +181,7 @@ public class BankController {
     /** 금액 입력 → 진행 화면 */
     @PostMapping("/ready")
     public String coinpay(@RequestParam int amount, Model model) {
+    	System.out.println("/ready amount: " + amount);
         model.addAttribute("amount", amount); // 진행 카드에 현재 금액 보여주기
         return "/coin/coin-pay";
     }
@@ -212,7 +195,9 @@ public class BankController {
                  consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> readyApi(@RequestParam int amount, HttpServletRequest req) {
+    public Map<String, Object> readyApi(@RequestParam int amount, 
+    									HttpSession session,
+    									HttpServletRequest req) {
         // 현재 도메인 기준 success/cancel/fail URL 생성
         String base = baseUrl(req); // ex) http://localhost:8813
         String success = base + "/bank/kakao/success";
@@ -224,6 +209,8 @@ public class BankController {
         Map<String, Object> resp = new HashMap<>();
         resp.put("redirectUrl", ready.getNextRedirectPcUrl());
         resp.put("tid", ready.getTid());
+        session.setAttribute("paid_amount", amount); // 클라이언트에서 사용하기 위해 반환
+        System.out.println("/ready-api amount: " + amount);
         return resp;
     }
 
@@ -231,14 +218,33 @@ public class BankController {
     @GetMapping("/kakao/success")
     public String kakaoSuccess(@RequestParam("pg_token") String pgToken,
                                @RequestParam(value = "tid", required = false) String tidFromQuery, // 일부 환경용
+                               HttpSession session,
                                HttpServletRequest req) {
-
-        KakaoApproveResponse approve = kakaoPayService.approve(pgToken, tidFromQuery);
+    	
+    	
+    	Integer amount = (Integer) session.getAttribute("paid_amount");
+        KakaoApproveResponse approve = kakaoPayService.approve(amount, pgToken, tidFromQuery);
 
         // 승인 성공 → 완료 페이지로
-        Integer amount = (approve != null && approve.getAmount() != null)
-                ? approve.getAmount().getTotal() : null;
-
+        System.out.println("approve.getAmount(): " + approve.getAmount());
+        System.out.println("getAmount().getTotal(): " + approve.getAmount().getTotal());
+        
+        // 백엔드 개발 필요 - 업데이트 유저 어카운트 & 어카운트 트랜잭션 로그 추가해야함
+        Long userId = (Long) session.getAttribute("userId");
+        bankService.updateAccount(userId, 100L, amount);
+        // 로그 추가
+        bankService.insertAccountTransactionLog(
+        		userId,
+        		100L,
+        		amount,
+        		"approvedNum",
+        		"입출금",
+        		"예금",
+        		"모으냥즈",
+        		"111-111-111"
+        		);
+        
+        
         // 완료 페이지로 리다이렉트 (쿼리 간결히)
         String url = String.format("/bank/complete?status=success&amount=%s&tid=%s",
                 amount != null ? amount : "",

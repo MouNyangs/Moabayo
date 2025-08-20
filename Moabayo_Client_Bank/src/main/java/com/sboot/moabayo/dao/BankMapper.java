@@ -18,19 +18,44 @@ public interface BankMapper {
 	// 냥코인 계좌 찾기
 	AccountVO findNyangcoinAccountByUserId(@Param("userId") Long userId);
 	
-//	// 유저 ID로 냥코인 VO 반환
-//	NyangCoinVO findNyangCoinByUserId(@Param("userId") Long userId);
-//	
-//	// 냥코인 ID로 냥코인 히스토리 개수 반환
-//	int countHistoryByNyangId(@Param("nyangId") Long nyangId);
-//	
-//	// 
-//	List<NyangCoinHistoryVO> findHistoryByNyangIdPaged(
-//			@Param("nyangId") Long nyangId,
-//			@Param("startRow") int startRow, // 1-based
-//			@Param("endRow") int endRow
-//			);
-//	
-//	// 유저가 가지고 있는 예적금대출 상품 조회
-//	List<UserAccountVO> findUserAccountsByUserID(@Param("userId") Long userId);    
+	/*
+	 * Long findUserAccountId(@Param("userId") Long userId,
+	 * 
+	 * @Param("accountId") Long accountId);
+	 * 
+	 * int updateAccountBalance(@Param("userAccountId") Long userAccountId,
+	 * 
+	 * @Param("amount") Integer amount);
+	 * 
+	 * int insertTransaction(@Param("userAccountId") Long userAccountId,
+	 * 
+	 * @Param("approvedAmount") Integer approvedAmount,
+	 * 
+	 * @Param("approvedNum") String approvedNum,
+	 * 
+	 * @Param("accountType") String accountType,
+	 * 
+	 * @Param("category") String category,
+	 * 
+	 * @Param("shopName") String shopName,
+	 * 
+	 * @Param("shopNumber") String shopNumber);
+	 */
+
+	Long findUserAccountId(	Long userId, 
+							Long accountId);
+
+	int updateBalancePlus(Long userAccountId, 
+							 Integer amount);
+	
+	int updateBalanceMinus(Long userAccountId, 
+			 				Integer amount);
+
+	void insertTransaction( Long userAccountId, 
+							Integer approvedAmount, 
+							String approvedNum, 
+							String accountType,
+							String category, 
+							String shopName, 
+							String shopNumber);
 }
