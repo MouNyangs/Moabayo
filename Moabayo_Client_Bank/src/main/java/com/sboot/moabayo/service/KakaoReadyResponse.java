@@ -4,9 +4,11 @@ import lombok.Data;
 
 @Data
 public class KakaoReadyResponse {
-    private String tid;
+	private int amount;
+	private String tid;
     private String nextRedirectPcUrl;
     // getter/setter
+    
     public String getTid(){ return tid; }
     public void setTid(String tid){ this.tid = tid; }
     public String getNextRedirectPcUrl(){ return nextRedirectPcUrl; }
