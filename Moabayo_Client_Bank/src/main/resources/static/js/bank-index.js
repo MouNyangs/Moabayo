@@ -28,3 +28,26 @@
   }
   requestAnimationFrame(step);
 })();
+
+// 요소가 화면에 들어오면 살짝 페이드-업
+const io = new IntersectionObserver((es)=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('is-visible'); }
+}), {threshold: .15});
+document.querySelectorAll('[data-reveal]').forEach(el=>{
+  el.style.opacity = .0; el.style.transform = 'translateY(12px)';
+  io.observe(el);
+});
+// 가시화 스타일(인라인로직 최소화)
+const style = document.createElement('style');
+style.textContent = `
+  [data-reveal].is-visible{ opacity:1 !important; transform:none !important; transition:.5s ease; }
+`;
+document.head.appendChild(style);
+
+// bank-index.js
+(() => {
+  const io = new IntersectionObserver(es => es.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); }
+  }), {threshold:.15});
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+})();
