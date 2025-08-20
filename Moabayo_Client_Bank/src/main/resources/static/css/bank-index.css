@@ -174,3 +174,166 @@ html[data-theme="dark"] .bank-index .ny-table thead th{ background:#131b25; }
 @media (max-width: 560px){
   .bank-index .quick .quick-list{ grid-template-columns: 1fr; }
 }
+/* ===== 레이아웃: 본문이 남은 높이를 채워 푸터 밀기 ===== */
+html, body { height: 100%; }
+body.site-layout { min-height: 100vh; display: flex; flex-direction: column; }
+main.site-content, main.bank-index { flex: 1 0 auto; }
+.site-footer, #footer { margin-top: auto; }
+
+/* ===== Hero/Grid 공통 여백 (리셋에 밀리지 않게) ===== */
+.bank-index .nx-hero,
+.bank-index .nx-grid{ width:100%; max-width:var(--maxw,960px); margin:0 auto; padding:0 18px; box-sizing:border-box; }
+
+/* ===== Empty state (페이지 전용 스코프 강화) ===== */
+.bank-index .empty-state{
+  --card: var(--card, #fff);
+  --ink:  var(--ink,  #111827);
+  --sub:  var(--sub,  #6b7280);
+  --line: var(--line, #e5e7eb);
+  --accent: var(--accent, #7c3aed);
+
+  position: relative; overflow: hidden;
+  max-width: var(--maxw, 960px);
+  margin: 20px auto 36px; padding: 28px 22px;
+  border-radius: 20px; background: var(--card);
+  box-shadow: var(--shadow, 0 10px 24px rgba(15,23,42,.08));
+  display:flex; gap:22px; align-items:center;
+}
+.bank-index .empty-state .bg-curve{
+  position:absolute; inset:auto -20% -40% -20%;
+  height:220px; border-radius:50%;
+  background: radial-gradient(80% 60% at 50% 50%,
+            color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+            transparent 70%);
+  pointer-events:none; filter: blur(8px);
+}
+.bank-index .empty-state .kitty{ width:220px; max-width:40%; flex:0 0 auto; animation: ny-float 3s ease-in-out infinite; }
+.bank-index .empty-state .empty-copy{ flex:1 1 auto; }
+.bank-index .empty-state h3{ margin:0 0 6px; color:var(--ink); font-weight:800; font-size:1.15rem; }
+.bank-index .empty-state p{ margin:0 0 12px; color:var(--sub); }
+.bank-index .empty-state .actions{ display:flex; gap:10px; }
+.bank-index .empty-state .btn-primary{
+  display:inline-block; padding:10px 14px; border-radius:10px;
+  background: var(--accent); color: var(--accent-ink, #fff); text-decoration:none;
+}
+.bank-index .empty-state .btn-ghost{
+  display:inline-block; padding:10px 14px; border-radius:10px;
+  background: transparent; border:1px solid var(--line);
+  color: var(--ink); text-decoration:none;
+}
+
+/* 코인(장식) */
+.bank-index .empty-state .coin{
+  position:absolute; width:34px; height:34px; border-radius:50%;
+  left: calc(12% + var(--i)*22%); top: 16%;
+  background: linear-gradient(180deg, #facc15, #f59e0b);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), 0 6px 14px rgba(0,0,0,.12);
+  animation: ny-bob 4.6s ease-in-out calc(var(--i)*.6s) infinite;
+  opacity:.9;
+}
+
+/* hover/미세 상호작용 */
+.bank-index .panel:hover{ transform: translateY(-1px); box-shadow: 0 12px 28px rgba(15,23,42,.12); }
+html[data-theme="dark"] .bank-index .panel:hover{ box-shadow: 0 14px 30px rgba(0,0,0,.55); }
+.bank-index .btn:hover{ transform: translateY(-1px); }
+
+/* 등장 애니메이션 */
+.bank-index [data-reveal]{ opacity:0; transform:translateY(12px); transition:.5s ease; }
+.bank-index [data-reveal].is-visible{ opacity:1; transform:none; }
+
+/* 모션 */
+@keyframes ny-float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes ny-bob  { 0%,100%{ transform: translateY(0) rotate(0) }
+                     50%    { transform: translateY(-14px) rotate(10deg) } }
+
+/* 다크모드: 장식 톤 다운 */
+html[data-theme="dark"] .bank-index .empty-state{ background:#0f151c; box-shadow: 0 12px 26px rgba(0,0,0,.55); }
+html[data-theme="dark"] .bank-index .empty-state .btn-ghost{ border-color:#233041; color:#e5e7eb; }
+html[data-theme="dark"] .bank-index .empty-state .bg-curve{
+  background: radial-gradient(80% 60% at 50% 50%,
+            color-mix(in srgb, var(--accent) 12%, transparent) 0%,
+            transparent 70%);
+}
+
+/* 모바일 */
+@media (max-width:560px){
+  .bank-index .empty-state{ padding:22px 16px; gap:14px; }
+  .bank-index .empty-state .kitty{ width:160px; }
+  .bank-index .empty-state .coin{ display:none; }
+}
+
+/* === 1) 지저분했던 장식 제거 === */
+.empty-state .coin,
+.empty-state .bg-curve { display:none !important; }
+
+/* === 2) 미니멀 카드 스타일(그림자/테두리/여백 정리) === */
+.bank-index .empty-state{
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 22px rgba(15,23,42,.10);   /* 조금 더 부드럽게 */
+  gap: 18px;
+}
+
+/* === 3) 외부 이미지를 쓰지 않아도 보이는 라인 일러스트(내장 SVG) === */
+/* - 카드 배경 왼쪽에 고양이 라인 아이콘을 배치 */
+/* - 실제 <img class="kitty"> 는 숨기고 카드 패딩으로 공간 확보 */
+.bank-index .empty-state img.kitty{ display:none !important; }
+.bank-index .empty-state{
+  /* 일러스트 자리 확보 */
+  padding-left: 200px;
+  /* 배경 일러스트 삽입 */
+  background-image:
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='176' height='176' viewBox='0 0 176 176'>\
+<g fill='none' stroke='%231f2937' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'>\
+<path d='M30 55 L62 32 L58 72 Z'/>\
+<path d='M146 55 L114 32 L118 72 Z'/>\
+<circle cx='88' cy='95' r='60' fill='%23f8fafc'/>\
+<circle cx='67' cy='90' r='6' fill='%231f2937' stroke='none'/>\
+<circle cx='109' cy='90' r='6' fill='%231f2937' stroke='none'/>\
+<path d='M68 118 Q88 108 108 118'/>\
+</g></svg>");
+  background-repeat: no-repeat;
+  background-size: 160px 160px;
+  background-position: 24px center;
+}
+
+/* 다크에서 라인/배경 톤 맞추기 */
+html[data-theme="dark"] .bank-index .empty-state{
+  border-color:#1e293b;
+  box-shadow: 0 12px 26px rgba(0,0,0,.52);
+  background-image:
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='176' height='176' viewBox='0 0 176 176'>\
+<g fill='none' stroke='%23e5e7eb' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'>\
+<path d='M30 55 L62 32 L58 72 Z'/>\
+<path d='M146 55 L114 32 L118 72 Z'/>\
+<circle cx='88' cy='95' r='60' fill='%230f151c'/>\
+<circle cx='67' cy='90' r='6' fill='%23e5e7eb' stroke='none'/>\
+<circle cx='109' cy='90' r='6' fill='%23e5e7eb' stroke='none'/>\
+<path d='M68 118 Q88 108 108 118'/>\
+</g></svg>");
+}
+
+/* === 4) 타이포와 버튼 간격 정리 === */
+.bank-index .empty-state h3{
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  margin-bottom: 6px;
+}
+.bank-index .empty-state p{
+  color: var(--sub);
+  margin-bottom: 14px;
+}
+.bank-index .empty-state .actions{ gap:12px; }
+.bank-index .empty-state .btn-primary{ font-weight:700; }
+.bank-index .empty-state .btn-ghost:hover{ background:transparent; border-color:var(--ink); }
+
+/* === 5) hover 미세 인터랙션만 남김 === */
+.bank-index .panel:hover{ transform: translateY(-1px); }
+.bank-index .btn:hover{ transform: translateY(-1px); }
+
+/* === 6) 모바일에서 일러스트 크기 축소 === */
+@media (max-width:560px){
+  .bank-index .empty-state{ padding-left: 150px; }
+  .bank-index .empty-state{ background-size: 120px 120px; background-position: 16px center; }
+}

@@ -15,10 +15,7 @@ import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
 import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
-
 import com.sboot.moabayo.vo.TxnRowVO;
-import com.sboot.moabayo.vo.UserAccountVO;
-
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
@@ -178,5 +175,10 @@ public class BankController {
 	    model.addAttribute("txnlist", txnlist);
 		
 		return "transactions";
+	}
+	
+	@GetMapping("/charge")
+	public String coincharge(HttpSession session, Model model) {
+		return "/coin/coin-charge";
 	}
 }
