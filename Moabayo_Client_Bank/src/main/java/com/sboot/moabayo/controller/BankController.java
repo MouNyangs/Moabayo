@@ -174,7 +174,7 @@ public class BankController {
 	    System.out.println(txnlist.toString());
 	    model.addAttribute("txnlist", txnlist);
 		
-		return "transactions";
+		return "/transactions";
 	}
 	
 	@GetMapping("/charge")
