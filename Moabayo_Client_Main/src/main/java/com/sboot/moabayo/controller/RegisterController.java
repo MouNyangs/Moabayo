@@ -1,6 +1,7 @@
 package com.sboot.moabayo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,9 +35,12 @@ public class RegisterController {
 	 
 	    @ResponseBody
 	    @GetMapping("/checkId")
-	    public String checkId(@RequestParam("loginId") String id) {
-	        boolean exists = registerService.isLoginIdExists(id);
-	        return exists ? "duplicate" : "available";
+	    public ResponseEntity<String> checkId(@RequestParam("loginId") String id) {
+	        if (id == null || id.trim().length() < 4) {
+	            return ResponseEntity.badRequest().body("invalid");
+	        }
+	        boolean exists = registerService.isLoginIdExists(id.trim());
+	        return ResponseEntity.ok(exists ? "duplicate" : "ok");
 	    }
 	    
 		@GetMapping("/welcome")
