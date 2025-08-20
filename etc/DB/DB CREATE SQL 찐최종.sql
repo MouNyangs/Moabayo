@@ -1,8 +1,6 @@
 --삭제문
 DROP TABLE card_transaction CASCADE CONSTRAINTS;
 DROP TABLE admin CASCADE CONSTRAINTS;
-DROP TABLE coin_history CASCADE CONSTRAINTS;
-DROP TABLE nyang_coin CASCADE CONSTRAINTS;
 DROP TABLE account_transaction CASCADE CONSTRAINTS;
 DROP TABLE user_card CASCADE CONSTRAINTS;
 DROP TABLE user_account CASCADE CONSTRAINTS;
@@ -75,6 +73,8 @@ CREATE TABLE user_account (
     account_id NUMBER(8,0) NOT NULL,
     account_number VARCHAR2(30) UNIQUE NOT NULL,
     account_name VARCHAR2(100),
+    create_date DATE DEFAULT SYSDATE,
+    balance NUMBER(20,0) DEFAULT 0 NOT NULL,
     CONSTRAINT fk_user_account_user FOREIGN KEY (user_id) REFERENCES users(user_id),
     CONSTRAINT fk_user_account_account FOREIGN KEY (account_id) REFERENCES bank_product(account_id)
 );
@@ -192,9 +192,6 @@ CREATE TABLE region_stats (
     CONSTRAINT fk_region_stats_upjong FOREIGN KEY (upjong_code) REFERENCES industry_codes(upjong_code)
 );
 
-
-
-
 /************************************************
  * 더미 데이터 (1 ~ 10)
  ************************************************/
@@ -222,11 +219,11 @@ INSERT INTO card_product VALUES (204, 'card4.png', '항공 마일리지 카드',
 INSERT INTO card_product VALUES (205, 'card5.png', '학생 전용 체크카드', 'Master', '학생용 카드', '일반', '편의점 할인', 0.00, '체크');
 
 -- user_account
-INSERT INTO user_account VALUES (301, 1, 101, '111-111-111', '홍길동 자유입출금');
-INSERT INTO user_account VALUES (302, 2, 102, '222-222-222', '김철수 청년적금');
-INSERT INTO user_account VALUES (303, 3, 103, '333-333-333', '이영희 청약저축');
-INSERT INTO user_account VALUES (304, 4, 104, '444-444-444', '박민수 정기예금');
-INSERT INTO user_account VALUES (305, 5, 105, '555-555-555', '최지은 어린이적금');
+INSERT INTO user_account VALUES (301, 1, 101, '111-111-111', '홍길동 자유입출금', TO_DATE('2025-06-01','YYYY-MM-DD'), 100000);
+INSERT INTO user_account VALUES (302, 2, 102, '222-222-222', '김철수 청년적금', TO_DATE('2024-06-02','YYYY-MM-DD'), 200000);
+INSERT INTO user_account VALUES (303, 3, 103, '333-333-333', '이영희 청약저축', TO_DATE('2024-06-03','YYYY-MM-DD'), 3000);
+INSERT INTO user_account VALUES (304, 4, 104, '444-444-444', '박민수 정기예금', TO_DATE('2024-06-04','YYYY-MM-DD'), 4000);
+INSERT INTO user_account VALUES (305, 5, 105, '555-555-555', '최지은 어린이적금', TO_DATE('2024-06-05','YYYY-MM-DD'), 50000);
 
 -- user_card
 INSERT INTO user_card VALUES (401, 1, 201);
@@ -275,8 +272,6 @@ SELECT * FROM card_product;
 SELECT * FROM user_account;
 SELECT * FROM user_card;
 SELECT * FROM account_transaction;
-SELECT * FROM nyang_coin;
-SELECT * FROM coin_history;
 SELECT * FROM admin;
 SELECT * FROM card_transaction;
 SELECT * FROM industry_codes;

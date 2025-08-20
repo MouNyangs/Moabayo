@@ -25,44 +25,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE login_Id = #{loginId}
 	</select>
 
-	<!-- 계좌 조회 페이지에서 기인한 공통 SELECT 컬럼 -->
-	<sql id="AccountSelectColumns">
-		ua.user_account_id AS ID,
+  <!-- 공통 SELECT 컬럼 -->
+  <sql id="AccountSelectColumns">
+    ua.user_account_id AS ID,
 
-		/* 아이콘은 type 기반 매핑 */
-		CASE UPPER(bp.type)
-		WHEN 'DEPOSIT' THEN '💳'
-		WHEN 'SAVINGS' THEN '🏦'
-		WHEN 'LOAN' THEN '📄'
-		ELSE '💰'
-		END AS ICON,
+    /* 아이콘은 type 기반 매핑 */
+    CASE UPPER(bp.type)
+      WHEN 'DEPOSIT' THEN '💳'
+      WHEN 'SAVINGS' THEN '🏦'
+      WHEN 'LOAN'    THEN '📄'
+      ELSE '💰'
+    END AS ICON,
 
-		NVL(ua.account_name, '내 통장') AS NAME,
-		ua.account_number AS ACCOUNT_NO,
-		bp.name AS PRODUCT,
-		bp.type AS TYPE,
+    NVL(ua.account_name, '내 통장') AS NAME,
+    ua.account_number AS ACCOUNT_NO,
+    bp.name AS PRODUCT,
+    bp.type AS TYPE,
 
-		/* 잔액: 입금계열 +, 출금계열 - */
-		NVL((
-		SELECT TRUNC(SUM(
-		CASE
-		WHEN UPPER(at.account_type) IN
-		('DEPOSIT','INCOME','TRANSFER_IN','입금','이체수신')
-		THEN at.approved_amount
-		ELSE -at.approved_amount
-		END
-		))
-		FROM account_transaction at
-		WHERE at.user_account_id = ua.user_account_id
-		), 0) AS BALANCE,
+    /* 잔액: 입금계열 +, 출금계열 - */
+    NVL(ua.balance, 0) AS BALANCE,
 
-		/* 개설일: 첫 거래일자 (없으면 NULL) */
-		(
-		SELECT TO_CHAR(MIN(at2.date_time), 'YYYY-MM-DD')
-		FROM account_transaction at2
-		WHERE at2.user_account_id = ua.user_account_id
-		) AS OPENED_AT
-	</sql>
+    /* 개설일: 첫 거래일자 (없으면 NULL) */
+    ua.create_date AS OPENED_AT
+  </sql>
 
 	<!-- 사용자 계좌 (내역 제외) -->
 	<resultMap id="AccountOnlyMap"
