@@ -60,7 +60,8 @@ CREATE TABLE card_product (
     description VARCHAR2(1000),
     category VARCHAR2(100),
     benefits VARCHAR2(1000),
-    interest NUMBER(5,2),
+    interest NUMBER(5,2),       -- 카드 이자율
+    limit NUMBER(8,0),          -- 카드 한도
     type VARCHAR2(50)
 );
 

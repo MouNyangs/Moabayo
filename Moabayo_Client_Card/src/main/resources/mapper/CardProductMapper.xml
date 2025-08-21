@@ -15,6 +15,7 @@
     category     AS category,
     benefits     AS benefits,    
     interest     AS interest,
+    limit		 AS limit, -- 카드 한도
     type         AS type
   FROM card_product
   ORDER BY card_id

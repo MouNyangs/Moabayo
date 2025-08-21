@@ -12,5 +12,6 @@ public class CardProductVO {
     private String category;
     private String benefits;    // "영화 할인,카페 10%" 처럼 저장되었다고 가정
     private Double interest;
+    private int limit;			// 카드 한도 int
     private String type;        
 }
