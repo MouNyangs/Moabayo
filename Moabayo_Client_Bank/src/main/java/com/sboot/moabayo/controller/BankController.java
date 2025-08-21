@@ -313,4 +313,9 @@ public class BankController {
         try { return java.net.URLEncoder.encode(s, java.nio.charset.StandardCharsets.UTF_8); }
         catch(Exception e){ return s; }
     }
+    @GetMapping("/transfer")
+    public String gotransfer (HttpSession session, Model model) {
+    	
+    	return "/transfer/transfer";
+    }
 }
