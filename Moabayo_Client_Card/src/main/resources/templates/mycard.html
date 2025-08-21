@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>모으냥즈 | 나의 카드</title>
+
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+<script defer src="http://localhost:8810/js/token-exp-display.js"></script>
+<script defer src="http://localhost:8810/js/common.js"></script>
+<script defer src="http://localhost:8810/js/adminservice.js"></script>
+<script defer src="http://localhost:8810/js/bankservice.js"></script>
+<script defer src="http://localhost:8810/js/cardservice.js"></script>
+<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
+<link rel="stylesheet" href="http://localhost:8810/css/theme.css">
+<link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
+<script defer src="http://localhost:8810/js/theme.js"></script>
+
+  <!-- 스타일 -->
+  <link rel="stylesheet" href="/css/mycard/mycards.css">
+  
+  
+</head>
+<body>
+  <!-- (공통 헤더가 있다면 여기 삽입) -->
+<div id="header"></div>
+<!-- ambient background (섹션 전체에 퍼지는 보케/그라데이션) -->
+<div id="ambient" class="ambient"></div>
+<section id="mycards" class="page">
+  <div id="pageBg" class="page-bg" aria-hidden="true"></div>
+  <section id="mycards" class="page">
+    <header class="mc-header">
+      <h1>나의 카드</h1>
+      <button class="btn" id="btnManage">카드 관리</button>
+    </header>
+
+    <!-- 카드 레일: 가로 스크롤 + 스냅 -->
+    <div class="rail-wrap" aria-label="보유 카드">
+      <ul id="cardRail" class="rail" role="listbox" aria-orientation="horizontal"></ul>
+    </div>
+
+    <!-- 히어로 요약 -->
+    <section id="hero" class="hero" aria-live="polite">
+      <div class="brand">MoaNyangz</div>
+      <div class="number" id="hNumber">**** **** **** ----</div>
+      <div class="holder-row">
+        <span id="hHolder" class="holder">—</span>
+        <span id="hExpire" class="expire">--/--</span>
+      </div>
+    </section>
+
+    <!-- 탭 -->
+    <nav class="tabs" role="tablist" aria-label="카드 상세">
+      <button class="tab active" role="tab" data-tab="overview" aria-selected="true">개요</button>
+      <button class="tab" role="tab" data-tab="history" aria-selected="false">내역</button>
+      <button class="tab" role="tab" data-tab="settings" aria-selected="false">설정</button>
+    </nav>
+
+    <!-- 패널: 개요 -->
+    <section id="panel-overview" class="panel show" role="tabpanel">
+      <div class="mods">
+        <article class="mod">
+          <header>
+            <h3>이번 달 한도</h3>
+            <div class="val"><b id="usedAmt">0원</b> / <span id="limitAmt">0원</span></div>
+          </header>
+          <div class="bar"><span id="limitBar" style="width:0%"></span></div>
+        </article>
+
+        <article class="mod">
+          <header>
+            <h3>냥포인트</h3>
+            <div class="val"><b id="pointAmt">0p</b> · 다음 구간 <span id="nextTier">+0%</span></div>
+          </header>
+          <div class="bar"><span id="pointBar" style="width:0%"></span></div>
+        </article>
+
+        <article class="mod">
+          <header>
+            <h3>다음 납부</h3>
+            <div class="val"><b id="dueDate">-</b> · 최소결제 <span id="minPay">0원</span></div>
+          </header>
+        </article>
+      </div>
+    </section>
+
+    <!-- 패널: 내역 -->
+    <section id="panel-history" class="panel" role="tabpanel">
+      <ul id="txList" class="tx" aria-live="polite"></ul>
+    </section>
+
+    <!-- 패널: 설정 -->
+    <section id="panel-settings" class="panel" role="tabpanel">
+      <form id="formSettings" class="form" autocomplete="off">
+        <label class="row">
+          <span class="lab">카드 닉네임</span>
+          <input id="nickInput" class="input" placeholder="예) 여행용 카드" />
+        </label>
+        <div class="actions">
+          <button type="button" class="btn primary" id="btnSave">저장</button>
+        </div>
+      </form>
+    </section>
+  </section>
+
+  <!-- (공통 푸터가 있다면 여기 삽입) -->
+
+  <!-- 스크립트 -->
+  <script src="/js/mycard/mycards.js" defer></script>
+  <div id="footer"></div>
+</body>
+</html>

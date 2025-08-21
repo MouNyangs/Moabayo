@@ -2,9 +2,9 @@
   // 페이지 이동
   function go(code){
     const map = {
-      'N07-01' : '/usercard/allcardList',
-      'N08-01' : '/card/newcard.html',
-      'N09-01' : '/card/writecard.html'
+      'N07-01' : '/usercard/mycard',
+      'N08-01' : '/usercard/newcard',
+      'N09-01' : '/usercard/writecard'
     };
     const page = map[code];
     if(!page){ alert('연결할 페이지가 정의되지 않았습니다.'); return; }

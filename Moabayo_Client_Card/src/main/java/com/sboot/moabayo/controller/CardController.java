@@ -85,9 +85,15 @@ public class CardController {
 	    return "newcard"; // newcard.html
 	}
 
-	
-	
+	@GetMapping("/mycard")
+	public String gomycard (Model model) {
+		return "/mycard";
+	}
 
+	@GetMapping("/writecard")
+	public String gowritecard (Model model) {
+		return "/writecard";
+	}
 
 	
 //	@GetMapping("/recommendcards")
