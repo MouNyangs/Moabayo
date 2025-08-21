@@ -22,6 +22,8 @@
   const snd = $('#sndSuccess');
   const doneName = $('#doneName');
   const doneAmt = $('#doneAmt');
+  const fail = $('#tfFail');
+  const failReason = $('#errorReason')
 
   // password modal
   const pwModal = $('#pwModal');
@@ -156,16 +158,47 @@
 
     // TODO: 실제 송금 API 호출
     await new Promise(r => setTimeout(r, 1200));
+	
+	if(r.ok) {	// 송금 성공 시. 송금 완료! 메시지와 함께 3초후 bank history 페이지로
+		showSuccess();
+	} else { 	// 송금 실패 시. 송금 오류 뽑아주고 3초후 bank index 페이지로
+		showFail(r.body); // 매개변수로 오류 결과 들어가야함.
+	}
+  }
+  
+  function showSuccess() {
+	// 진행 애니메이션 숨기기
+	progress.classList.remove('show');
+	fail.classList.remove('show');
+	
+	// 성공 메시지에 데이터 넣고 보여주기
+	const amt = +(onlyDigits(amount.value) || 0);
+	doneName.textContent = toName.value.trim() || '상대방';
+	doneAmt.textContent = formatKRW(amt);
+	done.classList.add('show');
 
+	// ? 아마 빵빠레 실행용 코드 같음. try-catch 로 묶여있고 play() 함수를 사용하는걸 봐서는...
+	try{ snd && snd.play && snd.play().catch(()=>{}); }catch(e){}
+
+	// 3초뒤 거래내역 페이지로 이동
+	setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
+  }
+  
+  function showFail(reason){
+    // 진행 애니메이션 숨기기
     progress.classList.remove('show');
-    const amt = +(onlyDigits(amount.value) || 0);
-    doneName.textContent = toName.value.trim() || '상대방';
-    doneAmt.textContent = formatKRW(amt);
-    done.classList.add('show');
+    done.classList.remove('show');
 
-    try{ snd && snd.play && snd.play().catch(()=>{}); }catch(e){}
+    // 실패 메시지 지정
+    failReason.textContent = reason || '송금에 실패했습니다.';
 
-    setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
+    // 실패 화면 보이기
+    fail.classList.add('show');
+
+    // 3초 뒤 인덱스로 이동
+    setTimeout(() => { 
+      window.location.href = '/bank/index'; 
+    }, 3000);
   }
 
   /**

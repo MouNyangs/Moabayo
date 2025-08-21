@@ -98,7 +98,7 @@ html[data-theme="dark"]{ color-scheme: dark; }
 #transfer .kv{ display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--tf-line); color:var(--tf-ink); }
 #transfer .kv:last-child{ border-bottom:none; }
 
-/* 진행/완료 */
+/* 진행/완료/실패 */
 #transfer .progress{ display:none; justify-content:center; align-items:center; gap:12px; padding:22px; }
 #transfer .progress.show{ display:flex; }
 #transfer .coin{ width:26px; height:26px; border-radius:50%; border:2px solid var(--tf-accent); position:relative; animation:spin 1.2s linear infinite; }
@@ -110,6 +110,11 @@ html[data-theme="dark"]{ color-scheme: dark; }
 #transfer .cat{ font-size:42px; line-height:1; }
 #transfer .done h2{ margin:10px 0 6px; }
 #transfer .done .desc{ color:var(--tf-sub); }
+
+#transfer .fail{ display:none; text-align:center; padding:22px 14px 10px; }
+#transfer .fail.show{ display:block; }
+#transfer .fail h2{ margin:10px 0 6px; }
+#transfer .fail .desc{ color:var(--tf-sub); }
 
 /* =========================
    4) 페이지 전역 보정 (흰 선/띠 마감)
