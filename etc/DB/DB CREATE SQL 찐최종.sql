@@ -104,6 +104,7 @@ CREATE TABLE account_transaction (
     date_time DATE,
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
+    memo VARCHAR2(1000),        -- 거래 메모
     CONSTRAINT fk_account_transaction_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id)
 );
 
