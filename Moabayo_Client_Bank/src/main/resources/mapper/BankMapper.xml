@@ -107,7 +107,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             CATEGORY,
             DATE_TIME,
             SHOP_NAME,
-            SHOP_NUMBER
+            SHOP_NUMBER,
+            MEMO
         )
         VALUES (
             SEQ_ACCOUNT_TRANSACTION_ID.NEXTVAL,
@@ -118,7 +119,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{category},
             SYSDATE,
             #{shopName},
-            #{shopNumber}
+            #{shopNumber},
+            #{memo}
         )
     </insert>
 

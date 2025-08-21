@@ -57,5 +57,6 @@ public interface BankMapper {
 							String accountType,
 							String category, 
 							String shopName, 
-							String shopNumber);
+							String shopNumber,
+							String memo);
 }

@@ -31,7 +31,8 @@ public interface BankService {
                                      String accountType,
                                      String category,
                                      String shopName,
-                                     String shopNumber);
+                                     String shopNumber,
+                                     String memo);
 
 	UserVO getUser(String loginId);
 

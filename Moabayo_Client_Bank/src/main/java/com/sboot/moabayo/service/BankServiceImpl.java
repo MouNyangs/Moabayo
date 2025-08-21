@@ -46,7 +46,7 @@ public class BankServiceImpl implements BankService {
     @Transactional
     public void insertAccountTransactionLog(Long userId, Long accountId, Integer approvedAmount,
                                             String approvedNum, String accountType, String category,
-                                            String shopName, String shopNumber) {
+                                            String shopName, String shopNumber, String memo) {
         Long userAccountId = bankMapper.findUserAccountId(userId, accountId);
 
         if (userAccountId == null) {
@@ -54,7 +54,7 @@ public class BankServiceImpl implements BankService {
         }
 
         bankMapper.insertTransaction(userAccountId, approvedAmount, approvedNum,
-                accountType, category, shopName, shopNumber);
+                accountType, category, shopName, shopNumber, memo);
     }
     
 }
