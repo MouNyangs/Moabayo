@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 다운로드 엑박은 무시할것. -->
 <mapper namespace="com.sboot.moabayo.dao.CardProductMapper">
-
+<!-- card product Mapper 와 중복임. 이 파일은 제거할 것. -->
     <select id="getRecommendCards" resultType="com.sboot.moabayo.vo.CardProductVO">
         SELECT
             CARD_ID     AS cardId,
