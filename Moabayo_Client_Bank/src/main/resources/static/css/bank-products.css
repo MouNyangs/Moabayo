@@ -1,4 +1,9 @@
 @charset "UTF-8";
+
+/* 기본 스타일시트에서 margin: 8px 을 0으로 변경 */
+html, body, body.dark {
+	margin: 0;
+}
 /* ===== MoaNyangz – Products (scoped) ===== */
 .bank-products{
   --maxw: 1160px;
