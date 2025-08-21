@@ -16,6 +16,8 @@
   const btnSend = $('#btnSend');
   const btnCancel = $('#btnCancel');
   const progress = $('#tfProgress');
+  const sendName = $('#sendName');
+  const sendAmt = $('#sendAmt');
   const done = $('#tfDone');
   const snd = $('#sndSuccess');
   const doneName = $('#doneName');
@@ -77,6 +79,11 @@
     accountPw.classList.remove('invalid','shake');
     accountPw.value = '';
     btnPwOK.disabled = true;
+	
+	// 패스워드 확인 창에 상대방 이름과 송금액 붙이기
+	const amt = +(onlyDigits(amount.value) || 0);
+	sendName.textContent = toName.value.trim() || '상대방';
+	sendAmt.textContent = formatKRW(amt);
 
     pwModal.classList.add('show');
     pwModal.setAttribute('aria-hidden','false');
@@ -186,3 +193,41 @@
     return password === 'moa1234!';
   }
 })();
+
+
+// 유저 검색
+function searchUser() {
+  const query = document.getElementById("toName").value;
+  // 백엔드에 이 주소가 필요하다.
+  fetch(`/bank/api/user/search?query=${encodeURIComponent(query)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data) {
+        document.getElementById("searchResult").innerHTML = `
+          <div>
+            <strong>${data.name}</strong> (${data.loginId})<br/>
+            계좌번호: ${data.accountNum}<br/>
+            전화번호: ${data.phone}
+          </div>
+        `;
+      } else {
+        document.getElementById("searchResult").innerText = "찾는 사용자가 없습니다.";
+      }
+    });
+}
+
+(function maskAccountNumbers() {
+    const sel = document.getElementById('fromAccount');
+    [...sel.options].forEach(opt => {
+      if (!opt.value) return;
+      const parts = opt.text.split(' • ');
+      if (parts.length < 2) return;
+      const name = parts[0];
+      const num  = parts[1].replace(/\s/g,''); // 공백 제거
+      // 단순 마스킹: 마지막 4자리만 남김
+      const last4 = num.slice(-4);
+      const masked = '****-****-' + last4;
+      opt.text = `${name} • ${masked}`;
+    });
+  })();
+

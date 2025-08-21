@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -231,7 +232,7 @@ public class BankController {
         
         // 백엔드 개발 필요 - 업데이트 유저 어카운트 & 어카운트 트랜잭션 로그 추가해야함
         Long userId = (Long) session.getAttribute("userId");
-        bankService.updateAccount(userId, 100L, amount);
+        bankService.updateBalancePlus(userId, 100L, amount);
         // 로그 추가
         bankService.insertAccountTransactionLog(
         		userId,
@@ -241,7 +242,8 @@ public class BankController {
         		"입출금",
         		"예금",
         		"모으냥즈",
-        		"111-111-111"
+        		"111-111-111",
+        		"모으냥즈 뱅크 예금"
         		);
         
         
@@ -315,7 +317,20 @@ public class BankController {
     }
     @GetMapping("/transfer")
     public String gotransfer (HttpSession session, Model model) {
+    	Long userId = (Long) session.getAttribute("userId");
+    	List<AccountVO> acclist = accountService.getAccountsByUserId(userId);
+    	model.addAttribute("acclist", acclist);
     	
     	return "/transfer/transfer";
     }
+    
+    // ───────── 계좌로 유저 찾기 ─────────
+    // 계좌번호(account_number) 는 Unique 값이니까 유저를 찾을 수 있음
+    @GetMapping("/api/user/search")
+    public ResponseEntity<UserVO> getUserByAccountNumber(@RequestParam String query) {
+    	UserVO user = accountService.getUserByAccountNumber(query);
+    	
+    	return ResponseEntity.ok(user);
+    }
+    
 }

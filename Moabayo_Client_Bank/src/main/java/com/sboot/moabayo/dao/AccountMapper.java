@@ -6,9 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.sboot.moabayo.vo.AccountVO;
+import com.sboot.moabayo.vo.UserVO;
 
 @Mapper
 public interface AccountMapper {
     List<AccountVO> findAccountsWithHistoryByUserId(@Param("userId") Long userId);
     List<AccountVO> findAccountsByUserId(@Param("userId") Long userId);
+    UserVO findUserByAccountNumber(@Param("query") String query);
 }

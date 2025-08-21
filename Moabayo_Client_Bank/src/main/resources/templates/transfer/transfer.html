@@ -43,6 +43,9 @@ layout:decorate="~{layout/base}">
 <div class="recipient">
 <div class="avatar" id="avatar">NY</div>
 <input type="text" class="input" id="toName" placeholder="닉네임 또는 계좌/전화번호" aria-label="받는 사람"/>
+<!-- 유저 검색 -->
+<button type="button" onclick="searchUser()">검색</button>
+<div id="searchResult"></div>
 </div>
 </div>
 </div>
@@ -51,11 +54,23 @@ layout:decorate="~{layout/base}">
 <div class="row">
 <div class="label">출금 수단</div>
 <div class="field">
-<select id="fromAccount" class="select" aria-label="출금 수단">
-<option value="">선택하세요</option>
-<option value="moa-001">모으냥즈 통장 • 123-45-67890</option>
-<option value="card-visa">비자 체크카드 • ****-1122</option>
-</select>
+    <select id="fromAccount" class="select" aria-label="출금 수단">
+      <option value="" selected>선택하세요</option>
+
+      <!-- 계좌 옵션 렌더링 -->
+      <option th:each="acc : ${acclist}"
+              th:value="${acc.id}"
+              th:data-type="${acc.type}"
+              th:data-icon="${acc.icon}"
+              th:data-product="${acc.product}"
+              th:text="${acc.name} + ' • ' + ${acc.number}">
+        계좌명 • 계좌번호
+      </option>
+    </select>
+        <!-- 계좌가 하나도 없을 때 -->
+    <div class="help" th:if="${#lists.isEmpty(acclist)}">
+      보유한 출금 수단이 없습니다. 먼저 계좌를 추가하세요.
+    </div>
 </div>
 </div>
 
@@ -99,11 +114,24 @@ layout:decorate="~{layout/base}">
 <p class="desc">3초 후 자동으로 거래내역으로 이동합니다…</p>
 </div>
 </div>
+<!-- 실패 화면 -->
+<div class="fail" id="tffail" role="status" aria-live="polite">
+	<div class="cat">😿😿</div>
+	<h2>송금 실패</h2>
+	<p class="desc">
+		<span id="errorReason">오류입니다</span>
+	</p>
+	<p class="desc">3초 후 자동으로 은행 인덱스 페이지로 이동합니다…</p>
 </div>
-<!-- 결제 비밀번호(=계정 비밀번호) 모달 -->
+</div>
+
+
+
+		<!-- 결제 비밀번호(=계정 비밀번호) 모달 -->
 <div class="modal" id="pwModal" aria-hidden="true" role="dialog" aria-labelledby="pwTitle" aria-modal="true">
   <div class="panel" role="document">
     <h3 id="pwTitle">비밀번호 확인</h3>
+    <p class="tf-desc"><span id="sendName">상대방</span>께 <b id="sendAmt">0원</b>을 보냅니다.</p>
     <p class="tf-desc">송금 전에 계정 비밀번호를 한 번 더 확인합니다.</p>
 
     <div class="pw-field">
