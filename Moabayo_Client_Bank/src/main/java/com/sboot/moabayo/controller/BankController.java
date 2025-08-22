@@ -318,4 +318,10 @@ public class BankController {
     	
     	return "/transfer/transfer";
     }
+    
+    @GetMapping("/product")
+    public String productDetail(@RequestParam long id, Model model) {
+        // id로 조회…
+        return "bpdetail";
+    }
 }
