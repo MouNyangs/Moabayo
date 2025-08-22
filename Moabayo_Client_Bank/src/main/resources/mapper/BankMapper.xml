@@ -123,5 +123,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{memo}
         )
     </insert>
+	<select id="findUserAccountByUsernameAccNum" resultType="Long">
+		SELECT ua.user_account_id
+		FROM users u
+		JOIN user_account ua
+		  ON ua.user_id = u.user_id
+		WHERE u.user_id = #{userId}
+		AND	 ua.account_num = #{accNum}
+	</select>
 
 </mapper>

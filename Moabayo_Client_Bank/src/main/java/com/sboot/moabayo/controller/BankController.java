@@ -239,7 +239,8 @@ public class BankController {
         
         // 백엔드 개발 필요 - 업데이트 유저 어카운트 & 어카운트 트랜잭션 로그 추가해야함
         Long userId = (Long) session.getAttribute("userId");
-        bankService.updateBalancePlus(userId, 100L, amount);
+        AccountVO avo = bankService.getNyangcoinAccount(userId);
+        bankService.updateBalancePlus(avo.getId(), amount);
         // 로그 추가
         bankService.insertAccountTransactionLog(
         		userId,
@@ -344,12 +345,10 @@ public class BankController {
     		  value = "/api/transfer",
     		  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     		)
-	public ResponseEntity<?> dotransfer(@ModelAttribute TransferRequest raw,
+	public ResponseEntity<?> dotransfer(@ModelAttribute TransferRequest req,
             							HttpSession session) {
     	System.out.println("-----------dotransfer 시작-----------");
-    	System.out.println("@ModelAttribute raw String: " + raw.getToAccountNumber());
-    	return ResponseEntity.ok(raw);
-    	/*
+    	System.out.println("@ModelAttribute raw String: " + req.getToAccountNumber());
     	System.out.println("req.getToAccountNumber = " + req.getToAccountNumber());
     	System.out.println("req.getSendAmount = " + req.getSendAmount());
     	System.out.println("req.getMemo = " + req.getMemo());
@@ -391,10 +390,16 @@ public class BankController {
         try {
             // 승인번호 서버에서 생성(형식은 프로젝트 맞게)
             String approvedNum = "TX-" + System.currentTimeMillis();
-
+            System.out.println("sender: " + sender.getUserId());
+            System.out.println("receiver: " + receiver.getUserId());
+            System.out.println("req.getSendAmount: " + req.getSendAmount());
+            System.out.println("approvedNum: " + approvedNum);
+            System.out.println("req.getMemo: " + req.getMemo());
             bankService.transfer(
                 sender.getUserId(),
+                sender.getAccountNum(),
                 receiver.getUserId(),
+                receiver.getAccountNum(),
                 req.getSendAmount(),
                 approvedNum,
                 req.getMemo()
@@ -411,7 +416,6 @@ public class BankController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "시스템 오류가 발생했습니다."));
         }
-        */
     }
     @GetMapping("/product")
     public String productDetail(@RequestParam long id, Model model) {
