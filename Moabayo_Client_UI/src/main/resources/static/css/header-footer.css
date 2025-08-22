@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root{
   --bg:#ffffff; --ink:#111827; --sub:#6b7280; --line:#e5e7eb;
   --brand:#7c3aed; --brand-ink:#f5f3ff; --card:#ffffff; --muted:#f8fafc;
@@ -9,7 +11,6 @@
   --shadow:0 10px 24px rgba(0,0,0,.45); --accent:#fbbf24;
 }
 
-@charset "UTF-8";
 
 /* ===============================
    Header (layout & look only)
