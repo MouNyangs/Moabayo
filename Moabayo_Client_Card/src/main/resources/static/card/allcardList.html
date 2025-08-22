@@ -247,17 +247,17 @@ body {
 	<script>
   // 데이터 (이미지는 /cardimg/ 이하 네 파일 사용)
   const cards = [
-    {id:'sc1', name:'스페이스캣 클래식', img:'/cardimg/spacecat-card.png', issuer:'Moenyangs', annual:0, tags:['쇼핑','카페','구독'], perks:['온라인 5%','카페 10%','OTT 2천원 할인'], popular:95},
-    {id:'sc2', name:'스페이스캣 플러스',  img:'/cardimg/spacecat-card.png', issuer:'Moenyangs', annual:10000, tags:['여행','영화'], perks:['해외적립 2%','영화 3천원 할인'], popular:83},
+    {id:'sc1', name:'스페이스캣 클래식', img:'http://localhost:8810/cardimg/spacecat-card.png', issuer:'Moenyangs', annual:0, tags:['쇼핑','카페','구독'], perks:['온라인 5%','카페 10%','OTT 2천원 할인'], popular:95},
+    {id:'sc2', name:'스페이스캣 플러스',  img:'http://localhost:8810/cardimg/spacecat-card.png', issuer:'Moenyangs', annual:10000, tags:['여행','영화'], perks:['해외적립 2%','영화 3천원 할인'], popular:83},
 
-    {id:'sm1', name:'서머캣 카드',       img:'/cardimg/summercat.png', issuer:'Moenyangs', annual:5000, tags:['식비','카페','쇼핑'], perks:['편의점 5%','카페 10%'], popular:88},
-    {id:'sm2', name:'서머캣 라이트',     img:'/cardimg/summercat.png', issuer:'Moenyangs', annual:0, tags:['교통','식비'], perks:['대중교통 10%','배달 5%'], popular:70},
+    {id:'sm1', name:'서머캣 카드',       img:'http://localhost:8810/cardimg/summercat.png', issuer:'Moenyangs', annual:5000, tags:['식비','카페','쇼핑'], perks:['편의점 5%','카페 10%'], popular:88},
+    {id:'sm2', name:'서머캣 라이트',     img:'http://localhost:8810/cardimg/summercat.png', issuer:'Moenyangs', annual:0, tags:['교통','식비'], perks:['대중교통 10%','배달 5%'], popular:70},
 
-    {id:'hl1', name:'할로윈캣',          img:'/cardimg/holloweencat.png', issuer:'Moenyangs', annual:7000, tags:['영화','구독'], perks:['영화 4천원','OTT 2천원'], popular:79},
-    {id:'hl2', name:'할로윈캣 딜라이트', img:'/cardimg/holloweencat.png', issuer:'Moenyangs', annual:12000, tags:['여행','주유'], perks:['해외수수료 50%','주유 100원/L'], popular:68},
+    {id:'hl1', name:'할로윈캣',          img:'http://localhost:8810/cardimg/holloweencat.png', issuer:'Moenyangs', annual:7000, tags:['영화','구독'], perks:['영화 4천원','OTT 2천원'], popular:79},
+    {id:'hl2', name:'할로윈캣 딜라이트', img:'http://localhost:8810/cardimg/holloweencat.png', issuer:'Moenyangs', annual:12000, tags:['여행','주유'], perks:['해외수수료 50%','주유 100원/L'], popular:68},
 
-    {id:'gr1', name:'그린캣 에코',       img:'/cardimg/card-green.png', issuer:'Moenyangs', annual:3000, tags:['교통','여행'], perks:['항공마일 적립','지하철 10%'], popular:90},
-    {id:'gr2', name:'그린캣 스탠다드',   img:'/cardimg/card-green.png', issuer:'Moenyangs', annual:0, tags:['주유','쇼핑'], perks:['주유 80원/L','오프라인 2%'], popular:72}
+    {id:'gr1', name:'그린캣 에코',       img:'http://localhost:8810/cardimg/card-green.png', issuer:'Moenyangs', annual:3000, tags:['교통','여행'], perks:['항공마일 적립','지하철 10%'], popular:90},
+    {id:'gr2', name:'그린캣 스탠다드',   img:'http://localhost:8810/cardimg/card-green.png', issuer:'Moenyangs', annual:0, tags:['주유','쇼핑'], perks:['주유 80원/L','오프라인 2%'], popular:72}
   ];
 
   const state = { q:'', sort:'popular', tags:new Set() };
