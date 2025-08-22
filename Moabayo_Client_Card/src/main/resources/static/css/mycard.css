@@ -366,3 +366,50 @@ html.dark .sticker-title{ box-shadow: 0 10px 24px rgba(0,0,0,.35); }
 @media (max-width: 1024px){
   .page-header.sticker-center{ margin-bottom: clamp(20px, 4vh, 44px); }
 }
+
+/* ===== Add Card (+) Tile ===== */
+.card.card--add{
+  background: color-mix(in oklab, var(--muted), black 4%);
+  border: 2px dashed color-mix(in oklab, var(--line), black 10%);
+  outline-color: var(--muted);
+  filter: none; mix-blend-mode: initial; opacity: 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,.10);
+  display: grid; place-items: center;
+  transition: border-color .2s ease, box-shadow .25s ease, transform .2s ease;
+}
+.card.card--add .add-inner{ display:grid; place-items:center; gap:10px; }
+.card.card--add .add-label{
+  font-size: 13px; color: var(--sub);
+}
+
+/* 플러스 버튼 모양 */
+.card.card--add .add-plus{
+  width:64px; height:64px; border-radius:16px;
+  background: linear-gradient(180deg, var(--brand), color-mix(in oklab, var(--brand), white 24%));
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--brand), black 45%);
+  position:relative;
+}
+.card.card--add .add-plus::before,
+.card.card--add .add-plus::after{
+  content:""; position:absolute; left:50%; top:50%;
+  width:28px; height:4px; background:#fff; border-radius:2px;
+  transform: translate(-50%,-50%);
+}
+.card.card--add .add-plus::after{ transform: translate(-50%,-50%) rotate(90deg); }
+
+/* Hover/Focus */
+.card.card--add:hover,
+.card.card--add:focus-visible{
+  border-color: color-mix(in oklab, var(--brand), black 20%);
+  box-shadow: 0 0 120px rgba(0,0,0,.35);
+  transform: rotate(0) scale(1.02);
+}
+
+/* 다크 톤 보정 */
+html.dark .card.card--add,
+body.dark .card.card--add,
+[data-theme="dark"] .card.card--add{
+  background: color-mix(in oklab, var(--muted), black 12%);
+  border-color: color-mix(in oklab, var(--line), black 25%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
