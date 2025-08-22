@@ -71,7 +71,16 @@
   let attempts = 0;
   const MAX_ATTEMPTS = 5;
 
-  btnSend.addEventListener('click', () => {
+  btnSend.addEventListener('click', async (e) => {
+	e.preventDefault();           // ✅ 기본 제출 막기 (혹시 모를 submit 방지)
+	if(await getUserByAccNum(toName.value)) {
+		console.log("toName: " + sessionStorage.getItem("toName"));
+		
+		// UI: 성공 → 버튼 다시 활성화
+		if (btnSend) btnSend.disabled = false;
+	} else {
+		return;
+	} // 조회된 계좌가 있는지 확인
     if (done.classList.contains('show')) return; // 이미 완료 상태면 무시
     openPwModal();
   });
@@ -84,7 +93,9 @@
 	
 	// 패스워드 확인 창에 상대방 이름과 송금액 붙이기
 	const amt = +(onlyDigits(amount.value) || 0);
-	sendName.textContent = toName.value.trim() || '상대방';
+	const sessionSendName = sessionStorage.getItem('toName');
+	
+	sendName.textContent = sessionSendName  + ' ('+ toName.value.trim() + ')' || '상대방';
 	sendAmt.textContent = formatKRW(amt);
 
     pwModal.classList.add('show');
@@ -93,6 +104,7 @@
   }
 
   function closePwModal(){
+	sessionStorage.removeItem("toName");
     pwModal.classList.remove('show');
     pwModal.setAttribute('aria-hidden','true');
   }
@@ -153,16 +165,53 @@
 
   // 실제 송금 로직
   async function doTransfer(){
-    btnSend.disabled = true;
-    progress.classList.add('show');
+	btnSend.disabled = true;
+	progress.classList.add('show');
 
-    // TODO: 실제 송금 API 호출
-    await new Promise(r => setTimeout(r, 1200));
-	
-	if(r.ok) {	// 송금 성공 시. 송금 완료! 메시지와 함께 3초후 bank history 페이지로
-		showSuccess();
-	} else { 	// 송금 실패 시. 송금 오류 뽑아주고 3초후 bank index 페이지로
-		showFail(r.body); // 매개변수로 오류 결과 들어가야함.
+	const toAccountNumber = toName.value.trim();
+	const amt = +(onlyDigits(amount.value) || 0);
+	const memo = (document.getElementById('memo')?.value || '').trim();
+
+	const payload = { toAccountNumber, sendAmount: amt, memo };   // ⬅️ amount로 통일
+	console.log("[transfer] payload:", payload, "JSON:", JSON.stringify(payload));
+
+	try {
+	  const res = await fetch("/bank/api/transfer", { // ⬅️ 출처표시 쿼리
+	    method: "POST",
+	    credentials: "include",
+	    headers: {
+	      "Content-Type": "application/json",
+	      "Accept": "application/json",
+	    },
+	    body: JSON.stringify(payload)       // ⬅️ 숫자 amt가 들어가야 정상
+	  });
+
+	  const raw = await res.text();
+	  console.log("[transfer] status:", res.status, "raw:", raw);
+
+	  // 응답 처리
+	  const data = await res.json().catch(() => ({}));
+
+	  if (res.ok) {
+	    // 성공 UI (필요한 데이터만 사용)
+	    if (data.toName) {
+	      // 성공 화면에 이름/금액 넣고 싶다면
+	      const doneName = document.getElementById("doneName");
+	      const doneAmt  = document.getElementById("doneAmt");
+	      if (doneName) doneName.textContent = data.toName;
+	      if (doneAmt)  doneAmt.textContent  = `${amount.toLocaleString()}원`;
+	    }
+	    showSuccess(); // 3초 후 history로 이동하는 기존 로직 사용
+	  } else {
+	    showFail(data.message || "송금 처리 중 오류가 발생했습니다.");
+	  }
+	} catch (e) {
+	  console.error(e);
+	  showFail("네트워크 오류가 발생했습니다.");
+	} finally {
+	  // 실패 시에만 버튼을 다시 열고 싶다면 여기서 분기해도 됨
+	  btnSend.disabled = false;
+	  progress.classList.remove("show");
 	}
   }
   
@@ -181,7 +230,8 @@
 	try{ snd && snd.play && snd.play().catch(()=>{}); }catch(e){}
 
 	// 3초뒤 거래내역 페이지로 이동
-	setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
+	// 임시로 주석처리함
+	//setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
   }
   
   function showFail(reason){
@@ -196,9 +246,8 @@
     fail.classList.add('show');
 
     // 3초 뒤 인덱스로 이동
-    setTimeout(() => { 
-      window.location.href = '/bank/index'; 
-    }, 3000);
+    // 임시로 주석처리함
+	//setTimeout(() => { window.location.href = '/bank/index'; }, 3000);
   }
 
   /**
@@ -228,25 +277,54 @@
 })();
 
 
-// 유저 검색
-function searchUser() {
-  const query = document.getElementById("toName").value;
-  // 백엔드에 이 주소가 필요하다.
-  fetch(`/bank/api/user/search?query=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data) {
-        document.getElementById("searchResult").innerHTML = `
-          <div>
-            <strong>${data.name}</strong> (${data.loginId})<br/>
-            계좌번호: ${data.accountNum}<br/>
-            전화번호: ${data.phone}
-          </div>
-        `;
-      } else {
-        document.getElementById("searchResult").innerText = "찾는 사용자가 없습니다.";
+// 송금을 받을 유저를 계좌번호로 가져와서 세션 저장
+// 계좌번호는 Unique 라서 한명 확정
+// 만약 없다면 버튼을 잠그고 "계좌에 해당하는 사람이 없습니다" 출력
+async function getUserByAccNum(accountNum) {
+  const btnSend = document.getElementById("btnSend");
+
+  // UI: 먼저 전송버튼 잠깐 막아두기(중복요청 방지)
+  if (btnSend) btnSend.disabled = true;
+
+  try {
+    // ✅ 백엔드 컨트롤러: @GetMapping("/api/user") / @RequestParam String query
+    const url = `/bank/api/user?${new URLSearchParams({ query: accountNum }).toString()}`;
+
+    const res = await fetch(url, {
+      method: "GET",
+      // 세션 쿠키 쓰는 경우 포함 (필요 없으면 지워도 됨)
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
       }
     });
+
+    if (!res.ok) {
+      throw new Error(`서버 오류: ${res.status}`);
+    }
+
+    // ✅ null/빈 본문 대비 (Controller가 null 반환 시 "null" 문자열이 올 수 있음)
+    const raw = await res.text();                    // 본문을 일단 텍스트로
+    const data = raw ? JSON.parse(raw) : null;       // 있으면 JSON 파싱, 없으면 null
+
+    if (data && typeof data.name === "string" && data.name.trim()) {
+      // ✅ 세션 저장
+      sessionStorage.setItem("toName", data.name.trim());
+      console.log("[getUserByAccNum] 세션 저장 성공:", data.name.trim());
+	  console.log("[getUserByAccNum] data 는 이렇게 생겼습니다: ", data)
+      return data;
+    } else {
+      // ✅ 사용자 없음
+      alert("계좌에 해당하는 사람이 없습니다");
+      // 버튼은 잠금 유지
+      return null;
+    }
+  } catch (err) {
+    console.error("[getUserByAccNum] 오류:", err);
+    alert("사용자 조회 중 오류가 발생했습니다.");
+    // 버튼은 잠금 유지
+    return null;
+  }
 }
 
 (function maskAccountNumbers() {
