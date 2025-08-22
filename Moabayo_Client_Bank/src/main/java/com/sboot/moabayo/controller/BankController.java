@@ -1,5 +1,6 @@
 package com.sboot.moabayo.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -340,10 +342,9 @@ public class BankController {
     
     @PostMapping(
     		  value = "/api/transfer",
-    		  consumes = MediaType.APPLICATION_JSON_VALUE,
-    		  produces = MediaType.APPLICATION_JSON_VALUE
+    		  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     		)
-	public ResponseEntity<?> dotransfer(@RequestBody @Valid String raw,
+	public ResponseEntity<?> dotransfer(@ModelAttribute String raw,
             							HttpSession session) {
     	System.out.println("-----------dotransfer 시작-----------");
     	System.out.println("@RequestBody raw String: " + raw);
@@ -411,5 +412,21 @@ public class BankController {
                     .body(Map.of("message", "시스템 오류가 발생했습니다."));
         }
         */
+    }
+    @GetMapping("/product")
+    public String productDetail(@RequestParam long id, Model model) {
+        // id로 조회…
+        return "bpdetail";
+    }
+    
+    @GetMapping("/apply")
+    public String startApply(@RequestParam Long productId,
+                             @RequestParam(required=false) Long amount,
+                             @RequestParam(required=false) Integer termMonths,
+                             @RequestParam(required=false) BigDecimal taxRate,
+                             Model model) {
+        // productId로 bank_product 조회 → 모델 세팅
+        // amount/termMonths/taxRate 있으면 초기값으로 바인딩
+        return "bpregister"; // 가입 위저드 뷰
     }
 }

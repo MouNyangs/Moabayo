@@ -96,7 +96,7 @@
 
   // 5) 전역 네비 (header onclick용)
   const goTo = (url) => { window.location.href = url; };
-  window.goToMainService   = () => goTo('/home');
+  window.goToMainService   = () => goTo('http://localhost:8812/mainpage');
   window.goToBankService   = () => goTo('/bank');
   window.goToCardService   = () => goTo('/cards');
   window.goToTransactions  = () => goTo('/accounts');
