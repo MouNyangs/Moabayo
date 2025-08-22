@@ -152,3 +152,27 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFilter();
   upgradeBackFaces();        // ← 이 줄 추가
 });
+
+// ===== Catalog Banner JS =====
+(function(){
+  const banner = document.getElementById('catalogBanner');
+  if(!banner) return;
+
+  const KEY = 'nyang_catalog_banner_hide_until';
+
+
+  // 도넛 게이지 값 바인딩
+  const ring = banner.querySelector('.cb-ring');
+  if (ring) {
+    const val = Math.max(0, Math.min(100, Number(ring.dataset.val || 0)));
+    ring.style.setProperty('--val', val);
+    ring.querySelector('span').textContent = `${val}%`;
+  }
+
+
+  // 쿼리로 강제 노출 (디버그용) ?showBanner=1
+  const sp = new URLSearchParams(location.search);
+  if (sp.get('showBanner') === '1') {
+    localStorage.removeItem(KEY);
+  }
+})();
