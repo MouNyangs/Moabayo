@@ -224,6 +224,15 @@ $('#similarWrap').innerHTML = SIMILAR.map(p=>`
 `).join('');
 
 // 가입 CTA
-$('#applyBtn').addEventListener('click', ()=>{
-  alert('가입 플로우로 이동 (예: /apply?product='+product.account_id+')');
+// 가입 CTA
+document.getElementById('applyBtn').addEventListener('click', () => {
+  const params = new URLSearchParams({
+    productId: String(product.account_id),   // 서버가 기대하는 파라미터명
+    // 필요하면 시뮬레이터 값도 같이 넘길 수 있어요 (초기값 채움용)
+	/*아래는 필요하면 쓰세요*/
+/*    amount: String(state.amount),
+    termMonths: String(state.term),
+    taxRate: String(state.tax),*/
+  });
+  location.href = `/bank/apply?${params.toString()}`;
 });
