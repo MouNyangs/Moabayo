@@ -1,0 +1,252 @@
+/* =========================
+   THEME TOKENS
+   ========================= */
+:root{
+  --bg:#ffffff; --ink:#111827; --sub:#6b7280; --line:#e5e7eb;
+  --card:#ffffff; --muted:#f8fafc;
+  --brand:#7c3aed; --brand-ink:#f5f3ff;
+  --shadow:0 10px 18px rgba(17,24,39,.08);
+  --accent:#f59e0b;
+  --radius:16px; --gap:16px;
+
+  /* 사용자 제공 코드와 맞춘 OKLCH 배경 */
+  --bg-oklch: 25% 0.0075 70;
+
+  --mobile-w: 360px;
+  --mobile-h: 540px;
+
+  --outline-w: 9px;
+  --preview-bg: #fff; /* 라이트 기준 */
+}
+[data-theme="dark"]{
+  /* 배경: 잿빛 남색 톤 */
+  --bg:#0b0f12;
+  --ink:#e6e9ef;
+  --sub:#a8b0bd;
+  
+  --preview-bg:#0b0f12; /* 카드 outline 톤 다운 */
+
+  /* 라인: 너무 밝지 않게  */
+  --line:#223042;                /* 카드 경계 */
+  --line-weak: rgba(255,255,255,.06);
+
+  /* 카드/표면 */
+  --card:#0e141a;
+  --muted:#0b1117;
+
+  /* 브랜드: 보라 계열, 다크에서 채도 살짝 ↓ */
+  --brand:#8b7cf5;
+  --brand-ink:#0b0f12;           /* 버튼 글씨 대비 */
+
+  /* 강조 (경고/주의 단계) */
+  --accent:#f2b94b;
+
+  /* 그림자 */
+  --shadow:0 14px 36px rgba(0,0,0,.55);
+
+  /* 반딧불 색 (캔버스에서 사용) */
+  --glow-1:#9a8cff;
+  --glow-2:#ffd166;  /* 따뜻한 금빛 */
+  --glow-3:#6ee7ff;  /* 청록 포인트 */
+}
+
+
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink);
+  background: linear-gradient(
+    50deg,
+    oklch(from oklch(var(--bg-oklch)) 50% c h),
+    oklch(from oklch(var(--bg-oklch)) 90% c h)
+  );
+  background-attachment: fixed;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+.page-header{
+  display:flex; align-items:center; gap:12px;
+  padding: 18px clamp(16px,2vw,28px);
+}
+.page-header h1{ margin:0; font-size:20px; font-weight:700 }
+.spacer{ flex:1 }
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background:var(--card); color:var(--ink);
+  border-radius:999px; padding:8px 12px; cursor:pointer;
+}
+.btn:hover{ filter:brightness(1.05) }
+.btn-brand{
+  border-color:transparent; background:var(--brand); color:var(--brand-ink);
+  box-shadow: var(--shadow);
+}
+#fireflies{
+  position: fixed; inset: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 0;    /* UI보다 뒤 */
+  opacity: 0; transition: opacity .35s ease;
+}
+/* 다크일 때만 보이기 */
+[data-theme="dark"] #fireflies{ opacity: .9 }
+/* 모션 줄임 사용자 배려 */
+@media (prefers-reduced-motion: reduce){
+  #fireflies{ display:none !important; }
+}
+/* =========================
+   LAYOUT (좌 갤러리 / 우 패널)
+   ========================= */
+.layout{
+  display:grid; gap: var(--gap);
+  grid-template-columns: 1fr 380px;
+  align-items: start;
+  padding: 0 clamp(16px,2vw,28px) 36px;
+}
+@media (max-width: 1080px){
+  .layout{ grid-template-columns: 1fr }
+}
+
+/* =========================
+   CARD GALLERY (사용자 디자인)
+   ========================= */
+.card__container{
+  display:flex; flex-wrap:wrap;
+  place-items:center; place-content:center;
+  gap: 18px;
+}
+
+/* 카드 본체 */
+.card{
+  --bg-pos-y: var(--bg-pos-y, 0);
+  --rotation: var(--rot, -3deg);
+  --shadow-blur: 24px;
+
+  position:relative;
+  background-image: var(--img);
+  background-position-y: var(--bg-pos-y);
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-attachment:fixed;
+
+  border: var(--outline-w) solid transparent;
+  border-radius: 6px;
+  outline: var(--outline-w) solid var(--preview-bg);
+  outline-offset: var(--outline-w);
+
+  min-height: var(--mobile-h); height: 100%;
+  min-width: var(--mobile-w); width: 100%;
+
+  box-shadow: 0 0 var(--shadow-blur) 0 oklch(70% 0.05 260);
+  filter: grayscale(100%) sepia(5%);
+  mix-blend-mode:multiply;
+  opacity:.69;
+
+  transform: rotate(var(--rotation)) scale(.85);
+  transition:
+    border .15s, box-shadow .15s, filter .6s, outline-offset .6s,
+    opacity .3s, transform .3s, z-index .15s;
+  cursor:pointer;
+  user-select:none;
+}
+.card:hover,
+.card.is-active{
+  --shadow-blur: 200px;
+  filter:none; mix-blend-mode:initial; opacity:1;
+  transform: rotate(0) scale(1);
+  border-color: oklch(84.16% 0.1169 71.19); /* gold */
+  box-shadow: 0 0 200px 0 oklch(80% 0.1 71);
+  outline-offset: calc(var(--outline-w)/2);
+  z-index: 5;
+}
+.card:focus{ outline: var(--outline-w) solid var(--preview-bg) }
+
+.card.mobile{
+  max-height: var(--mobile-h);
+  max-width: var(--mobile-w);
+}
+
+/* 카드 하단 메타 라벨 */
+.card .meta{
+  position:absolute; left:12px; bottom:12px;
+  background: rgba(0,0,0,.45); color:#fff;
+  padding:6px 10px; border-radius:10px;
+  backdrop-filter: blur(6px);
+  display:flex; gap:8px; align-items:center;
+  font-size:13px;
+}
+.pill{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.08);
+  color:#fff; padding:2px 8px; border-radius:999px; font-size:12px;
+}
+
+/* =========================
+   DETAIL PANEL (오른쪽)
+   ========================= */
+.detail{
+  position:sticky; top:16px;
+  background:var(--card); border:1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding:16px;
+}
+.cover{
+  width:100%; aspect-ratio:16/10; border-radius:12px;
+  background:var(--muted) center/cover no-repeat;
+  border:1px solid var(--line); margin-bottom:12px;
+}
+.detail h2{ margin:6px 0 4px; font-size:18px; font-weight:700 }
+.sub{ color:var(--sub); font-size:13px; margin-bottom:12px }
+.kv{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px }
+.box{ border:1px solid var(--line); border-radius:12px; padding:10px; background:var(--muted) }
+.mt6{ margin-top:6px }
+.hr{ height:1px; background:var(--line); margin:12px 0 }
+.actions{ display:flex; gap:8px; flex-wrap:wrap }
+
+.status{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--sub) }
+.status .dot{ width:8px; height:8px; border-radius:999px; background:var(--sub) }
+.status.active .dot{ background: var(--brand) }
+.status.fav .dot{ background: var(--accent) }
+
+/* 포커스/호버 시 다른 카드 흐리기(지원 브라우저에서만) */
+@supports selector(:has(*)){
+  .card__container:has(.card:hover) .card:not(:hover){ opacity:.45 }
+  .card__container:has(.card:focus) .card:not(:focus){ opacity:.45 }
+}
+.badges{ display:flex; gap:8px; margin:4px 0 10px }
+.badge{
+  display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
+  border:1px solid var(--line); background:var(--muted); color:var(--ink);
+}
+.badge.state-active{ border-color:transparent; background:var(--brand); color:var(--brand-ink) }
+.badge.state-frozen{ background:rgba(255,193,7,.12); border-color:rgba(255,193,7,.35) }
+.badge.state-lost{ background:rgba(244,67,54,.12); border-color:rgba(244,67,54,.35) }
+
+/* ===== Progress (Limit) ===== */
+.progress{
+  display:flex; align-items:center; gap:10px; margin-top:10px;
+}
+.progress-track{
+  flex:1; height:10px; border-radius:999px;
+  background: color-mix(in oklab, var(--line), transparent 35%);
+  /* 다크/라이트에서 경계가 과도하게 밝지 않도록 라인 색을 연하게 */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
+}
+.progress-bar{
+  height:100%; border-radius:999px;
+  background: linear-gradient(90deg, var(--brand), color-mix(in oklab, var(--brand), white 18%));
+  box-shadow: 0 1px 6px rgba(0,0,0,.15);
+  transition: width .35s ease;
+}
+.progress-label{
+  min-width:52px; text-align:right; font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
+
+/* 경고/위험 구간 색상 (70%↑, 90%↑) */
+.progress-bar.is-warn{
+  background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent), white 18%));
+}
+.progress-bar.is-danger{
+  background: linear-gradient(90deg, #ef4444, color-mix(in oklab, #ef4444, white 18%));
+}
