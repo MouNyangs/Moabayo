@@ -344,10 +344,10 @@ public class BankController {
     		  value = "/api/transfer",
     		  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     		)
-	public ResponseEntity<?> dotransfer(@ModelAttribute String raw,
+	public ResponseEntity<?> dotransfer(@ModelAttribute TransferRequest raw,
             							HttpSession session) {
     	System.out.println("-----------dotransfer 시작-----------");
-    	System.out.println("@RequestBody raw String: " + raw);
+    	System.out.println("@ModelAttribute raw String: " + raw.getToAccountNumber());
     	return ResponseEntity.ok(raw);
     	/*
     	System.out.println("req.getToAccountNumber = " + req.getToAccountNumber());

@@ -172,18 +172,16 @@
 	const amt = +(onlyDigits(amount.value) || 0);
 	const memo = (document.getElementById('memo')?.value || '').trim();
 
-	const payload = { toAccountNumber, sendAmount: amt, memo };   // ⬅️ amount로 통일
-	console.log("[transfer] payload:", payload, "JSON:", JSON.stringify(payload));
-
+	const fd = new FormData();
+	fd.append('toAccountNumber', toAccountNumber);
+	fd.append('sendAmount', amt);
+	fd.append('memo', memo);
+	
 	try {
 	  const res = await fetch("/bank/api/transfer", { // ⬅️ 출처표시 쿼리
 	    method: "POST",
 	    credentials: "include",
-	    headers: {
-	      "Content-Type": "application/json",
-	      "Accept": "application/json",
-	    },
-	    body: JSON.stringify(payload)       // ⬅️ 숫자 amt가 들어가야 정상
+	    body: fd       // ⬅️ 숫자 amt가 들어가야 정상
 	  });
 
 	  const raw = await res.text();
