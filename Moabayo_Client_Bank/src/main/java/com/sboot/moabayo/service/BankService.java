@@ -35,8 +35,11 @@ public interface BankService {
                                      String memo);
 
 	UserVO getUser(String loginId);
-	UserVO getUserByAccountId();
 	AccountVO getNyangcoinAccount(Long userId);
+
+    // ✅ 새로 추가: 전체 이체 트랜잭션
+    void transfer(Long senderUserId, Long receiverUserId, Integer amount,
+                  String approvedNum, String memo);
 	
 	
 }
