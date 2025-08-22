@@ -91,4 +91,10 @@ public class CardController {
 ////	    model.addAttribute("cardList", cardList);
 		return "/writecard"; // cardList.html 렌더링
 	}
+	
+	@GetMapping("/manage")
+	public String cardmanage(Model model) {
+		return "/card-manage"; // mycard.html
+	}
+	
 }
