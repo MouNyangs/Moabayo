@@ -86,7 +86,10 @@ public class CardController {
 	}
 
 	
-	
+	@GetMapping("/mycard")
+	public String mycard(Model model) {
+		return "/mycard"; //mycard.html
+	}
 
 
 	

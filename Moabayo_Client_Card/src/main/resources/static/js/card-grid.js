@@ -2,7 +2,7 @@
   // 페이지 이동
   function go(code){
     const map = {
-      'N07-01' : '/usercard/allcardList',
+      'N07-01' : '/usercard/mycard',
       'N08-01' : '/card/newcard.html',
       'N09-01' : '/card/writecard.html'
     };
