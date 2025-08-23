@@ -25,6 +25,11 @@ public class AccountService {
 	}
 	
 	public UserVO getUserByAccountNumber(String accNum) {
+		if (accNum == null || accNum.isBlank()) {
+		    throw new IllegalArgumentException("계좌번호가 비어있습니다.");
+		}
+		System.out.println("[AccountService.getUserByAccountNumber] accNum: " + accNum);
+		System.out.println("result: " + accMap.findUserByAccountNumber(accNum));
 		return accMap.findUserByAccountNumber(accNum);
 	}
 }

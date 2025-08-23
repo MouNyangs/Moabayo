@@ -108,13 +108,26 @@
     ORDER BY t.date_time DESC
     FETCH FIRST 10 ROWS ONLY
   </select>
-<!-- UserMapper.xml -->
+<!-- 어카운트 넘버(유니크) 로 유저찾기 -->
 <select id="findUserByAccountNumber" resultType="com.sboot.moabayo.vo.UserVO">
-  SELECT u.*
+  SELECT 
+    u.user_id           AS userId,
+    TO_CHAR(u.create_date, 'YYYY-MM-DD') AS createDate,
+    u.account_num       AS accountNum,
+    u.address           AS address,
+    u.address_detail    AS addressDetail,
+    u.zip_code          AS zipCode,
+    u.email             AS email,
+    u.name              AS name,
+    u.login_id          AS loginId,
+    u.password          AS password,
+    u.phone             AS phone,
+    u.refresh_token     AS refreshToken,
+    u.is_admin          AS isAdmin
   FROM users u
   JOIN user_account ua
     ON ua.user_id = u.user_id
-  WHERE ua.account_number = #{query}
+  WHERE ua.account_number = #{accNum, jdbcType=VARCHAR}
 </select>
 
 
