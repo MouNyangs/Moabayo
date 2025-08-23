@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,12 +28,16 @@ import com.sboot.moabayo.service.KakaoPayService;
 import com.sboot.moabayo.service.KakaoReadyResponse;
 import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
+import com.sboot.moabayo.vo.TransferRequest;
+import com.sboot.moabayo.vo.TransferResponse;
 import com.sboot.moabayo.vo.TxnRowVO;
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 //import com.sboot.moabayo.service.ProductService;
 //import com.sboot.moabayo.vo.CardProductVO;
@@ -232,7 +239,8 @@ public class BankController {
         
         // 백엔드 개발 필요 - 업데이트 유저 어카운트 & 어카운트 트랜잭션 로그 추가해야함
         Long userId = (Long) session.getAttribute("userId");
-        bankService.updateAccount(userId, 100L, amount);
+        AccountVO avo = bankService.getNyangcoinAccount(userId);
+        bankService.updateBalancePlus(avo.getId(), amount);
         // 로그 추가
         bankService.insertAccountTransactionLog(
         		userId,
@@ -242,7 +250,8 @@ public class BankController {
         		"입출금",
         		"예금",
         		"모으냥즈",
-        		"111-111-111"
+        		"111-111-111",
+        		"모으냥즈 뱅크 예금"
         		);
         
         
@@ -316,10 +325,98 @@ public class BankController {
     }
     @GetMapping("/transfer")
     public String gotransfer (HttpSession session, Model model) {
+    	Long userId = (Long) session.getAttribute("userId");
+    	List<AccountVO> acclist = accountService.getAccountsByUserId(userId);
+    	model.addAttribute("acclist", acclist);
     	
     	return "/transfer/transfer";
     }
     
+    // ───────── 계좌로 유저 찾기 ─────────
+    // 계좌번호(account_number) 는 Unique 값이니까 유저를 찾을 수 있음
+    @GetMapping("/api/user")
+    public ResponseEntity<UserVO> getUserByAccountNumber(@RequestParam String query) {
+    	UserVO user = accountService.getUserByAccountNumber(query);
+    	
+    	return ResponseEntity.ok(user);
+    }
+    
+    @PostMapping(
+    		  value = "/api/transfer",
+    		  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    		)
+	public ResponseEntity<?> dotransfer(@ModelAttribute TransferRequest req,
+            							HttpSession session) {
+    	System.out.println("-----------dotransfer 시작-----------");
+    	System.out.println("@ModelAttribute raw String: " + req.getToAccountNumber());
+    	System.out.println("req.getToAccountNumber = " + req.getToAccountNumber());
+    	System.out.println("req.getSendAmount = " + req.getSendAmount());
+    	System.out.println("req.getMemo = " + req.getMemo());
+
+        if (req.getSendAmount() <= 0) {
+            return ResponseEntity.badRequest().body(Map.of("error", "invalid params"));
+        }
+        // 1) 로그인 사용자 확인 (세션/보안컨텍스트 방식에 맞게 수정)
+        String loginId = (String) session.getAttribute("loginId");
+        if (loginId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요합니다."));
+        }
+        UserVO sender = bankService.getUser(loginId);
+        if (sender == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "사용자를 찾을 수 없습니다."));
+        }
+
+        // 2) 요청 검증
+        System.out.println("req.getAmount: " + req.getSendAmount());
+        if (req.getSendAmount() <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "유효한 금액이 아닙니다."));
+        }
+        if (req.getToAccountNumber() == null || req.getToAccountNumber().isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "수취 계좌번호를 입력해주세요."));
+        }
+
+        // 3) 수취인 조회 (계좌번호 -> 사용자)
+        UserVO receiver = accountService.getUserByAccountNumber(req.getToAccountNumber());
+        if (receiver == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "수취 계좌를 찾을 수 없습니다."));
+        }
+
+        // 4) 실제 이체 수행 (서비스 @Transactional 내부에서 minus -> plus 순서)
+        try {
+            // 승인번호 서버에서 생성(형식은 프로젝트 맞게)
+            String approvedNum = "TX-" + System.currentTimeMillis();
+            System.out.println("sender: " + sender.getUserId());
+            System.out.println("receiver: " + receiver.getUserId());
+            System.out.println("req.getSendAmount: " + req.getSendAmount());
+            System.out.println("approvedNum: " + approvedNum);
+            System.out.println("req.getMemo: " + req.getMemo());
+            bankService.transfer(
+                sender.getUserId(),
+                sender.getAccountNum(),
+                receiver.getUserId(),
+                receiver.getAccountNum(),
+                req.getSendAmount(),
+                approvedNum,
+                req.getMemo()
+            );
+
+            return ResponseEntity.ok(
+                new TransferResponse(true, approvedNum, receiver.getName())
+            );
+
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "시스템 오류가 발생했습니다."));
+        }
+    }
     @GetMapping("/product")
     public String productDetail(@RequestParam long id, Model model) {
         // id로 조회…

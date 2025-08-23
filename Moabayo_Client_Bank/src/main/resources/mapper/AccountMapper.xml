@@ -108,5 +108,14 @@
     ORDER BY t.date_time DESC
     FETCH FIRST 10 ROWS ONLY
   </select>
+<!-- UserMapper.xml -->
+<select id="findUserByAccountNumber" resultType="com.sboot.moabayo.vo.UserVO">
+  SELECT u.*
+  FROM users u
+  JOIN user_account ua
+    ON ua.user_id = u.user_id
+  WHERE ua.account_number = #{query}
+</select>
+
 
 </mapper>

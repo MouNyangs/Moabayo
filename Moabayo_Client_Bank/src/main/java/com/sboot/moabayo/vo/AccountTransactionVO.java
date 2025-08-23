@@ -29,4 +29,5 @@ public class AccountTransactionVO {
 	private Date	dateTime;
 	private String	shopName;
 	private String	shopNumber;
+	private String	memo;
 }

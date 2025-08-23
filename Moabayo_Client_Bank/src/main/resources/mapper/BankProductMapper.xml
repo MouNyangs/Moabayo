@@ -174,17 +174,4 @@
     WHERE account_id = #{accountId}
   </delete>
 
-  <!-- 참고: Oracle 11g 이하 페이징 (ROWNUM) 예시
-  <select id="searchLegacy" parameterType="map" resultMap="BankProductMap">
-    SELECT * FROM (
-      SELECT t.*, ROWNUM rn FROM (
-        SELECT <include refid="columns"/>
-        FROM bank_product
-        <where> ... 동일 조건 ... </where>
-        ORDER BY account_id
-      ) t
-      WHERE ROWNUM &lt;= #{offset} + #{limit}
-    ) WHERE rn &gt; #{offset}
-  </select>
-  -->
 </mapper>

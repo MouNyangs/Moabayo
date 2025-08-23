@@ -18,6 +18,8 @@ public interface BankMapper {
 	// 냥코인 계좌 찾기
 	AccountVO findNyangcoinAccountByUserId(@Param("userId") Long userId);
 	
+	// userid 와 accnum 으로 계좌찾기
+	Long findUserAccountByUsernameAccNum(@Param("userId") Long userId, @Param("accNum") String accNum);
 	/*
 	 * Long findUserAccountId(@Param("userId") Long userId,
 	 * 
@@ -57,5 +59,6 @@ public interface BankMapper {
 							String accountType,
 							String category, 
 							String shopName, 
-							String shopNumber);
+							String shopNumber,
+							String memo);
 }

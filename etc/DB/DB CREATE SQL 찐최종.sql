@@ -14,6 +14,7 @@ DROP TABLE gender_stats CASCADE CONSTRAINTS;
 DROP TABLE industry_codes CASCADE CONSTRAINTS;
 
 drop sequence user_seq;
+drop sequence acc_trns_seq;
 
 ------------------------------------------------
 -- 1. 사용자 (users)
@@ -104,6 +105,7 @@ CREATE TABLE account_transaction (
     date_time DATE,
     shop_name VARCHAR2(255),
     shop_number VARCHAR2(255),
+    memo VARCHAR2(1000),        -- 거래 메모
     CONSTRAINT fk_account_transaction_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id)
 );
 
@@ -213,11 +215,11 @@ INSERT INTO bank_product VALUES (104, '정기예금', 'img4.png', '고정금리 
 INSERT INTO bank_product VALUES (105, '어린이 적금', 'img5.png', '아이들을 위한 저축', '적금', '장학금 혜택', 2.00, '적금');
 
 -- card_product
-INSERT INTO card_product VALUES (201, 'card1.png', '플래티넘 카드', 'VISA', '해외 특화 카드', '프리미엄', '해외 이용 수수료 면제', 15.00, '신용');
-INSERT INTO card_product VALUES (202, 'card2.png', '체크 카드', 'Master', '실속형 체크카드', '일반', '교통카드 기능', 0.00, '체크');
-INSERT INTO card_product VALUES (203, 'card3.png', '쇼핑 카드', 'Amex', '쇼핑 전용 카드', '리워드', '온라인 캐시백', 18.00, '신용');
-INSERT INTO card_product VALUES (204, 'card4.png', '항공 마일리지 카드', 'VISA', '항공사 제휴 카드', '여행', '항공 마일리지 적립', 20.00, '신용');
-INSERT INTO card_product VALUES (205, 'card5.png', '학생 전용 체크카드', 'Master', '학생용 카드', '일반', '편의점 할인', 0.00, '체크');
+INSERT INTO card_product VALUES (201, 'card1.png', '플래티넘 카드', 'VISA', '해외 특화 카드', '프리미엄', '해외 이용 수수료 면제', 15.00, 10000001, '신용');
+INSERT INTO card_product VALUES (202, 'card2.png', '체크 카드', 'Master', '실속형 체크카드', '일반', '교통카드 기능', 0.00, 10000002,'체크');
+INSERT INTO card_product VALUES (203, 'card3.png', '쇼핑 카드', 'Amex', '쇼핑 전용 카드', '리워드', '온라인 캐시백', 18.00, 10000003, '신용');
+INSERT INTO card_product VALUES (204, 'card4.png', '항공 마일리지 카드', 'VISA', '항공사 제휴 카드', '여행', '항공 마일리지 적립', 20.00, 10000004, '신용');
+INSERT INTO card_product VALUES (205, 'card5.png', '학생 전용 체크카드', 'Master', '학생용 카드', '일반', '편의점 할인', 0.00, 10000005, '체크');
 
 -- user_account
 INSERT INTO user_account VALUES (301, 1, 101, '111-111-111', '홍길동 자유입출금', TO_DATE('2025-06-01','YYYY-MM-DD'), 100000);
@@ -234,16 +236,16 @@ INSERT INTO user_card VALUES (404, 4, 204);
 INSERT INTO user_card VALUES (405, 5, 205);
 
 -- account_transaction
-INSERT INTO account_transaction (account_transaction_id, user_account_id, approved_amount, approved_num, account_type, category, date_time, shop_name, shop_number) VALUES
-(1001, 301, 500000, 'ACC56789', 'Savings', 'Utilities', TO_DATE('2025-08-01 14:00','YYYY-MM-DD HH24:MI'), 'Electric Company', '02-1234-5678');
+INSERT INTO account_transaction (account_transaction_id, user_account_id, approved_amount, approved_num, account_type, category, date_time, shop_name, shop_number, memo) VALUES
+(1001, 301, 500000, 'ACC56789', 'Savings', 'Utilities', TO_DATE('2025-08-01 14:00','YYYY-MM-DD HH24:MI'), 'Electric Company', '02-1234-5678', 'Monthly Bill');
 INSERT INTO account_transaction VALUES
-(1002, 302, 150000, 'ACC56790', 'Checking', 'Rent', TO_DATE('2025-08-02 09:30','YYYY-MM-DD HH24:MI'), 'Landlord', '02-2345-6789');
+(1002, 302, 150000, 'ACC56790', 'Checking', 'Rent', TO_DATE('2025-08-02 09:30','YYYY-MM-DD HH24:MI'), 'Landlord', '02-2345-6789', 'Rent Payment');
 INSERT INTO account_transaction VALUES
-(1003, 303, 200000, 'ACC56791', 'Savings', 'Groceries', TO_DATE('2025-08-03 18:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '02-3456-7890');
+(1003, 303, 200000, 'ACC56791', 'Savings', 'Groceries', TO_DATE('2025-08-03 18:20','YYYY-MM-DD HH24:MI'), 'Supermarket', '02-3456-7890', 'Weekly Shopping');
 INSERT INTO account_transaction VALUES
-(1004, 304, 75000, 'ACC56792', 'Checking', 'Dining', TO_DATE('2025-08-04 12:10','YYYY-MM-DD HH24:MI'), 'Cafe', '02-4567-8901');
+(1004, 304, 75000, 'ACC56792', 'Checking', 'Dining', TO_DATE('2025-08-04 12:10','YYYY-MM-DD HH24:MI'), 'Cafe', '02-4567-8901', 'Lunch with Friends');
 INSERT INTO account_transaction VALUES
-(1005, 305, 300000, 'ACC56793', 'Deposit', 'Investment', TO_DATE('2025-08-05 16:45','YYYY-MM-DD HH24:MI'), 'Investment Firm', '02-5678-9012');
+(1005, 305, 300000, 'ACC56793', 'Deposit', 'Investment', TO_DATE('2025-08-05 16:45','YYYY-MM-DD HH24:MI'), 'Investment Firm', '02-5678-9012', 'Stock Investment');
 
 
 -- admin
@@ -262,6 +264,11 @@ INSERT INTO card_transaction VALUES (905, 405, 12000, 'CT005', '체크', '편의
 
 CREATE SEQUENCE user_seq
 START WITH 6
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE acc_trns_seq
+START WITH 1006 -- 임시 값.
 INCREMENT BY 1
 NOCACHE;
 

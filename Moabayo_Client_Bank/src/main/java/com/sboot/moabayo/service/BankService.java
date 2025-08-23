@@ -1,5 +1,7 @@
 package com.sboot.moabayo.service;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
@@ -9,10 +11,10 @@ public interface BankService {
      * 계좌 잔액 업데이트
      * @param userId 유저 ID
      * @param accountId 계좌 ID
-     * @param amount 결제 금액 (차감)
+     * @param amount 계좌 변동 금액 (Plus 증가, Minus 감소)
      */
-    void updateAccount(Long userId, Long accountId, Integer amount);
-
+	void updateBalancePlus(Long userAccountId, Integer amount);
+    void updateBalanceMinus(Long userAccountId, Integer amount);
     /**
      * 계좌 거래 로그 추가
      * @param userId 유저 ID
@@ -31,9 +33,17 @@ public interface BankService {
                                      String accountType,
                                      String category,
                                      String shopName,
-                                     String shopNumber);
+                                     String shopNumber,
+                                     String memo);
 
 	UserVO getUser(String loginId);
-
 	AccountVO getNyangcoinAccount(Long userId);
+	
+
+    // ✅ 새로 추가: 전체 이체 트랜잭션
+	void transfer(Long senderUserId, String senderAccountNum, Long receiverUserId, String receiverAccountNum,
+			Integer amount, String approvedNum, String memo);
+
+	
+	
 }

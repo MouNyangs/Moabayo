@@ -63,7 +63,8 @@
       -- 추가 표시용(계좌/상품)
       NVL(ua.account_name, '내 통장') AS accountName,
       ua.account_number              AS accountNumber,
-      bp.name                        AS product
+      bp.name                        AS product,
+      t.memo						 AS memo
 
     FROM account_transaction t
     JOIN user_account ua ON ua.user_account_id = t.user_account_id

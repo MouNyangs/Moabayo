@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.sboot.moabayo.dao.AccountMapper;
 import com.sboot.moabayo.vo.AccountVO;
+import com.sboot.moabayo.vo.UserVO;
 
 @Service
 public class AccountService {
@@ -21,5 +22,9 @@ public class AccountService {
 	
 	public List<AccountVO> getAccountsByUserId(Long userId) {
 		return accMap.findAccountsByUserId(userId);
+	}
+	
+	public UserVO getUserByAccountNumber(String accNum) {
+		return accMap.findUserByAccountNumber(accNum);
 	}
 }
