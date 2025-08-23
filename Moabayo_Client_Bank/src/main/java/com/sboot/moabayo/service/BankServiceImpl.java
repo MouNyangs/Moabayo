@@ -101,8 +101,4 @@ public class BankServiceImpl implements BankService {
         );
         updateBalancePlus(receiverAccId, amount);
     }
-
-
-
-    
 }
