@@ -57,6 +57,7 @@ layout:decorate="~{layout/base}">
       <!-- 계좌 옵션 렌더링 -->
       <option th:each="acc : ${acclist}"
               th:value="${acc.id}"
+              th:data-number="${acc.number}"
               th:data-type="${acc.type}"
               th:data-icon="${acc.icon}"
               th:data-product="${acc.product}"

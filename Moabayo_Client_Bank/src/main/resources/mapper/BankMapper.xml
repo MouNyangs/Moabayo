@@ -129,7 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		JOIN user_account ua
 		  ON ua.user_id = u.user_id
 		WHERE u.user_id = #{userId}
-		AND	 ua.account_num = #{accNum}
+		AND	 ua.account_number = #{accNum}
 	</select>
 
 </mapper>

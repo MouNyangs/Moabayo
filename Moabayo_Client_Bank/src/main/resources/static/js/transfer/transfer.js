@@ -169,11 +169,15 @@
 	progress.classList.add('show');
 
 	const toAccountNumber = toName.value.trim();
+	const fromAccountNumber = 
+	(fromAccount.selectedOptions?.[0] || fromAccount.options[fromAccount.selectedIndex]).dataset.number;
+	console.log(fromAccountNumber);
 	const amt = +(onlyDigits(amount.value) || 0);
 	const memo = (document.getElementById('memo')?.value || '').trim();
 
 	const fd = new FormData();
 	fd.append('toAccountNumber', toAccountNumber);
+	fd.append('fromAccountNumber', fromAccountNumber);
 	fd.append('sendAmount', amt);
 	fd.append('memo', memo);
 	
@@ -228,8 +232,7 @@
 	try{ snd && snd.play && snd.play().catch(()=>{}); }catch(e){}
 
 	// 3초뒤 거래내역 페이지로 이동
-	// 임시로 주석처리함
-	//setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
+	setTimeout(() => { window.location.href = '/bank/history'; }, 3000);
   }
   
   function showFail(reason){
@@ -244,8 +247,7 @@
     fail.classList.add('show');
 
     // 3초 뒤 인덱스로 이동
-    // 임시로 주석처리함
-	//setTimeout(() => { window.location.href = '/bank/index'; }, 3000);
+	setTimeout(() => { window.location.href = '/bank/index'; }, 3000);
   }
 
   /**

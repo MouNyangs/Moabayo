@@ -349,7 +349,7 @@ public class BankController {
             							HttpSession session) {
     	System.out.println("-----------dotransfer 시작-----------");
     	System.out.println("@ModelAttribute raw String: " + req.getToAccountNumber());
-    	System.out.println("req.getToAccountNumber = " + req.getToAccountNumber());
+    	System.out.println("req.getFromAccountNumber = " + req.getFromAccountNumber());
     	System.out.println("req.getSendAmount = " + req.getSendAmount());
     	System.out.println("req.getMemo = " + req.getMemo());
 
@@ -390,16 +390,16 @@ public class BankController {
         try {
             // 승인번호 서버에서 생성(형식은 프로젝트 맞게)
             String approvedNum = "TX-" + System.currentTimeMillis();
-            System.out.println("sender: " + sender.getUserId() + "(" + sender.getAccountNum() +  ")");
-            System.out.println("receiver: " + receiver.getUserId() + "(" + receiver.getAccountNum() +  ")");
+            System.out.println("sender: " + sender.getUserId() + "(" + req.getFromAccountNumber() +  ")");
+            System.out.println("receiver: " + receiver.getUserId() + "(" + req.getToAccountNumber() +  ")");
             System.out.println("req.getSendAmount: " + req.getSendAmount());
             System.out.println("approvedNum: " + approvedNum);
             System.out.println("req.getMemo: " + req.getMemo());
             bankService.transfer(
                 sender.getUserId(),
-                sender.getAccountNum(),
+                req.getFromAccountNumber(),
                 receiver.getUserId(),
-                receiver.getAccountNum(),
+                req.getToAccountNumber(),
                 req.getSendAmount(),
                 approvedNum,
                 req.getMemo()
