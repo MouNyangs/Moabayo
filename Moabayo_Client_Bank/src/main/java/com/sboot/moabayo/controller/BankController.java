@@ -390,8 +390,8 @@ public class BankController {
         try {
             // 승인번호 서버에서 생성(형식은 프로젝트 맞게)
             String approvedNum = "TX-" + System.currentTimeMillis();
-            System.out.println("sender: " + sender.getUserId());
-            System.out.println("receiver: " + receiver.getUserId());
+            System.out.println("sender: " + sender.getUserId() + "(" + sender.getAccountNum() +  ")");
+            System.out.println("receiver: " + receiver.getUserId() + "(" + receiver.getAccountNum() +  ")");
             System.out.println("req.getSendAmount: " + req.getSendAmount());
             System.out.println("approvedNum: " + approvedNum);
             System.out.println("req.getMemo: " + req.getMemo());
@@ -413,6 +413,9 @@ public class BankController {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
+        	System.out.println("error e: " + e);
+        	System.out.println("error message: " + e.getMessage());
+        	System.out.println("error Cause: " + e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "시스템 오류가 발생했습니다."));
         }
