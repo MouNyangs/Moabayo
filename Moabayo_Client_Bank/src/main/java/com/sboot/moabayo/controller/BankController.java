@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.sboot.moabayo.jwt.BankJwtGenerate;
+import com.sboot.moabayo.service.AccountBalanceService;
 import com.sboot.moabayo.service.AccountService;
 import com.sboot.moabayo.service.BankProductService;
 import com.sboot.moabayo.service.BankService;
@@ -53,6 +54,7 @@ public class BankController {
     private final BankService bankService;
     private final BankProductService bankProductService;
     private final AccountService accountService;
+    private final AccountBalanceService accBalServ;
     private final TransactionService transactionService;
     private final KakaoPayService kakaoPayService;   // ✅ 추가
 
@@ -60,12 +62,14 @@ public class BankController {
     	    BankService bankService, 
     	    BankProductService bankProductService,
     	    AccountService accountService,
+    	    AccountBalanceService accBalServ,
     	    TransactionService transactionService,
     	    KakaoPayService kakaoPayService   // ✅ 추가
     	) {
     	    this.bankService = bankService;
     	    this.bankProductService = bankProductService;
     	    this.accountService = accountService;
+    	    this.accBalServ = accBalServ;
     	    this.transactionService = transactionService;
     	    this.kakaoPayService = kakaoPayService; // ✅ 이제 정상 인식
     	}
@@ -240,7 +244,7 @@ public class BankController {
         // 백엔드 개발 필요 - 업데이트 유저 어카운트 & 어카운트 트랜잭션 로그 추가해야함
         Long userId = (Long) session.getAttribute("userId");
         AccountVO avo = bankService.getNyangcoinAccount(userId);
-        bankService.updateBalancePlus(avo.getId(), amount);
+        accBalServ.updateBalancePlus(avo.getId(), amount);
         // 로그 추가
         bankService.insertAccountTransactionLog(
         		userId,
