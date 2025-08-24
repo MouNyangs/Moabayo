@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
     private final BankMapper bankMapper;
+    private final AccountBalanceService accBalServ;
 
     public UserVO getUser(String loginId) {
         return bankMapper.findUserByLoginId(loginId);
@@ -24,28 +25,6 @@ public class BankServiceImpl implements BankService {
     
     public AccountVO getNyangcoinAccount(Long userId) {
         return bankMapper.findNyangcoinAccountByUserId(userId);
-    }
-
-    // 계좌 업데이트 및 결제 로그 추가
-    @Override
-    @Transactional
-    public void updateBalancePlus(Long userAccountId, Integer amount) {
-        // 잔액 증가
-        int updated = bankMapper.updateBalancePlus(userAccountId, amount);
-        if (updated == 0) {
-            throw new IllegalStateException("계좌 잔액 업데이트 실패");
-        }
-    }
-    
-    // 계좌 업데이트 및 결제 로그 추가
-    @Override
-    @Transactional
-    public void updateBalanceMinus(Long userAccountId, Integer amount) {
-        // 잔액 차감
-        int updated = bankMapper.updateBalanceMinus(userAccountId, amount);
-        if (updated == 0) {
-            throw new IllegalStateException("계좌 잔액 업데이트 실패");
-        }
     }
 
     @Override
@@ -83,11 +62,12 @@ public class BankServiceImpl implements BankService {
             .approvedNum(approvedNum)
             .accountType("WITHDRAW")
             .category("TRANSFER_OUT")
-            .shopName("계좌이체") // 원하는 표현으로
+            .shopName("계좌이체")
+            .shopNumber("모으냥즈 은행 번호")
             .memo(memo)
             .build()
         );
-        updateBalanceMinus(senderAccId, amount);
+        accBalServ.updateBalanceMinus(senderAccId, amount);
 
         // 3) 입금 (AOP가 거래로그 남김)
         AccountTxMetaHolder.set(AccountTxMeta.builder()
@@ -96,9 +76,10 @@ public class BankServiceImpl implements BankService {
             .accountType("DEPOSIT")
             .category("TRANSFER_IN")
             .shopName("계좌이체")
+            .shopNumber("모으냥즈 은행 번호")
             .memo(memo)
             .build()
         );
-        updateBalancePlus(receiverAccId, amount);
+        accBalServ.updateBalancePlus(receiverAccId, amount);
     }
 }

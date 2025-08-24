@@ -111,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             MEMO
         )
         VALUES (
-            SEQ_ACCOUNT_TRANSACTION_ID.NEXTVAL,
+            acc_trns_seq.NEXTVAL,
             #{userAccountId},
             #{approvedAmount},
             #{approvedNum},

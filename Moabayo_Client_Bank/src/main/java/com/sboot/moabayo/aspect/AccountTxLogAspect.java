@@ -21,18 +21,13 @@ public class AccountTxLogAspect {
 
     // 시그니처: (Long userAccountId, Integer amount) 를 타겟
     @AfterReturning(
-        value = "@annotation(mark) && args(userAccountId, amount, ..)",
-        argNames = "mark,userAccountId,amount"
-    )
+    		  value = "@annotation(mark) && args(userAccountId, amount, ..)",
+    		  argNames = "mark,userAccountId,amount")
     public void writeTxLog(AccountTxLogged mark,
                            Long userAccountId,
-                           Integer amount) {
-
-        // 애초
-    	
+                           Integer amount) {	
     	// 메타데이터 읽기(읽고 비움)
         AccountTxMeta meta = AccountTxMetaHolder.getAndClear();
-        
 
         Integer approvedAmount = (meta != null && meta.getApprovedAmount() != null)
                 ? meta.getApprovedAmount() : amount;
@@ -44,8 +39,22 @@ public class AccountTxLogAspect {
         String shopNumber = (meta != null) ? meta.getShopNumber() : null;
         String memo       = (meta != null) ? meta.getMemo()       : null;
 
+        // AOP 진입했는지 로그 기록용
+        // 각 변수에 어떤 데이터가 담기는가?
+        System.out.println("[AOP.writeTxLog] AccountTxMeta meta: " + meta);
+        System.out.println("userAccountId: " + userAccountId);
+        System.out.println("approvedAmount: " + approvedAmount);
+        System.out.println("approvedNum: " + approvedNum);
+        System.out.println("accountType: " + accountType);
+        System.out.println("category: " + category);
+        System.out.println("shopName: " + shopName);
+        System.out.println("shopNumber: " + shopNumber);
+        System.out.println("memo: " + memo);
+        
         // 커밋 후 기록
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
+        	System.out.println("if(TransactionSynchronizationManager.isSynchronizationActive()) == " + 
+        TransactionSynchronizationManager.isSynchronizationActive());
             TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override public void afterCommit() {
@@ -63,6 +72,8 @@ public class AccountTxLogAspect {
                 }
             );
         } else {
+        	System.out.println("if else... (TransactionSynchronizationManager.isSynchronizationActive()) == " + 
+        TransactionSynchronizationManager.isSynchronizationActive());
             bankMapper.insertTransaction(
                 userAccountId, approvedAmount, approvedNum,
                 accountType, category, shopName, shopNumber, memo

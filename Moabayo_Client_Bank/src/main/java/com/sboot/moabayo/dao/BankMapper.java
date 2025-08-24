@@ -53,12 +53,12 @@ public interface BankMapper {
 	int updateBalanceMinus(Long userAccountId, 
 			 				Integer amount);
 
-	void insertTransaction( Long userAccountId, 
-							Integer approvedAmount, 
-							String approvedNum, 
-							String accountType,
-							String category, 
-							String shopName, 
-							String shopNumber,
-							String memo);
+	void insertTransaction( @Param("userAccountId")  Long userAccountId, 
+							@Param("approvedAmount") Integer approvedAmount, 
+							@Param("approvedNum") 	 String approvedNum, 
+							@Param("accountType") 	 String accountType,
+							@Param("category") 		 String category, 
+							@Param("shopName") 		 String shopName, 
+							@Param("shopNumber") 	 String shopNumber,
+							@Param("memo") 			 String memo);
 }
