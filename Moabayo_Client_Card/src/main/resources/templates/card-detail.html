@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모으냥즈 · 카드 상세 (Magazine)</title>
+
+  <!-- 페이지 전용 CSS -->
+  <link rel="stylesheet" th:href="@{/css/card-detail.css}">
+  <!-- 페이지 전용 JS -->
+  <script defer src="/js/card-detail.js"></script>
+</head>
+<body>
+  <!-- 헤더(프로젝트 공용 헤더가 있다면 여기에 include) -->
+  <header class="mz-header">
+    <div class="mz-header__inner">
+      <a class="brand" href="/">MOANYANGZ</a>
+      <div class="mz-actions">
+        <!-- 다크모드 토글 -->
+        <button id="themeToggle" class="btn btn--ghost" aria-label="테마 전환">
+          <span class="on">🌙</span><span class="off">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mz-wrap">
+    <div class="mz-grid">
+      <!-- 좌측: 히어로 기사(큰 비주얼) -->
+      <article class="mz-hero">
+        <!-- 이미지가 없으면 이 div만 둬도 레이아웃 유지 -->
+        <!-- <img src="카드이미지.jpg" alt="카드 이미지" class="hero-img"> -->
+        <div class="hero-figure">
+          <div class="hero-card">
+            <div class="chip"></div>
+            <div class="digits">4678 9743 6489 9721</div>
+            <div class="holder">MOANYANGZ</div>
+          </div>
+        </div>
+
+        <header class="hero-head">
+          <h1 id="cardTitle">Moa Plus</h1>
+          <p id="cardIssuer" class="sub">Moa Card</p>
+        </header>
+
+        <section class="hero-body">
+          <p class="lede">
+            일상 소비에 최적화된 모으냥즈 시그니처 카드.
+            통신·편의점·대중교통 중심으로 안정적인 절약 효과를 제공합니다.
+          </p>
+
+          <ul class="hero-meta">
+            <li><b>적합도</b> <span id="fitScore">91%</span></li>
+            <li><b>연회비</b> 국내 10,000원 / 해외 10,000원</li>
+            <li><b>전월 실적</b> 30만원 이상</li>
+          </ul>
+
+          <div class="hero-cta">
+            <a id="applyBtn" class="btn btn--primary is-pill" href="#">신청하기</a>
+            <a id="termsBtn" class="btn is-pill" href="#">약관 보기</a>
+          </div>
+        </section>
+      </article>
+
+      <!-- 우측: 혜택 카드 그리드(잡지 기사 블럭처럼) -->
+      <aside class="mz-benefits" aria-label="혜택">
+        <h2 class="section-title">이 카드의 주요 혜택</h2>
+
+        <div class="benefit-grid">
+          <!-- benefit item -->
+          <article class="benefit">
+            <div class="badge">DINING</div>
+            <h3 class="benefit-title">통신요금 7% 할인</h3>
+            <p class="benefit-desc">이동통신 자동이체 결제 시 월 최대 5,000원 할인.</p>
+            <ul class="benefit-notes">
+              <li>전월 실적 30만원 이상</li>
+              <li>통신 3사/알뜰폰 일부 포함</li>
+            </ul>
+          </article>
+
+          <article class="benefit">
+            <div class="badge">CONVENIENCE</div>
+            <h3 class="benefit-title">편의점/카페 5% 적립</h3>
+            <p class="benefit-desc">모으냥즈 포인트로 월 최대 10,000P 적립.</p>
+            <ul class="benefit-notes">
+              <li>특정 가맹점 MCC 기준</li>
+              <li>이벤트 기간 중 추가 +2%</li>
+            </ul>
+          </article>
+
+          <article class="benefit">
+            <div class="badge">TRANSIT</div>
+            <h3 class="benefit-title">대중교통 10% 할인</h3>
+            <p class="benefit-desc">버스·지하철 후불교통 이용 금액에 할인 적용.</p>
+            <ul class="benefit-notes">
+              <li>월 한도 10,000원</li>
+            </ul>
+          </article>
+
+          <article class="benefit">
+            <div class="badge">OVERSEAS</div>
+            <h3 class="benefit-title">해외 결제 수수료 0%</h3>
+            <p class="benefit-desc">프로모션 기간 중 해외 온라인/오프라인 결제 수수료 면제.</p>
+            <ul class="benefit-notes">
+              <li>비자/마스터 브랜드 기준</li>
+            </ul>
+          </article>
+
+          <!-- 필요 시 더 추가 -->
+        </div>
+
+        <!-- 안내/유의사항 박스 -->
+        <section class="disclaimer">
+          <h3>안내 및 유의사항</h3>
+          <ul>
+            <li>가맹점 분류(MCC), 전월 실적, 월 한도에 따라 혜택이 달라질 수 있습니다.</li>
+            <li>상세 약관은 ‘약관 보기’에서 확인하세요.</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <!-- 푸터(프로젝트 공용 푸터가 있다면 include) -->
+  <footer class="mz-footer">
+    <div class="mz-footer__inner">
+      <small>© 2025 Moanyangs Bank. All rights reserved.</small>
+    </div>
+  </footer>
+</body>
+</html>

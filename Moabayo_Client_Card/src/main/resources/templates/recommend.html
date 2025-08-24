@@ -1,226 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<style>
-* {
-	box-sizing: border-box;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>N09-01 | 모으냥즈 카드 추천</title>
 
-body {
-	font-family: Mori;
-	background: #111;
-	min-height: 100vh;
-	padding: 0;
-	margin: 0;
-}
+  <!-- 기존 테마/헤더·푸터(네 환경 기준) -->
+  <link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+  <link rel="stylesheet" href="http://localhost:8810/css/theme.css" />
+  <link rel="stylesheet" href="http://localhost:8810/css/toggle.css" />
+  <script defer src="http://localhost:8810/js/theme.js"></script>
+  <script defer src="http://localhost:8810/js/common.js"></script>
 
-.gallery {
-	position: absolute;
-	width: 100%;
-	height: 100vh;
-	overflow: hidden;
-}
+  <!-- 프로젝트 공통 버튼 팩(이전 파일) -->
+  <link rel="stylesheet" href="/css/ui-buttons.css" />
 
-.cards {
-	display: flex;
-	gap: 16px;
-	padding: 0;
-	margin: 0;
-	list-style: none;
-	justify-content: center; /* <-- 여기 flex-start → center */
-	align-items: center;
-	flex-shrink: 0;
-	white-space: nowrap;
-	overflow-x: visible;
-}
+  <!-- 이 페이지 전용 -->
+  <link rel="stylesheet" href="/css/card-reco.css" />
 
-.cards li {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	width: 14rem;
-	height: 18rem;
-	text-align: center;
-	line-height: 18rem;
-	font-size: 2rem;
-	position: absolute;
-	top: 0;
-	left: 0;
-	border-radius: 0.8rem;
-}
+  <!-- 차트 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script defer src="/js/card-reco.js"></script>
 
-.cards li img {
-	max-width: 90%;
-	opacity: 0;
-}
-
-.actions {
-	position: absolute;
-	bottom: 25px;
-	left: 50%;
-	transform: translateX(-50%);
-}
-
-button {
-	display: inline-block;
-	outline: none;
-	padding: 8px 14px;
-	background: var(--dark);
-	border: solid 2px var(--light);
-	color: var(--light);
-	text-decoration: none;
-	border-radius: 99px;
-	padding: 12px 25px;
-	font-weight: 600;
-	cursor: pointer;
-	line-height: 18px;
-	margin: 1rem;
-}
-
-a {
-	color: #88ce02;
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-	<div class="gallery">
-		<ul class="cards">
-			<li><img src="https://assets.codepen.io/16327/portrait-number-1.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-2.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-3.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-4.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-5.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-1.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-2.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-3.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-4.png" alt="" /></li>
-			<li><img src="https://assets.codepen.io/16327/portrait-number-5.png" alt="" /></li>
-		</ul>
-		<div class="actions">
-			<button class="prev">Prev</button>
-			<button class="next">Next</button>
-		</div>
-	</div>
-	<script>
-	gsap.registerPlugin(ScrollTrigger);
+  <div id="header"></div>
 
-	gsap.to("img", {opacity: 1,delay: 0.1}) // gentle fade in
+  <main class="reco">
+    <!-- HERO: 이벤트 느낌, 안전한 글로우/입자 -->
+    <section class="hero">
+      <canvas id="fx"></canvas>
+      <div class="bg-glow"></div>
+      <div class="inner">
+        <div class="eyebrow">
+          <span class="pill pill-event">이번주 한정</span>
+          <span class="pill pill-brand">모으냥즈 카드</span>
+        </div>
+        <h1 class="title">소비패턴 기반<br><span>맞춤 카드 추천</span></h1>
+        <p class="sub">ML 분석으로 혜택·적립·구독을 한 번에 최적화.</p>
+        <div class="cta">
+          <a href="#picks" class="mbtn mbtn--lg mbtn--primary is-pill">내 추천 보기</a>
+          <a href="#insights" class="mbtn mbtn--lg mbtn--outline is-pill">인사이트</a>
+        </div>
+        <div class="count"><b id="dday">D-7</b> 이벤트 종료까지</div>
+      </div>
+    </section>
 
-	let iteration = 0; // gets iterated when we scroll all the way to the end or start and wraps around - allows us to smoothly continue the playhead scrubbing in the correct direction.
+    <!-- 필터(세그먼트) -->
+    <section class="filters">
+      <div class="chips">
+        <button class="chip is-active" data-k="age" data-v="20">20대</button>
+        <button class="chip" data-k="age" data-v="30">30대</button>
+        <button class="chip" data-k="age" data-v="40">40대</button>
+        <button class="chip" data-k="age" data-v="50">50+</button>
 
-	const spacing = 0.1,    // spacing of the cards (stagger)
-		snap = gsap.utils.snap(spacing), // we'll use this to snap the playhead on the seamlessLoop
-		cards = gsap.utils.toArray('.cards li'),
-		seamlessLoop = buildSeamlessLoop(cards, spacing),
-		scrub = gsap.to(seamlessLoop, { // we reuse this tween to smoothly scrub the playhead on the seamlessLoop
-			totalTime: 0,
-			duration: 0.5,
-			ease: "power3",
-			paused: true
-		}),
-		trigger = ScrollTrigger.create({
-			start: 0,
-			onUpdate(self) {
-				if (self.progress === 1 && self.direction > 0 && !self.wrapping) {
-					wrapForward(self);
-				} else if (self.progress < 1e-5 && self.direction < 0 && !self.wrapping) {
-					wrapBackward(self);
-				} else {
-	        scrub.vars.totalTime = snap((iteration + self.progress) * seamlessLoop.duration());
-					scrub.invalidate().restart(); // to improve performance, we just invalidate and restart the same tween. No need for overwrites or creating a new tween on each update.
-					self.wrapping = false;
-				}
-			},
-			end: "+=3000",
-			pin: ".gallery"
-		});
+        <span class="spacer"></span>
 
-	function wrapForward(trigger) { // when the ScrollTrigger reaches the end, loop back to the beginning seamlessly
-		iteration++;
-		trigger.wrapping = true;
-		trigger.scroll(trigger.start + 1);
-	}
+        <button class="chip is-active" data-k="sex" data-v="F">여성</button>
+        <button class="chip" data-k="sex" data-v="M">남성</button>
 
-	function wrapBackward(trigger) { // when the ScrollTrigger reaches the start again (in reverse), loop back to the end seamlessly
-		iteration--;
-		if (iteration < 0) { // to keep the playhead from stopping at the beginning, we jump ahead 10 iterations
-			iteration = 9;
-			seamlessLoop.totalTime(seamlessLoop.totalTime() + seamlessLoop.duration() * 10);
-	    scrub.pause(); // otherwise it may update the totalTime right before the trigger updates, making the starting value different than what we just set above. 
-		}
-		trigger.wrapping = true;
-		trigger.scroll(trigger.end - 1);
-	}
+        <span class="spacer"></span>
 
-	function scrubTo(totalTime) { // moves the scroll position to the place that corresponds to the totalTime value of the seamlessLoop, and wraps if necessary.
-		let progress = (totalTime - seamlessLoop.duration() * iteration) / seamlessLoop.duration();
-	  console.log(progress)
-		if (progress > 1) {
-			wrapForward(trigger);
-		} else if (progress < 0) {
-			wrapBackward(trigger);
-		} else {
-			trigger.scroll(trigger.start + progress * (trigger.end - trigger.start));
-		}
-	}
+        <select class="select" id="region">
+          <option>서울</option><option>경기</option><option>부산</option><option>대구</option>
+        </select>
+        <select class="select" id="timeband">
+          <option>점심(11–14)</option><option>저녁(18–21)</option><option>심야(22–02)</option>
+        </select>
 
-	document.querySelector(".next").addEventListener("click", () => scrubTo(scrub.vars.totalTime + spacing));
-	document.querySelector(".prev").addEventListener("click", () => scrubTo(scrub.vars.totalTime - spacing));
+        <span class="sample">유사 이용자 <b id="peer">7,582</b>명</span>
+      </div>
+    </section>
 
+    <!-- 인사이트(도넛/바/라인) -->
+    <section id="insights" class="insights">
+      <article class="panel">
+        <h3>적합도</h3>
+        <div class="donut-wrap">
+          <canvas id="fitChart"></canvas>
+          <div class="donut-center"><b id="fitVal">84</b><span>적합도</span></div>
+        </div>
+      </article>
+      <article class="panel">
+        <h3>시간대별 결제</h3>
+        <div class="mini"><canvas id="timeBar"></canvas></div>
+      </article>
+      <article class="panel">
+        <h3>주간 소비 추이</h3>
+        <div class="mini"><canvas id="weekLine"></canvas></div>
+      </article>
+    </section>
 
-	function buildSeamlessLoop(items, spacing) {
-		let overlap = Math.ceil(1 / spacing), // number of EXTRA animations on either side of the start/end to accommodate the seamless looping
-			startTime = items.length * spacing + 0.5, // the time on the rawSequence at which we'll start the seamless loop
-			loopTime = (items.length + overlap) * spacing + 1, // the spot at the end where we loop back to the startTime 
-			rawSequence = gsap.timeline({paused: true}), // this is where all the "real" animations live
-			seamlessLoop = gsap.timeline({ // this merely scrubs the playhead of the rawSequence so that it appears to seamlessly loop
-				paused: true,
-				repeat: -1, // to accommodate infinite scrolling/looping
-				onRepeat() { // works around a super rare edge case bug that's fixed GSAP 3.6.1
-					this._time === this._dur && (this._tTime += this._dur - 0.01);
-				}
-			}),
-			l = items.length + overlap * 2,
-			time = 0,
-			i, index, item;
+    <!-- 추천 카드 슬라이더 -->
+    <section id="picks" class="picks">
+      <header class="picks-head">
+        <h2>이번 주 추천 카드</h2>
+        <span class="hint">혜택 이벤트 적용 중 · 스와이프/스크롤로 더 보기</span>
+      </header>
 
-		// set initial state of items
-		gsap.set(items, {xPercent: 400, opacity: 0,	scale: 0});
+      <div class="slider" id="slider">
+        <!-- 카드 1 -->
+        <article class="card3d">
+          <div class="poster poster--a"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>92</b>%</div>
+            <h3 class="name">야식냥 체크카드</h3>
+            <ul class="pros">
+              <li>외식 7% 적립 (점심 추가 +3%)</li>
+              <li>배달앱 10% 캐시백</li>
+              <li>모으냥즈 페이 5% 적립</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+			  <form action="/usercard/detail" method="post" style="display:inline">
+			    <input type="hidden" name="cardId" value="C001">
+			    <button class="mbtn mbtn--outline is-pill" type="submit">상세</button>
+			  </form>
 
-		// now loop through and create all the animations in a staggered fashion. Remember, we must create EXTRA animations at the end to accommodate the seamless looping.
-		for (i = 0; i < l; i++) {
-			index = i % items.length;
-			item = items[index];
-			time = i * spacing;
-			rawSequence.fromTo(item, {scale: 0, opacity: 0}, {scale: 1, opacity: 1, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: "power1.in", immediateRender: false}, time)
-			           .fromTo(item, {xPercent: 400}, {xPercent: -400, duration: 1, ease: "none", immediateRender: false}, time);
-			i <= items.length && seamlessLoop.add("label" + i, time); // we don't really need these, but if you wanted to jump to key spots using labels, here ya go.
-		}
-		
-		// here's where we set up the scrubbing of the playhead to make it appear seamless. 
-		rawSequence.time(startTime);
-		seamlessLoop.to(rawSequence, {
-			time: loopTime,
-			duration: loopTime - startTime,
-			ease: "none"
-		}).fromTo(rawSequence, {time: overlap * spacing + 1}, {
-			time: startTime,
-			duration: startTime - (overlap * spacing + 1),
-			immediateRender: false,
-			ease: "none"
-		});
-		return seamlessLoop;
-	}
+            </div>
+          </div>
+        </article>
 
-	</script>
+        <!-- 카드 2 -->
+        <article class="card3d">
+          <div class="poster poster--b"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>88</b>%</div>
+            <h3 class="name">커뮤냥 플래티넘</h3>
+            <ul class="pros">
+              <li>교통/편의점 10% 캐시백</li>
+              <li>OTT 구독 매월 3,000P</li>
+              <li>해외 2% 적립</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+			  <form action="/usercard/detail" method="post" style="display:inline">
+			    <input type="hidden" name="cardId" value="C002">
+			    <button class="mbtn mbtn--outline is-pill" type="submit">상세</button>
+			  </form>
+
+            </div>
+          </div>
+        </article>
+
+        <!-- 카드 3 -->
+        <article class="card3d">
+          <div class="poster poster--c"></div>
+          <div class="body">
+            <div class="badge">적합도 <b>85</b>%</div>
+            <h3 class="name">글로벌냥 카드</h3>
+            <ul class="pros">
+              <li>해외 결제 3% 적립</li>
+              <li>공항 라운지 연 2회</li>
+              <li>여행 보험 포함</li>
+            </ul>
+            <div class="actions">
+              <button class="mbtn mbtn--primary is-pill apply-btn">혜택 받기</button>
+			  <form action="/usercard/detail" method="post" style="display:inline">
+			    <input type="hidden" name="cardId" value="C003">
+			    <button class="mbtn mbtn--outline is-pill" type="submit">상세</button>
+			  </form>
+
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 이벤트 배너 -->
+    <section class="event">
+      <div class="glow"></div>
+      <h3>이번 주 추가 적립 + 캐시백 부스트</h3>
+      <p>추천 카드 신규/전환 시 최대 <b>12,000P</b> + 외식 <b>+3%</b> 추가적립 (D-<span id="dday2">7</span>)</p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
 </body>
 </html>
