@@ -1,113 +1,52 @@
 // js/token-exp-display.js
-(function() {
-	function getStoredToken() {
-		console.log('[JWT] token-exp-display loaded');
-		const raw = localStorage.getItem('token');
-		if (!raw) return null;
-		return raw.startsWith('Bearer ') ? raw.slice(7) : raw;
-	}
+(function () {
+  function readCookie(name) {
+    const cookies = document.cookie.split(";");
+    for (let c of cookies) {
+      const [k, v] = c.trim().split("=");
+      if (k === name) return decodeURIComponent(v || "");
+    }
+    return null;
+  }
 
-	function parseJwt(token) {
-		const parts = token.split('.');
-		if (parts.length !== 3) throw new Error('Invalid JWT');
-		const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-		const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
-		const json = decodeURIComponent(
-			atob(padded).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-		);
-		return JSON.parse(json);
-	}
+  let timer;
+  function hide(){ const b=document.getElementById('tokenBox'), r=document.getElementById('remainTime');
+    if(timer) clearInterval(timer); if(r) r.textContent='-'; if(b) b.style.display='none'; }
+  function show(){ const b=document.getElementById('tokenBox'); if(b) b.style.display='inline-block'; }
 
-	function pickUserId(payload) {
-		return payload?.userId ?? payload?.uid ?? payload?.id ?? payload?.username ?? payload?.sub ?? null;
-	}
+  function runCountdown(expSec){
+    const r=document.getElementById('remainTime'); if(!r) return;
+    if(timer) clearInterval(timer);
+    function tick(){
+      const left = expSec*1000 - Date.now();
+      if(left<=0){ hide(); return; }
+      const total = Math.floor(left/1000);
+      const m = Math.floor(total/60);
+      const s = total % 60;
+      r.textContent = `${m}:${s<10?'0'+s:s}`;
+    }
+    show(); tick(); timer=setInterval(tick,1000);
+  }
 
-	let timer;
+  function start(){
+    const box = document.getElementById('tokenBox');
+    const span = document.getElementById('remainTime');
+    if(!box || !span) {
+      console.log('[TTL] header elements missing:', {box: !!box, span: !!span});
+      return;
+    }
+    const expStr = readCookie('EXP');
+    const exp = expStr ? Number(expStr) : 0;
+    console.log('[TTL] start → EXP cookie =', expStr, '→ expNum =', exp);
+    if(!exp){ hide(); return; }
+    runCountdown(exp);
+  }
 
-	function hideRemain() {
-		const box = document.getElementById('tokenBox');
-		const remainEl = document.getElementById('remainTime');
-		if (timer) clearInterval(timer);
-		if (remainEl) remainEl.textContent = '-';
-		if (box) box.style.display = 'none';
-	}
+  document.addEventListener('DOMContentLoaded', start);
+  window.addEventListener('auth:login', start);
+  window.addEventListener('pageshow', start);   // ✅ BFCache 복귀시 재시작
+  window.addEventListener('auth:logout', () => { document.cookie='EXP=; Path=/; Max-Age=0; SameSite=Lax'; hide(); });
 
-	function showRemain() {
-		const box = document.getElementById('tokenBox');
-		if (box) box.style.display = 'inline-block';
-	}
-
-	function startTokenTimer() {
-		const box = document.getElementById('tokenBox');
-		const remainEl = document.getElementById('remainTime');
-		if (!box || !remainEl) return;
-
-		const raw = localStorage.getItem('token');
-		if (!raw) { hideRemain(); return; }
-		const tok = raw.startsWith('Bearer ') ? raw.slice(7) : raw;
-
-		try {
-			const payload = parseJwt(tok);
-			const uid = localStorage.getItem('userId') || pickUserId(payload);
-			const exp = payload?.exp;
-
-			if (!uid || !exp) { hideRemain(); return; }
-
-			const expMs = Number(exp) * 1000;
-			if (timer) clearInterval(timer);
-
-			function tick() {
-				const left = expMs - Date.now();
-				if (left <= 0) {
-					remainEl.textContent = '만료됨';
-					clearInterval(timer);
-					hideRemain();
-					logout();
-					return;
-				}
-				const s = Math.floor(left / 1000);
-				const h = Math.floor(s / 3600);
-				const m = Math.floor((s % 3600) / 60);
-				const ss = s % 60;
-				const pad = n => (n < 10 ? '0' + n : n);
-				remainEl.textContent = h > 0 ? `${h}:${pad(m)}:${pad(ss)}` : `${m}:${pad(ss)}`;
-			}
-
-			showRemain();
-			tick();
-			timer = setInterval(tick, 1000);
-		} catch (e) {
-			console.warn('[JWT] parse error:', e);
-			hideRemain();
-		}
-	}
-
-	function waitAndStart() {
-		// 헤더가 비동기로 주입되는 경우 대비
-		if (document.getElementById('tokenBox') && document.getElementById('remainTime')) {
-			startTokenTimer(); return;
-		}
-		const target = document.getElementById('header') || document.body;
-		const mo = new MutationObserver(() => {
-			if (document.getElementById('tokenBox') && document.getElementById('remainTime')) {
-				mo.disconnect();
-				startTokenTimer();
-			}
-		});
-		mo.observe(target, { childList: true, subtree: true });
-	}
-
-	// 다른 탭/창 변경
-	window.addEventListener('storage', e => {
-		if (e.key === 'token' || e.key === 'userId') waitAndStart();
-	});
-
-	// 같은 탭: 로그인/로그아웃 커스텀 이벤트
-	window.addEventListener('auth:login', waitAndStart);
-	window.addEventListener('auth:logout', () => { hideRemain(); });
-
-	document.addEventListener('DOMContentLoaded', waitAndStart);
-
-	// 수동 호출도 가능
-	window.startTokenTimer = startTokenTimer;
+  // 디버그/수동 강제 실행 훅
+  window.startTokenTimer = start;
 })();
