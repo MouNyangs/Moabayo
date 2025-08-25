@@ -12,9 +12,8 @@
 
 			<nav class="nav">
 				<a href="javascript:void(0);" onclick="goToMainService()">홈</a>
-				<a href="javascript:void(0);" onclick="goToBankService()">저축상품</a>
-				<a href="javascript:void(0);" onclick="goToCardService()">카드조회</a>
-				<a href="javascript:void(0);" onclick="goToTransactions()">계좌조회</a>
+				<a href="javascript:void(0);" onclick="goToBankService()">자산관리</a>
+				<a href="javascript:void(0);" onclick="goToCardService()">카드상품</a>
 				<a href="javascript:void(0);" onclick="goAdmin()">고객센터</a>
 
 				<span class="toggle"> <input type="checkbox" id="switch-mode" hidden aria-label="테마 전환"> <label class="swith-lm admin-switch" for="switch-mode"> <i class="bx bxs-moon"></i> <i class="bx bx-sun"></i> <span class="ball"></span>
@@ -28,14 +27,21 @@
 				</div>
 			</nav>
 			<div class="profile-dropdown">
-				<i class="fas fa-user-circle profile-icon" onclick="toggleDropdown()" aria-label="프로필 아이콘"></i>
+				<!-- 기본 아이콘 (비로그인 시 사용됨) -->
+				<i id="defaultProfileIcon" class="fas fa-user-circle profile-icon" onclick="toggleDropdown()" aria-label="프로필 아이콘"></i>
+
+				<!-- 사용자 프로필 이미지 (로그인 시 사용됨, 처음엔 숨김) -->
+				<img id="userProfileImage" class="profile-icon" src="" alt="프로필 이미지" onclick="toggleDropdown()" style="display: none;" />
 
 				<div id="dropdownMenu" class="dropdown-menu">
-					<!-- 로그인 상태 -->
-					<div id="userNameDisplay" style="padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #ddd;">
-						<!-- 사용자 이름이 여기 표시됩니다 -->
+					<!-- 사용자 이름 영역 -->
+					<div id="userNameDisplay" style="padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #ddd; text-align: center;">
+						<!-- 사용자 이름 또는 로그인 필요 메시지 -->
 					</div>
+
 					<hr style="border: none; border-top: 1px solid var(--line, #ddd); margin: 0 0 10px 0;" />
+
+					<!-- 로그인 상태 -->
 					<div class="logged-in" style="display: none;">
 						<a href="http://localhost:8812/mypage">
 							<i class="fa fa-user-circle"></i> 마이페이지
