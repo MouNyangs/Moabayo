@@ -11,7 +11,7 @@
         SELECT 
             login_id 	AS loginId,
             gender 	 	AS gender,
-            birth_date 	AS birth_date
+            birth_date 	AS birthDate
         FROM users
         WHERE login_id = #{loginId}
 	</select>

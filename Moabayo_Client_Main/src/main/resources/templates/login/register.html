@@ -12,10 +12,23 @@
 <link rel="stylesheet" href="http://localhost:8810/css/register.css" />
 <link rel="stylesheet" href="http://localhost:8810/css/footer.css" />
 <script src="/js/register.js"></script>
-<!-- <script defer src="http://localhost:8810/js/teugsu.js"></script> -->
+<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+<script defer src="http://localhost:8810/js/token-exp-display.js"></script>
+<script defer src="http://localhost:8810/js/common.js"></script>
+<script defer src="http://localhost:8810/js/mainpage2.js"></script>
+<script defer src="http://localhost:8810/js/adminservice.js"></script>
+<script defer src="http://localhost:8810/js/bankservice.js"></script>
+<script defer src="http://localhost:8810/js/cardservice.js"></script>
+<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
+<link rel="stylesheet" href="http://localhost:8810/css/theme.css">
+<link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
+<script defer src="http://localhost:8810/js/theme.js"></script>
 </head>
 <body>
-
+	<div id="header"></div>
 	<div class="signup-container">
 		<h2 class="text-center mb-4">🐾 모으냥즈 회원가입 🐾</h2>
 
@@ -23,9 +36,23 @@
 
 			<!-- 이름 -->
 			<div class="form-floating mb-3">
-				<input type="text" class="form-control" id="name" name="name" placeholder="홍길동" required> <label for="name">이름</label>
+				<input type="text" class="form-control" id="name" name="name" required> <label for="name">이름</label>
 				<div class="valid-feedback">완벽하다냥!</div>
 				<div class="invalid-feedback">이름을 입력하라냥...</div>
+			</div>
+			
+			<!-- 성별 -->
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="gender" name="gender" required> <label for="gender">성별</label>
+				<div class="valid-feedback">완벽하다냥!</div>
+				<div class="invalid-feedback">성별을 입력하라냥...</div>
+			</div>
+			
+			<!-- 생년월일 -->
+			<div class="form-floating mb-3">
+				<input type="text" class="form-control" id="birthDate" name="birthDate" placeholder="" required> <label for="birthDate">생년월일</label>
+				<div class="valid-feedback">완벽하다냥!</div>
+				<div class="invalid-feedback">생년월일을 입력하라냥...</div>
 			</div>
 
 			<!-- 아이디 + 중복확인 버튼 -->

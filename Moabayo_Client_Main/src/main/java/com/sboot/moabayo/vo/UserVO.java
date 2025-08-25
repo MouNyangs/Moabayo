@@ -21,4 +21,6 @@ public class UserVO {
 	private String refreshToken;
 	private String simplePassword;
 	private String isAdmin;
+	private String gender;
+	private String birthDate;
 }
