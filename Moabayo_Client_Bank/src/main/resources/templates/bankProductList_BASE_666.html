@@ -9,8 +9,10 @@
 <link rel="stylesheet" th:href="@{/css/bank-products.css}" />
 
 <!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
-<link rel="stylesheet"
-	href="http://localhost:8810/css/header-footer.css" />
+<link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
 <script defer src="http://localhost:8810/js/token-exp-display.js"></script>
 <script defer src="http://localhost:8810/js/common.js"></script>
 <script defer src="http://localhost:8810/js/adminservice.js"></script>
@@ -54,8 +56,7 @@
 		<!-- Filters -->
 		<section class="filter-bar">
 			<form class="filters" onsubmit="return false;">
-				<input id="q" type="search" placeholder="이름/타입/카테고리/설명/혜택…"
-					aria-label="검색" /> <select id="typeSel" aria-label="타입">
+				<input id="q" type="search" placeholder="이름/타입/카테고리/설명/혜택…" aria-label="검색" /> <select id="typeSel" aria-label="타입">
 					<option value="">타입 전체</option>
 					<option>Savings</option>
 					<option>Checking</option>
@@ -65,11 +66,7 @@
 					<option value="">카테고리 전체</option>
 					<!-- 서버에서 categories 제공 시 아래 라인 유지 -->
 					<option th:each="c : ${categories}" th:value="${c}" th:text="${c}">Savings</option>
-				</select> <input id="minRate" type="number" step="0.01" min="0"
-					placeholder="최소 이율(%)" aria-label="최소 이율"> <input
-					id="maxRate" type="number" step="0.01" min="0"
-					placeholder="최대 이율(%)" aria-label="최대 이율"> <select
-					id="sortSel" aria-label="정렬">
+				</select> <input id="minRate" type="number" step="0.01" min="0" placeholder="최소 이율(%)" aria-label="최소 이율"> <input id="maxRate" type="number" step="0.01" min="0" placeholder="최대 이율(%)" aria-label="최대 이율"> <select id="sortSel" aria-label="정렬">
 					<option value="default">정렬: 기본</option>
 					<option value="name-asc">이름 ↑</option>
 					<option value="name-desc">이름 ↓</option>
@@ -86,35 +83,26 @@
 		<section class="grid" id="grid">
 			<div class="empty" id="empty" hidden>조건에 맞는 은행 상품이 없어요 😿</div>
 
-			<div class="card-wrap" th:each="p : ${products}"
-				th:data-id="${p.accountId}" th:data-name="${p.name}"
-				th:data-type="${p.type}" th:data-category="${p.category}"
-				th:data-rate="${p.interest}">
+			<div class="card-wrap" th:each="p : ${products}" th:data-id="${p.accountId}" th:data-name="${p.name}" th:data-type="${p.type}" th:data-category="${p.category}" th:data-rate="${p.interest}">
 				<article class="product-card">
 					<div class="img">
-						<img th:if="${p.img != null}" th:src="${p.img}" alt=""> <img
-							th:if="${p.img == null}" src="/images/account-placeholder.svg"
-							alt="">
+						<img th:if="${p.img != null}" th:src="${p.img}" alt=""> <img th:if="${p.img == null}" src="/images/account-placeholder.svg" alt="">
 					</div>
 
 					<div class="body">
 						<div class="top">
-							<span class="pill" th:text="${p.type}">Savings</span> <span
-								class="rate"
-								th:text="${#numbers.formatDecimal(p.interest,1,'POINT',2,'NONE')} + '%'">1.20%</span>
+							<span class="pill" th:text="${p.type}">Savings</span> <span class="rate" th:text="${#numbers.formatDecimal(p.interest,1,'POINT',2,'NONE')} + '%'">1.20%</span>
 						</div>
 						<h3 class="name" th:text="${p.name}">Standard Savings</h3>
 						<div class="cat" th:text="${p.category}">Savings</div>
 						<p class="desc" th:text="${p.description}">기본 예금 상품 설명…</p>
 						<ul class="benefits">
-							<li th:each="b : ${#strings.arraySplit(p.benefits, ',')}"><i>✔</i><span
-								th:text="${#strings.trim(b)}">무이자 수수료</span></li>
+							<li th:each="b : ${#strings.arraySplit(p.benefits, ',')}"><i>✔</i><span th:text="${#strings.trim(b)}">무이자 수수료</span></li>
 						</ul>
 					</div>
 
 					<div class="foot">
-						<a class="btn btn-dark flex"
-							th:href="@{/bank/product(id=${p.accountId})}"> 자세히 </a>
+						<a class="btn btn-dark flex" th:href="@{/bank/product(id=${p.accountId})}"> 자세히 </a>
 						<button class="btn btn-outline" type="button" data-act="compare">비교</button>
 					</div>
 				</article>
@@ -135,8 +123,7 @@
 	</main>
 
 	<!-- Compare modal (vanilla) -->
-	<div class="modal" id="compareModal" hidden role="dialog"
-		aria-modal="true" aria-labelledby="cmpTitle">
+	<div class="modal" id="compareModal" hidden role="dialog" aria-modal="true" aria-labelledby="cmpTitle">
 		<div class="modal-dim" data-act="close"></div>
 		<div class="modal-box">
 			<header class="modal-head">
