@@ -1,51 +1,97 @@
-/* ============ Theme toggle (auto ↔ dark ↔ light) ============ */
-(function themeToggle(){
-  const html = document.documentElement;
-  const btn  = document.getElementById('themeToggle');
-  if(!btn) return;
+// ===== Dynamic Accent from Image (safe fallback) =====
+(function(){
+  const img = document.getElementById('cardImg');
+  if(!img) return;
 
-  // 초기 상태: localStorage → 없으면 auto
-  const saved = localStorage.getItem('moa.theme') || 'auto';
-  html.setAttribute('data-theme', saved);
+  const setAccent = (r,g,b) => {
+    // to HSL for better gradients
+    const rgb2hsl = (r,g,b)=>{
+      r/=255; g/=255; b/=255;
+      const max=Math.max(r,g,b), min=Math.min(r,g,b);
+      let h,s,l=(max+min)/2;
+      if(max===min){ h=s=0; }
+      else{
+        const d=max-min;
+        s = l>0.5 ? d/(2-max-min) : d/(max+min);
+        switch(max){
+          case r: h=(g-b)/d + (g<b?6:0); break;
+          case g: h=(b-r)/d + 2; break;
+          case b: h=(r-g)/d + 4; break;
+        }
+        h/=6;
+      }
+      return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
+    };
 
-  // 버튼 아이콘 상태
-  const render = () => {
-    const mode = html.getAttribute('data-theme') || 'auto';
-    btn.querySelector('.on').style.display  = (mode === 'dark') ? 'inline' : 'none';
-    btn.querySelector('.off').style.display = (mode === 'light') ? 'inline' : 'none';
-    if(mode === 'auto'){ btn.querySelector('.on').style.display = btn.querySelector('.off').style.display = 'inline'; }
+    const [h,s,l] = rgb2hsl(r,g,b);
+    const accent = `hsl(${h} ${Math.min(68, s+6)}% ${Math.min(54, l+4)}%)`;
+    const bg1 = `hsl(${h} ${Math.max(20, s-30)}% ${Math.max(10, l-20)}%)`;
+    const bg2 = `hsl(${(h+12)%360} ${Math.max(24, s-18)}% ${Math.max(14, l-12)}%)`;
+
+    document.documentElement.style.setProperty('--accent', accent);
+    document.documentElement.style.setProperty('--bg1', bg1);
+    document.documentElement.style.setProperty('--bg2', bg2);
+
+    // browser UI color
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', bg1);
   };
-  render();
 
-  // 순환: auto → dark → light → auto
-  btn.addEventListener('click', () => {
-    const cur = html.getAttribute('data-theme') || 'auto';
-    const next = (cur === 'auto') ? 'dark' : (cur === 'dark') ? 'light' : 'auto';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('moa.theme', next);
-    render();
+  const computeAccent = () => {
+    try{
+      const c = document.createElement('canvas');
+      const w = c.width = 48, h = c.height = 30;
+      const ctx = c.getContext('2d', { willReadFrequently:true });
+      ctx.drawImage(img, 0, 0, w, h);
+      const { data } = ctx.getImageData(0,0,w,h);
+
+      let r=0,g=0,b=0,count=0;
+      for(let i=0;i<data.length;i+=4){
+        const R=data[i], G=data[i+1], B=data[i+2], A=data[i+3];
+        // skip near-white/near-black/transparent to reduce noise
+        const lum = 0.2126*R + 0.7152*G + 0.0722*B;
+        if(A<200) continue;
+        if(lum<20 || lum>240) continue;
+        r+=R; g+=G; b+=B; count++;
+      }
+      if(count<5) throw new Error('not enough samples');
+      setAccent( (r/count)|0, (g/count)|0, (b/count)|0 );
+    }catch(e){
+      // Fallback (keeps CSS defaults)
+      // console.warn('Accent compute failed:', e);
+    }
+  };
+
+  if(img.complete) computeAccent();
+  else img.addEventListener('load', computeAccent);
+
+  // simple tilt effect
+  const stage = document.getElementById('cardStage');
+  if(stage){
+    stage.addEventListener('mousemove', (e)=>{
+      const rect = stage.getBoundingClientRect();
+      const dx = (e.clientX - rect.left) / rect.width - .5;
+      const dy = (e.clientY - rect.top) / rect.height - .5;
+      stage.style.transform = `perspective(1200px) rotateX(${dy*-6}deg) rotateY(${dx*6}deg)`;
+    });
+    stage.addEventListener('mouseleave', ()=>{
+      stage.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+    });
+  }
+
+  // CTA
+  document.getElementById('applyBtn')?.addEventListener('click', ()=>{
+    alert('발급 프로세스로 이동합니다. (라우팅 연결 예정)');
   });
-})();
-
-/* ============ Optional: cardId 쿼리로 CTA 링크 연동 ============ */
-(function linkParams(){
-  const qs = new URLSearchParams(location.search);
-  const id = qs.get('cardId');
-  if(!id) return;
-  const apply = document.getElementById('applyBtn');
-  const terms = document.getElementById('termsBtn');
-  if(apply) apply.href = `/cards/${id}/apply`;
-  if(terms) terms.href = `/cards/${id}/terms`;
-})();
-
-/* ============ Optional: 샘플 데이터 바인딩 훅 (필요 시 교체) ============ */
-// 서버에서 모델 바인딩하면 이 블록은 삭제해도 됩니다.
-(function sampleData(){
-  // 예시로 제목/발급사/적합도만 교체
-  const title  = document.getElementById('cardTitle');
-  const issuer = document.getElementById('cardIssuer');
-  const fit    = document.getElementById('fitScore');
-  if(title)  title.textContent  = title.textContent || 'Moa Plus';
-  if(issuer) issuer.textContent = issuer.textContent || 'Moa Card';
-  if(fit)    fit.textContent    = fit.textContent || '91%';
+  document.getElementById('shareBtn')?.addEventListener('click', async ()=>{
+    const url = location.href;
+    try{
+      if(navigator.share){
+        await navigator.share({ title: document.title, url });
+      }else{
+        await navigator.clipboard.writeText(url);
+        alert('링크를 클립보드에 복사했어요.');
+      }
+    }catch(_){}
+  });
 })();
