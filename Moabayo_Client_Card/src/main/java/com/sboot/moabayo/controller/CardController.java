@@ -59,7 +59,7 @@ public class CardController {
 	public String allCardList(Model model) {
 		List<CardProductVO> cards = service.findAll();
 		model.addAttribute("cards", cards);
-		return "allcardList"; // JSP나 Thymeleaf 템플릿
+		return "cardList"; // JSP나 Thymeleaf 템플릿
 	}
 
 	@GetMapping("/newcard")
@@ -106,5 +106,10 @@ public class CardController {
 		 * model.addAttribute("benefits", cardService.findBenefits(cardId));
 		 */
 		return "/card-detail";
+	}
+	
+	@GetMapping("/register")
+	public String cardregister(Model model) {
+		return "/card-register";
 	}
 }
