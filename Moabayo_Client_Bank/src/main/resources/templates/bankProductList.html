@@ -132,13 +132,12 @@
 				</div>
 			</div>
 		</aside>
-	</main>
-
-	<!-- Compare modal (vanilla) -->
-	<div class="modal" id="compareModal" hidden role="dialog"
-		aria-modal="true" aria-labelledby="cmpTitle">
-		<div class="modal-dim" data-act="close"></div>
-		<div class="modal-box">
+		
+			<!-- Compare modal (vanilla) -->
+<div class="modal modal--center" id="compareModal" hidden role="dialog"
+     aria-modal="true" aria-labelledby="cmpTitle">
+  <div class="modal-dim" data-act="close"></div>
+  <div class="modal-box">
 			<header class="modal-head">
 				<h3 id="cmpTitle">은행 상품 비교</h3>
 				<button class="btn btn-ghost btn-sm" data-act="close">닫기</button>
@@ -160,6 +159,9 @@
 			</div>
 		</div>
 	</div>
+	</main>
+
+
 	<div id="footer"></div>
 	<!-- Page JS -->
 	<script defer th:src="@{/js/bank-products.js}"></script>
