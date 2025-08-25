@@ -1,25 +1,170 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<title>모으냥즈</title>
-<link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
-<link rel="stylesheet" href="http://localhost:8810/css/loading.css" />
-<!-- ✅ 외부 JS 파일 연결 -->
-<script defer src="http://localhost:8810/js/loading.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monyangs – Handwriting with Great Vibes (Real Pen Effect)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14; --ink:#ffffff; --accent:#a78bfa;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; display:grid; place-items:center; height:100%;
+      background:var(--bg); color:var(--ink);
+      font-family: 'Great Vibes', cursive;
+    }
+    .wrap{display:grid; gap:16px; place-items:center}
+    .hint{opacity:.7; font-size:14px}
+
+    svg{ width:min(1100px, 95vw); height:auto; overflow:visible }
+
+    /* 텍스트는 채우기(실제 글씨), 외곽선은 살짝만 */
+    .fill-text{ fill:var(--ink); stroke:rgba(255,255,255,.25); stroke-width:1.2 }
+
+    /* 마스크로 글씨를 '펜'으로 긁어내며 나타내기 */
+    #revealStroke{
+      stroke:#fff; /* 마스크에서 흰색=보임 */
+      stroke-linecap:round; stroke-linejoin:round;
+      vector-effect:non-scaling-stroke;
+    }
+
+    /* 펜촉(원) */
+    .nib{ fill:var(--ink); filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) }
+
+    .panel{display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center}
+    .panel label{display:flex; gap:6px; align-items:center}
+    .panel input[type="range"]{ width:160px }
+
+    @media (prefers-reduced-motion: reduce){
+      .nib{ display:none }
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
 
-	<!-- 로딩 화면 로딩창 필요하면 이거 -->
-	<div id="loading-screen">
-		<img src="http://localhost:8810/images/moenyang.gif" alt="로딩중" width="150" />
-		<p>귀엽게 준비 중입니다...</p>
-		<div class="progress-container">
-			<div class="progress-bar" id="progress-bar"></div>
-		</div>
-		<p id="progress-text">0%</p>
-	</div>
-	<!-- 로딩 화면 끝 -->
+    <svg viewBox="0 0 1200 300" role="img" aria-label="Monyangs handwriting with real pen effect">
+      <!-- 1) 텍스트(실제 글씨) -->
+      <defs>
+        <!-- 2) 마스크: 굵은 스트로크가 지나간 부분만 보이도록 -->
+        <mask id="m-reveal" maskUnits="userSpaceOnUse">
+          <rect x="0" y="0" width="1200" height="300" fill="#000" />
+          <path id="revealStroke" d="M80,210 C140,140 260,140 340,200 C420,260 560,230 640,180 C740,120 880,140 980,200 C1060,250 1110,250 1160,230"/>
+        </mask>
+      </defs>
 
+      <!-- 텍스트는 마스크를 적용하여 '펜 경로'가 지나간 곳만 보임 -->
+      <g mask="url(#m-reveal)">
+        <text id="title" x="90" y="210" font-size="180" class="fill-text">Monyangs</text>
+      </g>
+
+      <!-- 펜촉(애니메이션 경로를 따라 이동) -->
+      <circle id="nib" class="nib" r="8" cx="80" cy="210" />
+    </svg>
+
+    <div class="hint">실제 필기처럼 펜 스트로크가 지나가며 글자가 드러나요. 속도/두께/압력 변화를 조절할 수 있습니다.</div>
+
+    <div class="panel">
+      <label>속도 <input id="speed" type="range" min="0.2" max="3.0" value="1.0" step="0.05"></label>
+      <label>펜두께 <input id="thick" type="range" min="60" max="220" value="150" step="1"></label>
+      <label>압력감(진폭) <input id="press" type="range" min="0" max="0.4" value="0.18" step="0.01"></label>
+      <button id="replay" type="button">다시 쓰기</button>
+    </div>
+  </div>
+
+  <script>
+    // === 핵심 아이디어 ===
+    // 굵은 흰색 스트로크(revealStroke)를 마스크로 써서, 그 스트로크가 지나는 부분만 텍스트가 보이게 함.
+    // stroke-dashoffset을 L->0으로 줄이며 왼→오 필기처럼 보이게 하고,
+    // nib 원을 guide 경로상의 getPointAtLength로 이동시켜 '펜촉' 효과를 줌.
+
+    const guide = document.getElementById('revealStroke');
+    const nib = document.getElementById('nib');
+    const speed = document.getElementById('speed');
+    const thick = document.getElementById('thick');
+    const press = document.getElementById('press');
+    const replay = document.getElementById('replay');
+
+    let L = 0;      // 경로 길이
+    let off = 0;    // 현재 dashoffset
+    let animId = 0; // rAF id
+
+    // 글자 별 잠깐 멈춤(펜 띄기) 느낌: 대략적 위치 비율
+    const pauseMarks = [0.05, 0.18, 0.32, 0.46, 0.60, 0.74, 0.88];
+
+    function init(){
+      L = guide.getTotalLength();
+      // dash 초기화
+      guide.style.strokeDasharray = L;
+      guide.style.strokeDashoffset = L;
+      // 두께 적용(텍스트 전체를 충분히 덮도록 크게)
+      guide.style.strokeWidth = thick.value;
+      off = L;
+      moveNib(L); // 시작점으로 펜 이동
+    }
+
+    // 압력감: 진행률 t(0~1)에 따라 스트로크 폭을 살짝 변화(사인파)
+    function applyPressure(t){
+      const base = parseFloat(thick.value);
+      const amp = base * parseFloat(press.value); // 진폭
+      const w = base + Math.sin(t * Math.PI * 2) * amp * 0.6 + Math.sin(t * Math.PI * 6) * amp * 0.4;
+      guide.style.strokeWidth = Math.max(40, w);
+    }
+
+    function moveNib(dist){
+      const p = guide.getPointAtLength(Math.max(0, Math.min(L, L - dist)));
+      nib.setAttribute('cx', p.x);
+      nib.setAttribute('cy', p.y);
+    }
+
+    function animate(){
+      cancelAnimationFrame(animId);
+      const vBase = 280; // 기준 px/s
+      const vScale = parseFloat(speed.value); // 사용자 속도 스케일
+      const start = performance.now();
+      let last = start;
+
+      function frame(now){
+        const dt = (now - last) / 1000; // s
+        last = now;
+
+        // 현재 진행률(0~1)
+        const t = 1 - (off / L);
+
+        // 글자 단위 멈춤 효과: pauseMarks 근처에서 속도를 잠깐 줄이기
+        let slow = 1.0;
+        for(const m of pauseMarks){
+          const d = Math.abs(t - m);
+          if(d < 0.02){ slow = Math.max(slow, 1.0 + (0.3 - d*10)); }
+        }
+
+        // 가속/감속 곡선(느낌 좋게): easeInOutCubic 계열
+        const ease = (x)=> x<0.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2,3)/2;
+        const curve = 0.6 + 0.8*ease(t); // 0.6~1.4 배속 변동
+
+        // 실제 감소량
+        const v = (vBase * vScale) / slow * curve; // px/s
+        off = Math.max(0, off - v * dt);
+        guide.style.strokeDashoffset = off;
+
+        // 펜촉 이동 & 압력감
+        moveNib(off);
+        applyPressure(t);
+
+        if(off>0){ animId = requestAnimationFrame(frame); }
+      }
+      animId = requestAnimationFrame(frame);
+    }
+
+    replay.addEventListener('click', ()=>{ init(); animate(); });
+    speed.addEventListener('input', ()=>{});
+    thick.addEventListener('input', ()=>{ guide.style.strokeWidth = thick.value });
+
+    // 초기 실행
+    init();
+    animate();
+  </script>
 </body>
 </html>

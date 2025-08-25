@@ -1,0 +1,8 @@
+html,body{height:100%}
+body{
+  margin:0; background:#f7f7fa;
+  display:grid; place-items:center;
+  font-family:ui-sans-serif, system-ui;
+}
+.wrap{ width:min(1100px,92vw); }
+.logo{ width:100%; height:auto; display:block; }
