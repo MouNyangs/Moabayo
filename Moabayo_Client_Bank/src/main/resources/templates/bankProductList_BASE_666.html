@@ -120,35 +120,33 @@
 				</div>
 			</div>
 		</aside>
+	</main>
 
-		<!-- Compare modal (vanilla) -->
-		<div class="modal modal--center" id="compareModal" hidden role="dialog" aria-modal="true" aria-labelledby="cmpTitle">
-			<div class="modal-dim" data-act="close"></div>
-			<div class="modal-box">
-				<header class="modal-head">
-					<h3 id="cmpTitle">은행 상품 비교</h3>
-					<button class="btn btn-ghost btn-sm" data-act="close">닫기</button>
-				</header>
-				<div class="modal-body">
-					<div class="table-wrap">
-						<table class="ny-table">
-							<thead>
-								<tr>
-									<th>이름</th>
-									<th>타입</th>
-									<th>카테고리</th>
-									<th class="t-right">이율</th>
-								</tr>
-							</thead>
-							<tbody id="compareTbody"></tbody>
-						</table>
-					</div>
+	<!-- Compare modal (vanilla) -->
+	<div class="modal" id="compareModal" hidden role="dialog" aria-modal="true" aria-labelledby="cmpTitle">
+		<div class="modal-dim" data-act="close"></div>
+		<div class="modal-box">
+			<header class="modal-head">
+				<h3 id="cmpTitle">은행 상품 비교</h3>
+				<button class="btn btn-ghost btn-sm" data-act="close">닫기</button>
+			</header>
+			<div class="modal-body">
+				<div class="table-wrap">
+					<table class="ny-table">
+						<thead>
+							<tr>
+								<th>이름</th>
+								<th>타입</th>
+								<th>카테고리</th>
+								<th class="t-right">이율</th>
+							</tr>
+						</thead>
+						<tbody id="compareTbody"></tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-	</main>
-
-
+	</div>
 	<div id="footer"></div>
 	<!-- Page JS -->
 	<script defer th:src="@{/js/bank-products.js}"></script>
