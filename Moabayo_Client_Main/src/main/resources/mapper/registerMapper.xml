@@ -20,7 +20,9 @@
             name,
             login_id,
             password,
-            phone
+            phone,
+            gender,
+            birth_date
         ) VALUES (
             #{userId, jdbcType=NUMERIC},
             SYSDATE,
@@ -31,7 +33,9 @@
             #{name, jdbcType=VARCHAR},
             #{loginId, jdbcType=VARCHAR},
             #{password, jdbcType=VARCHAR},
-            #{phone, jdbcType=VARCHAR}
+            #{phone, jdbcType=VARCHAR},
+            #{gender, jdbcType=VARCHAR},
+            TO_DATE(#{birthDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')
         )
     </insert>
 

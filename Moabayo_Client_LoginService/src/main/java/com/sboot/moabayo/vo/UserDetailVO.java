@@ -6,6 +6,6 @@ import lombok.Data;
 public class UserDetailVO {
 	private String loginId;
 	private String gender;
-	private String birth_date;
+	private String birthDate;
 	
 }
