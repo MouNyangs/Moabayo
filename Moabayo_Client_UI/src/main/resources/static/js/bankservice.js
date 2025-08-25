@@ -1,37 +1,20 @@
-function goToBankService() {
-	const token = localStorage.getItem('token');
+async function goToBankService() {
+  // 1) 세션 확인 (쿠키 자동 전송)
+  try {
+    const res = await fetch("http://localhost:8812/jwt/verify", {
+      method: "GET",
+      credentials: "include" // ❗쿠키 동반 필수
+    });
 
-	if (!token) {
-		alert("로그인이 필요합니다.");
-		window.location.href = "http://localhost:8812/loginpage";
-		return;
-	}
-
-	// ✅ 카드 인증 요청
-	fetch("http://localhost:8812/jwt/verify", {
-		method: "GET",
-		headers: {
-			"Authorization": token
-		}
-	})
-		.then(res => {
-			console.log(res);
-			if (res.ok) {
-				// ✅ 인증 성공 시 브라우저 이동 (진짜 이동)
-				const cardUrl = `http://localhost:8813/bank/verify?token=${encodeURIComponent(token)}`;
-				window.location.href = cardUrl;
-			} else {
-				throw new Error("인증 실패");
-			}
-		})
-		/*		.then(html => {
-					document.open();
-					document.write(html);
-					document.close();
-				})*/
-		.catch(err => {
-			console.error("❌ 인증 에러:", err);
-			alert("인증되지 않았습니다. 다시 로그인해주세요.");
-			window.location.href = "http://localhost:8812/loginpage";
-		});
+    if (res.ok) {
+      // 2) 인증 성공 → 은행 서비스로 이동
+      window.location.href = "http://localhost:8813/bank/verify";
+    } else {
+      throw new Error("인증 실패");
+    }
+  } catch (err) {
+    console.error("❌ 인증 에러:", err);
+    alert("인증되지않았습니다. 다시 로그인해주세요.");
+    window.location.href = "http://localhost:8812/loginpage";
+  }
 }
