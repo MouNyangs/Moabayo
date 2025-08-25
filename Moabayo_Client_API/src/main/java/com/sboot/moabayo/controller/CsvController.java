@@ -18,6 +18,12 @@ public class CsvController {
 
     @Autowired
     private CsvReader csvReader;
+    
+
+    @GetMapping("/")
+    public String home() {
+        return "index.html";
+    }
 
     @GetMapping("/age")
     public List<AgeGenderVO> getAgeGender() throws Exception {
