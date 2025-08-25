@@ -176,3 +176,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// === 달력(생년월일) ===
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.flatpickr) {
+    flatpickr('#birthDate', {
+      locale: 'ko',
+      dateFormat: 'Y-m-d',
+      maxDate: 'today',       // 오늘 이후 선택 불가
+      allowInput: true,       // 직접 타이핑 허용
+      disableMobile: false    // 모바일에서도 위젯 사용
+    });
+  }
+
+  // (선택) 부트스트랩 floating label과 궁합: 값 있으면 label이 떠 있게
+  const bd = document.getElementById('birthDate');
+  if (bd) {
+    const toggleFilled = () => bd.classList.toggle('is-filled', !!bd.value);
+    bd.addEventListener('change', toggleFilled);
+    bd.addEventListener('input', toggleFilled);
+    toggleFilled();
+  }
+});
+
+// 값이 있으면 라벨이 올라가도록 class 부여 (자동완성/초기값 대응)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.form-floating > .form-control').forEach(el => {
+    const sync = () => el.classList.toggle('is-filled', !!el.value);
+    ['input','change'].forEach(ev => el.addEventListener(ev, sync));
+    setTimeout(sync, 50); // 자동완성/초기값 반영
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const radios = document.querySelectorAll('.nx-segment .seg-radio');
+  const sync = () => {
+    radios.forEach(r => {
+      const label = document.querySelector(`label[for="${r.id}"]`);
+      if (label) label.setAttribute('aria-pressed', r.checked ? 'true' : 'false');
+    });
+  };
+  radios.forEach(r => r.addEventListener('change', sync));
+  sync();
+});
+
