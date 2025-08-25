@@ -62,10 +62,26 @@ function updateDropdownMenu() {
 
 // 로그아웃 처리
 function logout() {
-	localStorage.clear();
-	alert("로그아웃 되었습니다.");
-	location.href = "mainpage";
+  // 1) 로컬스토리지 정리
+  localStorage.clear();
+
+  // 2) 표시용 EXP 쿠키 제거
+  document.cookie = "EXP=; Path=/; Max-Age=0; SameSite=Lax";
+
+  // 3) 헤더 타이머 숨기기 (token-exp-display.js가 듣고 있음)
+  window.dispatchEvent(new Event("auth:logout"));
+
+  // 4) 서버에도 ACCESS_TOKEN 쿠키 무효화 요청 (HttpOnly 쿠키는 JS에서 못 지움)
+  fetch("http://localhost:8812/user/logout", {
+    method: "POST",
+    credentials: "include"
+  }).catch(err => console.warn("서버 로그아웃 요청 실패:", err));
+
+  // 5) 안내 + 이동
+  alert("로그아웃 되었습니다.");
+  location.href = "http://localhost:8812/loginpage";
 }
+
 
 // 메뉴 생성 함수 (로그인 상태에 따라 다르게 생성)
 function createRotatingMenu(items) {
