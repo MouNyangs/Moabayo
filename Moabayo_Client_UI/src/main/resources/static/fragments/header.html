@@ -27,7 +27,34 @@
 					남은 시간: <span id="remainTime">-</span>
 				</div>
 			</nav>
-		</div>
+			<div class="profile-dropdown">
+				<i class="fas fa-user-circle profile-icon" onclick="toggleDropdown()" aria-label="프로필 아이콘"></i>
 
+				<div id="dropdownMenu" class="dropdown-menu">
+					<!-- 로그인 상태 -->
+					<div id="userNameDisplay" style="padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #ddd;">
+						<!-- 사용자 이름이 여기 표시됩니다 -->
+					</div>
+					<hr style="border: none; border-top: 1px solid var(--line, #ddd); margin: 0 0 10px 0;" />
+					<div class="logged-in" style="display: none;">
+						<a href="http://localhost:8812/mypage">
+							<i class="fa fa-user-circle"></i> 마이페이지
+						</a>
+						<a href="#" onclick="logout()">
+							<i class="fa fa-sign-out-alt"></i> 로그아웃
+						</a>
+					</div>
+
+					<!-- 비로그인 상태 -->
+					<div class="logged-out" style="display: none;">
+						<a href="http://localhost:8812/loginpage">
+							<i class="fa fa-sign-in-alt"></i> 로그인
+						</a>
+						<a href="registerpage">
+							<i class="fa fa-user-plus"></i> 회원가입
+						</a>
+					</div>
+				</div>
+			</div>
 	</header>
 </div>
