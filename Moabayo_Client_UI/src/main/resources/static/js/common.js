@@ -79,7 +79,7 @@ function logout() {
 
   // 5) 안내 + 이동
   alert("로그아웃 되었습니다.");
-  location.href = "http://localhost:8812/loginpage";
+  location.href = "http://localhost:8812/mainpage";
 }
 
 
