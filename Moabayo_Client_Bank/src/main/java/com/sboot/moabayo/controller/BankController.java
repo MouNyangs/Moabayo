@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.sboot.moabayo.feign.UserDataFeignClient;
 import com.sboot.moabayo.jwt.BankJwtGenerate;
 import com.sboot.moabayo.service.AccountBalanceService;
 import com.sboot.moabayo.service.AccountService;
@@ -29,6 +30,8 @@ import com.sboot.moabayo.service.KakaoPayService;
 import com.sboot.moabayo.service.KakaoReadyResponse;
 import com.sboot.moabayo.service.TransactionService;
 import com.sboot.moabayo.vo.AccountVO;
+import com.sboot.moabayo.vo.PwCheckRequest;
+import com.sboot.moabayo.vo.PwCheckResponse;
 import com.sboot.moabayo.vo.TransferRequest;
 import com.sboot.moabayo.vo.TransferResponse;
 import com.sboot.moabayo.vo.TxnRowVO;
@@ -39,11 +42,13 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 //import com.sboot.moabayo.service.ProductService;
 //import com.sboot.moabayo.vo.CardProductVO;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/bank")
 public class BankController {
 
@@ -57,23 +62,6 @@ public class BankController {
     private final AccountBalanceService accBalServ;
     private final TransactionService transactionService;
     private final KakaoPayService kakaoPayService;   // ✅ 추가
-
-    public BankController(
-    	    BankService bankService, 
-    	    BankProductService bankProductService,
-    	    AccountService accountService,
-    	    AccountBalanceService accBalServ,
-    	    TransactionService transactionService,
-    	    KakaoPayService kakaoPayService   // ✅ 추가
-    	) {
-    	    this.bankService = bankService;
-    	    this.bankProductService = bankProductService;
-    	    this.accountService = accountService;
-    	    this.accBalServ = accBalServ;
-    	    this.transactionService = transactionService;
-    	    this.kakaoPayService = kakaoPayService; // ✅ 이제 정상 인식
-    	}
-
 	
 	@GetMapping("/verify")
 	public String handleToken(@RequestParam String token, HttpSession session) {
@@ -439,5 +427,25 @@ public class BankController {
         // productId로 bank_product 조회 → 모델 세팅
         // amount/termMonths/taxRate 있으면 초기값으로 바인딩
         return "bpregister"; // 가입 위저드 뷰
+    }
+    
+    // feign client
+    private final UserDataFeignClient udFeignClient;
+    // 프런트 바디용 Record
+    public record VerifyPwRequest(String password) {}
+    
+    @PostMapping("/pwcheck")
+    public ResponseEntity<Map<String,Object>> verifyPassword(
+    		@SessionAttribute(name = "loginId", required = true) String loginId,
+    		@RequestBody VerifyPwRequest req,
+            HttpServletRequest request
+    ) {
+        // 1) LoginService에 위임
+    	System.out.println("[BankController.verifyPassword] 백엔드로 들어온 패스워드: " + req.password()
+    			+ " | " + req.password);
+        PwCheckResponse res = udFeignClient.pwcheck(new PwCheckRequest(loginId, req.password()));
+
+        // 2) 프런트 규격에 맞게 단순화해서 응답
+        return ResponseEntity.ok(Map.of("ok", res.ok()));
     }
 }

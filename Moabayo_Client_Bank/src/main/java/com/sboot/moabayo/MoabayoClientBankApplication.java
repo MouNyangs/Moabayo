@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.sboot.moabayo")
 @MapperScan("com.sboot.moabayo.dao")
 public class MoabayoClientBankApplication {
 
