@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sboot.moabayo.jwt.CardJwtGenerate;
 import com.sboot.moabayo.service.CardProductService;
 import com.sboot.moabayo.vo.CardProductVO;
+import com.sboot.moabayo.vo.CardSummaryVO;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpSession;
@@ -51,8 +52,17 @@ public class CardController {
 	}
 
 	@GetMapping("/toCardList")
-	public String showDashboard() {
-		return "index"; // templates/index.html
+	public String toCardList(Model model) {
+		CardSummaryVO summary = new CardSummaryVO();
+		summary.setOwnedCount(5);
+		summary.setTotalSpend(1234.56);
+		summary.setExpectedReward(100);
+		summary.setAlertsCount(1);
+		summary.setDaysUntilBilling(10);
+
+		model.addAttribute("summary", summary); // 꼭 이 부분이 있어야 함
+
+		return "index"; // 또는 해당 뷰 이름
 	}
 
 	@GetMapping("/allcardList")
@@ -107,7 +117,7 @@ public class CardController {
 		 */
 		return "/card-detail";
 	}
-	
+
 	@GetMapping("/register")
 	public String cardregister(Model model) {
 		return "/card-register";
