@@ -74,24 +74,21 @@
       </div>
     </section>
 
-    <!-- 인사이트(도넛/바/라인) -->
-    <section id="insights" class="insights">
-      <article class="panel">
-        <h3>적합도</h3>
-        <div class="donut-wrap">
-          <canvas id="fitChart"></canvas>
-          <div class="donut-center"><b id="fitVal">84</b><span>적합도</span></div>
-        </div>
-      </article>
-      <article class="panel">
-        <h3>시간대별 결제</h3>
-        <div class="mini"><canvas id="timeBar"></canvas></div>
-      </article>
-      <article class="panel">
-        <h3>주간 소비 추이</h3>
-        <div class="mini"><canvas id="weekLine"></canvas></div>
-      </article>
-    </section>
+	<!-- 인사이트(연령/지역/시간대별 결제) -->
+	<section id="insights" class="insights">
+	  <article class="panel">
+	    <h3>연령별 결제</h3>
+	    <div class="mini"><canvas id="ageChart"></canvas></div>
+	  </article>
+	  <article class="panel">
+	    <h3>지역별 결제</h3>
+	    <div class="mini"><canvas id="regionChart"></canvas></div>
+	  </article>
+	  <article class="panel">
+	    <h3>시간대별 결제</h3>
+	    <div class="mini"><canvas id="timeChart"></canvas></div>
+	  </article>
+	</section>
 
     <!-- 추천 카드 슬라이더 -->
     <section id="picks" class="picks">
