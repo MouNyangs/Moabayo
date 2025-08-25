@@ -229,3 +229,42 @@ body.dark .bank-products{
 @media (max-width: 960px){
   .bank-products .nx-hero{ grid-template-columns:1fr; }
 }
+
+/* ==== 중앙 모달: 컨테이너로 정중앙 정렬 (권장) ==== */
+.modal.modal--center{
+  position: fixed;           /* 화면 기준 */
+  inset: 0;                  /* 전체 덮기 */
+  display: flex;             /* 중앙 정렬 */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;             /* 비교바보다 위 */
+}
+
+/* 기존 바텀시트 규칙 무력화 + 박스 사이즈 */
+.modal.modal--center .modal-box{
+  position: relative;        /* fixed/absolute 금지 */
+  top: auto; left: auto; right: auto; bottom: auto;
+  inset: auto;               /* 잔여 inset 리셋 */
+  transform: none;           /* 이전 transform 리셋 */
+  margin: 0;                 /* 중앙정렬은 flex에 맡김 */
+  width: min(960px, calc(100% - 48px));
+  max-height: min(80vh, 720px);
+  overflow: auto;
+  border-radius: 16px;       /* 네 모서리 둥글게 */
+  z-index: 1001;
+}
+
+/* 오버레이 */
+.modal-dim{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000;
+}
+
+/* (선택) 모바일 보정 */
+@media (max-width: 560px){
+  .modal.modal--center .modal-box{
+    width: calc(100% - 24px);
+    max-height: 82vh;
+  }
+}
