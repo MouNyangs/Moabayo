@@ -62,6 +62,7 @@
 					remainEl.textContent = '만료됨';
 					clearInterval(timer);
 					hideRemain();
+					logout();
 					return;
 				}
 				const s = Math.floor(left / 1000);
