@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -89,12 +90,21 @@ public class CardController {
 	public String recommendCards(Model model) {
 //	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
 ////	    model.addAttribute("cardList", cardList);
-		return "/writecard"; // cardList.html 렌더링
+		return "/recommend"; // cardList.html 렌더링
 	}
-	
+
 	@GetMapping("/manage")
 	public String cardmanage(Model model) {
-		return "/card-manage"; // mycard.html
+		return "/card-manage";
 	}
-	
+
+	@PostMapping("/detail")
+	public String detail(@RequestParam String cardId, Model model) {
+
+		/*
+		 * model.addAttribute("card", cardService.findCard(cardId));
+		 * model.addAttribute("benefits", cardService.findBenefits(cardId));
+		 */
+		return "/card-detail";
+	}
 }
