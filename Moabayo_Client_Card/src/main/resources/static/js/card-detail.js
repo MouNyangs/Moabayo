@@ -82,6 +82,7 @@
   // CTA
   document.getElementById('applyBtn')?.addEventListener('click', ()=>{
     alert('발급 프로세스로 이동합니다. (라우팅 연결 예정)');
+	window.location.href = "/usercard/register";   // 컨트롤러 매핑 URL
   });
   document.getElementById('shareBtn')?.addEventListener('click', async ()=>{
     const url = location.href;
