@@ -2,6 +2,13 @@ function toggleMenu() {
 	const menu = document.getElementById("menu");
 	if (menu) menu.classList.toggle("active");
 }
+function showUserName() {
+	const userName = localStorage.getItem("userName") || localStorage.getItem("userId") || "사용자";
+	const userNameDisplay = document.getElementById("userNameDisplay");
+	if (userNameDisplay) {
+		userNameDisplay.textContent = userName + "님";
+	}
+}
 
 window.addEventListener("DOMContentLoaded", () => {
 	// ✅ HEADER 로드
@@ -13,6 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 			header.innerHTML = data;
 
+			updateDropdownMenu();
 			// ✅✅ 헤더가 DOM에 삽입된 '이후' 토큰 타이머 시작
 			if (window.startTokenTimer) {
 				try {
@@ -90,8 +98,45 @@ window.addEventListener("DOMContentLoaded", () => {
 			window.startTokenTimer();
 		}
 	});
-
+	updateDropdownMenu();
 });
+
+let isLoggedIn = false; // TODO: 서버에서 로그인 상태에 따라 true/false 설정
+
+function toggleDropdown() {
+	const menu = document.getElementById("dropdownMenu");
+	menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function updateDropdownMenu() {
+	const loggedInEl = document.querySelector(".logged-in");
+	const loggedOutEl = document.querySelector(".logged-out");
+
+	if (!loggedInEl || !loggedOutEl) {
+		console.warn("드롭다운 요소가 존재하지 않습니다.");
+		return;
+	}
+
+	const isLoggedIn = !!localStorage.getItem("token");
+
+	if (isLoggedIn) {
+		showUserName();
+		loggedInEl.style.display = "block";
+		loggedOutEl.style.display = "none";
+	} else {
+		loggedInEl.style.display = "none";
+		loggedOutEl.style.display = "block";
+	}
+}
+
+document.addEventListener("click", function(event) {
+	const profile = document.querySelector(".profile-dropdown");
+	if (!profile.contains(event.target)) {
+		document.getElementById("dropdownMenu").style.display = "none";
+	}
+});
+
+window.addEventListener("DOMContentLoaded", updateDropdownMenu);
 
 document.addEventListener("DOMContentLoaded", () => {
 	const cards = document.querySelector(".cards");
@@ -111,10 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 });
-
-/*function goToMainService() {
-	window.location.href = "http://localhost:8812/mainpage";
-}*/
+// 전역 네비 (header onclick용)
+const goTo = (url) => { window.location.href = url; };
+window.goToMainService = () => goTo('http://localhost:8812/mainpage');
+window.goToBankService = () => goTo('/bank');
+window.goToCardService = () => goTo('/cards');
+window.goToTransactions = () => goTo('/accounts');
+window.goAdmin = () => goTo('/support');
 
 function goToTransactions() {
 	window.location.href = "http://localhost:8812/transactions"
