@@ -432,20 +432,34 @@ public class BankController {
     // feign client
     private final UserDataFeignClient udFeignClient;
     // 프런트 바디용 Record
-    public record VerifyPwRequest(String password) {}
+    public static class VerifyPwRequest {
+    	private String password;
+    	public String getPassword() {return password;}
+    	public void setPassword(String password) { this.password = password; }
+    }
+    
+//    @PostMapping(value = "/pwcheck",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<Map<String,Object>> verifyPassword(
+//    		@SessionAttribute(name = "loginId", required = true) String loginId,
+//    		@RequestBody String password,
+//            HttpServletRequest request
+//    ) {
+//        // 1) LoginService에 위임
+//    	System.out.println("[BankController.verifyPassword] 세션에 있던 loginId: " + loginId);
+//    	System.out.println("[BankController.verifyPassword] 백엔드로 들어온 패스워드: " + password);
+//        PwCheckResponse res = udFeignClient.pwcheck(new PwCheckRequest(loginId, password));
+//
+//        // 2) 프런트 규격에 맞게 단순화해서 응답
+//        return ResponseEntity.ok(Map.of("ok", res.ok()));
+//    }
     
     @PostMapping("/pwcheck")
-    public ResponseEntity<Map<String,Object>> verifyPassword(
-    		@SessionAttribute(name = "loginId", required = true) String loginId,
-    		@RequestBody VerifyPwRequest req,
-            HttpServletRequest request
-    ) {
-        // 1) LoginService에 위임
-    	System.out.println("[BankController.verifyPassword] 백엔드로 들어온 패스워드: " + req.password()
-    			+ " | " + req.password);
-        PwCheckResponse res = udFeignClient.pwcheck(new PwCheckRequest(loginId, req.password()));
-
-        // 2) 프런트 규격에 맞게 단순화해서 응답
-        return ResponseEntity.ok(Map.of("ok", res.ok()));
+    @ResponseBody
+    public Map<String,Object> debug(@RequestBody Map<String,Object> body) {
+        System.out.println(body); // {password=bbbbbbbb} 가 찍히면 전송/헤더 OK, 바인딩 문제였던 것
+        return Map.of("ok", true);
     }
 }
