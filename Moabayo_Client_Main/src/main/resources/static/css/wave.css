@@ -1,0 +1,55 @@
+/* 라일락 팔레트 */
+:root{
+  --lilac-sky-0:#f4f0fa; --lilac-sky-1:#efe7ff; --lilac-sky-2:#d9c8ff;
+  --lilac-ocean:#7a63e6;
+  --lilac-wave-1:#b79cff;
+  --lilac-wave-2:#9e88ff;
+}
+
+html,body{height:100%}
+body{
+  background:radial-gradient(ellipse at center,
+    var(--lilac-sky-0) 0%,
+    var(--lilac-sky-1) 35%,
+    var(--lilac-sky-2) 100%);
+  overflow:hidden;
+}
+
+.ocean{
+  height:5%; width:100%;
+  position:absolute; left:0; bottom:0;
+  background:var(--lilac-ocean);
+}
+
+/* ✅ 파도: SVG를 마스크로 사용 → 배경색으로 정확히 착색됨 */
+.wave{
+  position:absolute; top:-198px;
+  width:6400px; height:198px;
+  background:var(--lilac-wave-1);                /* 파도 색 */
+  -webkit-mask-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg);
+          mask-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg);
+  -webkit-mask-repeat: repeat-x;                 mask-repeat: repeat-x;
+  -webkit-mask-position: 0 0;                    mask-position: 0 0;
+  -webkit-mask-size: 1600px 198px;               mask-size: 1600px 198px; /* 타일 폭 */
+  animation: wave 7s cubic-bezier(.36,.45,.63,.53) infinite;
+  transform: translate3d(0,0,0);
+}
+
+/* 두 번째 파도(색만 다르게 + 스웰) */
+.wave:nth-of-type(2){
+  top:-175px;
+  background:var(--lilac-wave-2);
+  animation: wave 7s cubic-bezier(.36,.45,.63,.53) -.125s infinite,
+             swell 7s ease -1.25s infinite;
+  opacity:1;
+}
+
+/* 원본 애니메이션 그대로 */
+@keyframes wave{
+  0%{   margin-left:0 }
+  100%{ margin-left:-1600px } /* 마스크 타일 폭과 일치 */
+}
+@keyframes swell{
+  0%,100%{ transform:translate3d(0,-25px,0) }
+  50%{    transform:translate3d(0,  5px,0) }
+}
