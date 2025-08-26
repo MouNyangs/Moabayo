@@ -41,11 +41,8 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-<<<<<<< HEAD
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-=======
->>>>>>> main
 
 //import com.sboot.moabayo.service.ProductService;
 //import com.sboot.moabayo.vo.CardProductVO;
@@ -458,28 +455,21 @@ public class BankController {
     	public void setPassword(String password) { this.password = password; }
     }
     
-//    @PostMapping(value = "/pwcheck",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<Map<String,Object>> verifyPassword(
-//    		@SessionAttribute(name = "loginId", required = true) String loginId,
-//    		@RequestBody String password,
-//            HttpServletRequest request
-//    ) {
-//        // 1) LoginService에 위임
-//    	System.out.println("[BankController.verifyPassword] 세션에 있던 loginId: " + loginId);
-//    	System.out.println("[BankController.verifyPassword] 백엔드로 들어온 패스워드: " + password);
-//        PwCheckResponse res = udFeignClient.pwcheck(new PwCheckRequest(loginId, password));
-//
-//        // 2) 프런트 규격에 맞게 단순화해서 응답
-//        return ResponseEntity.ok(Map.of("ok", res.ok()));
-//    }
-    
-    @PostMapping("/pwcheck")
-    @ResponseBody
-    public Map<String,Object> debug(@RequestBody Map<String,Object> body) {
-        System.out.println(body); // {password=bbbbbbbb} 가 찍히면 전송/헤더 OK, 바인딩 문제였던 것
-        return Map.of("ok", true);
+    @PostMapping(value = "/pwcheck",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+            )
+    public ResponseEntity<Map<String,Object>> verifyPassword(
+    		@SessionAttribute(name = "loginId", required = true) String loginId,
+    		@ModelAttribute VerifyPwRequest req,
+            HttpServletRequest request
+    ) {
+        // 1) LoginService에 위임
+    	System.out.println("[BankController.verifyPassword] 세션에 있던 loginId: " + loginId);
+    	System.out.println("[BankController.verifyPassword] 백엔드로 들어온 패스워드: " + req.getPassword());
+        PwCheckResponse res = udFeignClient.pwcheck(new PwCheckRequest(loginId, req.getPassword()));
+
+        // 2) 프런트 규격에 맞게 단순화해서 응답
+        return ResponseEntity.ok(Map.of("ok", res.ok()));
     }
+    
 }

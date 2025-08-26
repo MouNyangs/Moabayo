@@ -258,18 +258,19 @@
    */
   async function verifyPassword(password){
     // CSRF 토큰 사용(있을 경우)
-    const headers = { 'Content-Type': 'application/json' };
     const csrf = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
     if (csrf && csrfHeader) headers[csrfHeader] = csrf;
 
 	console.log("입력한 패스워드: ", password);
+	const fd1 = new FormData();
+	fd1.append('password', password);
+	
     // 실제 API로 교체하세요.
     const res = await fetch('/bank/pwcheck', {
        method:'POST', 
-	   headers,
 	   credentials: 'include',
-	   body: JSON.stringify({ password })
+	   body: fd1
     });
 	console.log("fetch 완료 결과 res: ", res);
     if(!res.ok) throw new Error('verify failed');
