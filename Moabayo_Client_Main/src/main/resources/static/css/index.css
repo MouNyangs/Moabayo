@@ -178,3 +178,28 @@ body {
 .button:active .bx{
   color: var(--color-pink-200);      /* 눌림 시 진한 라일락 */
 }
+
+/* ⛔ 기존 타일 별 숨기기 (있어도 화면에 안 보이게) */
+.stars, .stars--near { display:none !important; background:none !important; }
+
+/* ✅ 랜덤 별 요소용 스타일 */
+.star{
+  position:fixed; z-index:1;          /* 바다/파도 뒤집히면 z-index 조절 */
+  width:2px; height:2px; border-radius:50%;
+  background: var(--star-a);
+  box-shadow: 0 0 6px var(--star-a);
+  opacity:.75;
+  animation: starTwinkle var(--dur,3s) ease-in-out infinite alternate;
+  pointer-events:none;
+  will-change: transform, opacity;
+}
+.star--b{
+  width:1.5px; height:1.5px;
+  background: var(--star-b);
+  box-shadow: 0 0 5px var(--star-b);
+}
+@keyframes starTwinkle{
+  0%{ transform:scale(1);   opacity:.45; }
+  100%{ transform:scale(1.6); opacity:1; }
+}
+
