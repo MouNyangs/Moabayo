@@ -38,11 +38,14 @@ import com.sboot.moabayo.vo.TxnRowVO;
 import com.sboot.moabayo.vo.UserVO;
 
 import io.jsonwebtoken.Jwts;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+<<<<<<< HEAD
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+=======
+>>>>>>> main
 
 //import com.sboot.moabayo.service.ProductService;
 //import com.sboot.moabayo.vo.CardProductVO;
@@ -63,38 +66,55 @@ public class BankController {
     private final TransactionService transactionService;
     private final KakaoPayService kakaoPayService;   // ✅ 추가
 	
-	@GetMapping("/verify")
-	public String handleToken(@RequestParam String token, HttpSession session) {
-	    try {
-	    	
-	    	// Bearer 접두사 제거
-	        if (token.startsWith("Bearer ")) {
-	            token = token.substring(7); // "Bearer " 잘라내기
-	        }
-	        
-	        // 토큰 검증
-	        String loginId = Jwts.parserBuilder()
-	            .setSigningKey(BankJwtGenerate.getKey())
-	            .build()
-	            .parseClaimsJws(token)
-	            .getBody()
-	            .getSubject();
-	        UserVO user = bankService.getUser(loginId);
-	        System.out.println("UserVO: " + user.toString());
-	        
-	        // 검증된 토큰을 세션이나 모델에 저장 (필요시)
-	        session.setAttribute("token", token); // 또는 사용자 정보
-	        session.setAttribute("loginId", loginId); // 또는 사용자 정보
-	        session.setAttribute("userId", user.getUserId());
-	        // URL 정리해서 리다이렉트 (토큰 제거)
-	        return "redirect:/bank/index"; // index.html
-	    } catch (Exception e) {
-	    	System.err.println(e);
-	    	System.err.println(e.getMessage());
-	    	System.err.println(e.getCause());
-	        return "redirect:/error";
-	    }
-	}
+    @GetMapping("/verify")
+    public String handleToken(HttpServletRequest request, HttpSession session) {
+        try {
+            // 1) 토큰 가져오기: Authorization 헤더 우선, 없으면 쿠키(ACCESS_TOKEN)
+            String auth = request.getHeader("Authorization");
+            String token = null;
+
+            if (auth != null && auth.startsWith("Bearer ")) {
+                token = auth.substring(7).trim();
+            } else if (request.getCookies() != null) {
+                for (Cookie c : request.getCookies()) {
+                    if ("ACCESS_TOKEN".equals(c.getName())) {
+                        token = c.getValue();
+                        break;
+                    }
+                }
+            }
+
+            if (token == null || token.isBlank()) {
+                // 토큰이 전혀 없으면 로그인 페이지로
+                return "redirect:/loginpage";
+            }
+
+            // 2) 토큰 검증 (기존 로직 그대로 유지)
+            String loginId = Jwts.parserBuilder()
+                    .setSigningKey(BankJwtGenerate.getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+
+            UserVO user = bankService.getUser(loginId);
+            if (user == null) {
+                return "redirect:/loginpage";
+            }
+
+            // 3) 세션에 보관 (기존과 동일)
+            session.setAttribute("token", token);
+            session.setAttribute("loginId", loginId);
+            session.setAttribute("userId", user.getUserId());
+
+            // 4) URL에서 토큰 제거된 상태로 진입
+            return "redirect:/bank/index";
+        } catch (Exception e) {
+            System.err.println(e);
+            return "redirect:/error";
+        }
+    }
+
 	
 	@GetMapping("/index")
 	public String showBankIndex(

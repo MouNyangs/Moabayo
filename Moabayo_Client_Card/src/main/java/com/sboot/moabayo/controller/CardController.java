@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sboot.moabayo.jwt.CardJwtGenerate;
 import com.sboot.moabayo.service.CardProductService;
 import com.sboot.moabayo.vo.CardProductVO;
+import com.sboot.moabayo.vo.CardSummaryVO;
 
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -27,32 +30,63 @@ public class CardController {
 	}
 
 	@GetMapping("/cardList")
-	public String showCardList(@RequestParam String token, Model model, HttpSession session) {
-		try {
+	public String showCardList(HttpServletRequest request, HttpSession session) {
+	    try {
+	        // 1) 토큰: Authorization 헤더 우선, 없으면 쿠키에서
+	        String auth = request.getHeader("Authorization");
+	        String token = null;
 
-			// Bearer 접두사 제거
-			if (token.startsWith("Bearer ")) {
-				token = token.substring(7); // "Bearer " 잘라내기
-			}
-			// 토큰 검증
-			Jwts.parserBuilder().setSigningKey(CardJwtGenerate.getKey()).build().parseClaimsJws(token);
+	        if (auth != null && auth.startsWith("Bearer ")) {
+	            token = auth.substring(7).trim();
+	        } else if (request.getCookies() != null) {
+	            for (Cookie c : request.getCookies()) {
+	                if ("ACCESS_TOKEN".equals(c.getName())) {
+	                    token = c.getValue();
+	                    break;
+	                }
+	            }
+	        }
 
-			// 검증된 토큰을 세션이나 모델에 저장 (필요시)
-			session.setAttribute("token", token); // 또는 사용자 정보
+	        if (token == null || token.isBlank()) {
+	            return "redirect:/loginpage";
+	        }
 
-			// URL 정리해서 리다이렉트 (토큰 제거)
-			return "redirect:/usercard/toCardList"; // index.html 대신 정제된 주소로 이동
-		} catch (Exception e) {
-			return "redirect:/error";
-		}
-//	    List<CardDTO> cardList = cardService.getMyCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
-		// cardList.html 렌더링
+	        // 2) 토큰 검증 (기존 로직 유지: CardJwtGenerate 사용)
+	        Jwts.parserBuilder()
+	            .setSigningKey(CardJwtGenerate.getKey())
+	            .build()
+	            .parseClaimsJws(token);
+
+	        // (선택) subject 등 꺼내서 세션/모델에 저장하고 싶다면:
+	        // String loginId = Jwts.parserBuilder()
+	        //         .setSigningKey(CardJwtGenerate.getKey())
+	        //         .build()
+	        //         .parseClaimsJws(token).getBody().getSubject();
+	        // session.setAttribute("loginId", loginId);
+
+	        // 3) 세션에 토큰 저장(필요시)
+	        session.setAttribute("token", token);
+
+	        // 4) URL 정리해서 페이지 진입
+	        return "redirect:/usercard/toCardList";
+	    } catch (Exception e) {
+	        return "redirect:/error";
+	    }
 	}
 
+
 	@GetMapping("/toCardList")
-	public String showDashboard() {
-		return "index"; // templates/index.html
+	public String toCardList(Model model) {
+		CardSummaryVO summary = new CardSummaryVO();
+		summary.setOwnedCount(5);
+		summary.setTotalSpend(1234.56);
+		summary.setExpectedReward(100);
+		summary.setAlertsCount(1);
+		summary.setDaysUntilBilling(10);
+
+		model.addAttribute("summary", summary); // 꼭 이 부분이 있어야 함
+
+		return "index"; // 또는 해당 뷰 이름
 	}
 
 	@GetMapping("/allcardList")
@@ -107,7 +141,7 @@ public class CardController {
 		 */
 		return "/card-detail";
 	}
-	
+
 	@GetMapping("/register")
 	public String cardregister(Model model) {
 		return "/card-register";

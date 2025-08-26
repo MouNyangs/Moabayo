@@ -1,0 +1,205 @@
+@import url("https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap");
+
+:root {
+	--background-color: #f4f0fa;
+  /* 중립(회색 역할)도 살짝 보라 톤 */
+  --color-gray-100: #f3edff;  /* 가장 밝은 라일락 그레이 */
+  --color-gray-200: #e7dbff;  /* 버튼 바탕/패널 */
+  --color-gray-300: #cbb8ff;  /* 보더/인셋 섀도우 */
+  --color-light: #ffffff;
+  /* 포인트 라일락 */
+  --color-pink-100: #a789ff;  /* 메인 라일락(아이콘/타이틀) */
+  --color-pink-200: #7a63e6;  /* 진한 라일락(호버/액티브) */
+}
+
+* {
+	-webkit-tap-highlight-color: transparent;
+	tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+	font-family: "Cal Sans", sans-serif;
+	font-optical-sizing: auto;
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	padding: 2rem;
+	text-align: center;
+	background-color: var(--background-color);
+	justify-content: center;
+	align-items: center;
+	flex-flow: column nowrap;
+	row-gap: 2rem;
+	display: flex;
+	overflow: hidden;
+}
+
+.wrapper {
+	position: relative;
+	width: 140px;
+	aspect-ratio: 1/1;
+	border-radius: 16px;
+	background-color: var(--color-gray-200);
+	box-shadow: inset 0 0 16px var(--color-gray-300);
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	display: flex;
+}
+
+.button {
+	position: relative;
+	width: 120px;
+	aspect-ratio: 1/1;
+	margin: 0;
+	border: 2px solid var(--color-gray-300);
+	border-radius: 8px;
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	background-image: conic-gradient(
+		var(--color-gray-100) 45deg,
+		var(--color-gray-200) 45deg,
+		var(--color-gray-100) 90deg,
+		var(--color-gray-200) 135deg,
+		var(--color-gray-100) 135deg,
+		var(--color-gray-300) 135deg,
+		var(--color-gray-300) 225deg,
+		var(--color-gray-200) 225deg,
+		var(--color-gray-200) 315deg,
+		var(--color-gray-100) 315deg
+	);
+	transform-origin: 50% 50%;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	display: flex;
+	cursor: pointer;
+
+	&:active {
+		transform: scale(0.9);
+		box-shadow: 0 0 4px 2px var(--color-light);
+	}
+
+	&:active::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform: translate(-50% -50%);
+		width: 100%;
+		height: 100%;
+		background-image: linear-gradient(
+			var(--color-gray-200),
+			var(--color-light),
+			var(--color-gray-300)
+		);
+		mix-blend-mode: multiply;
+		opacity: 0.5;
+	}
+
+	&::before {
+		position: absolute;
+		width: 82%;
+		aspect-ratio: 1/1;
+		border-radius: 4px;
+		background-image: linear-gradient(
+			var(--color-gray-100),
+			var(--color-gray-200)
+		);
+		font-size: 60px;
+		box-shadow: inset -4px 4px 4px var(--color-light);
+		justify-content: center;
+		align-items: center;
+		flex-flow: nowrap;
+		display: flex;
+	}
+
+	&:active::before {
+		box-shadow: inset -4px -4px 4px var(--color-light);
+		background-image: linear-gradient(
+			var(--color-gray-200),
+			var(--color-gray-100)
+		);
+	}
+
+
+}
+
+.title {
+	margin: 0;
+	color: var(--color-pink-100);
+	font-size: clamp(4rem, 20vw, 10rem);
+	z-index: 200;
+}
+
+/* (중요) 버튼에 걸려 있던 Font Awesome 폰트 해제 */
+.button{
+  /* 기존 스타일은 유지하되… */
+  font-family: inherit;           /* ← "Font Awesome 6 Free" 제거 */
+  font-weight: 700;               /* 필요하면 조절 */
+}
+
+/* 안쪽 패널: 기존 .button::before 의 역할을 자식으로 이동 */
+.button__face{
+  position: absolute;
+  width: 82%;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  background-image: linear-gradient(var(--color-gray-100), var(--color-gray-200));
+  box-shadow: inset -4px 4px 4px var(--color-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 눌렀을 때(기존 :active::before 와 동일한 효과) */
+.button:active .button__face{
+  box-shadow: inset -4px -4px 4px var(--color-light);
+  background-image: linear-gradient(var(--color-gray-200), var(--color-gray-100));
+}
+
+/* Boxicons 아이콘 사이즈/색상 (라일락 팔레트 사용) */
+.button .bx{
+  font-size: clamp(36px, 8vw, 60px);
+  line-height: 1;
+  color: var(--color-pink-100);      /* 라일락 메인 */
+}
+.button:active .bx{
+  color: var(--color-pink-200);      /* 눌림 시 진한 라일락 */
+}
+
+/* ⛔ 기존 타일 별 숨기기 (있어도 화면에 안 보이게) */
+.stars, .stars--near { display:none !important; background:none !important; }
+
+/* ✅ 랜덤 별 요소용 스타일 */
+.star{
+  position:fixed; z-index:1;          /* 바다/파도 뒤집히면 z-index 조절 */
+  width:2px; height:2px; border-radius:50%;
+  background: var(--star-a);
+  box-shadow: 0 0 6px var(--star-a);
+  opacity:.75;
+  animation: starTwinkle var(--dur,3s) ease-in-out infinite alternate;
+  pointer-events:none;
+  will-change: transform, opacity;
+}
+.star--b{
+  width:1.5px; height:1.5px;
+  background: var(--star-b);
+  box-shadow: 0 0 5px var(--star-b);
+}
+@keyframes starTwinkle{
+  0%{ transform:scale(1);   opacity:.45; }
+  100%{ transform:scale(1.6); opacity:1; }
+}
+
