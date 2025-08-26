@@ -18,11 +18,11 @@ public class JwtGenerate {
 
 
 	// 토큰 만료 시간 : 10분
-	/*
-	 * private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 10; // 10분
-	 */	// 액세스 토큰 만료 시간 : 1분
+	
+	  private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 10; // 10분
+	 	// 액세스 토큰 만료 시간 : 1분
 	//private static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 1; // 1분
-	private static final long ACCESS_EXPIRATION_TIME = 1000 * 10; // 10초
+	//private static final long ACCESS_EXPIRATION_TIME = 1000 * 10; // 10초
 	// 또는
 	// private static final long ACCESS_EXPIRATION_TIM
 
