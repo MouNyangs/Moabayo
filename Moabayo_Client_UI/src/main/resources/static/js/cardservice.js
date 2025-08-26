@@ -14,7 +14,7 @@ async function goToCardService() {
 
 
 
-		// cardservice.js
+	/*	// cardservice.js
 		document.addEventListener('DOMContentLoaded', () => {
 			// 로그인 세션 기반: 백엔드가 세션에서 userId 추출함
 			fetch('/api/cards/summary')
@@ -43,7 +43,7 @@ async function goToCardService() {
 				.catch(err => {
 					console.warn("세션 없음 또는 오류:", err.message);
 				});
-		});
+		});*/
 
 		if (res.ok) {
 			// 2) 인증 성공 → 은행 서비스로 이동
