@@ -111,16 +111,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             MEMO
         )
         VALUES (
-            acc_trns_seq.NEXTVAL,
-            #{userAccountId},
-            #{approvedAmount},
-            #{approvedNum},
-            #{accountType},
-            #{category},
-            SYSDATE,
-            #{shopName},
-            #{shopNumber},
-            #{memo}
+		  acc_trns_seq.NEXTVAL,
+		  #{userAccountId, jdbcType=NUMERIC},
+		  #{approvedAmount, jdbcType=NUMERIC},
+		  #{approvedNum, jdbcType=VARCHAR},
+		  #{accountType, jdbcType=VARCHAR, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		  #{category, jdbcType=VARCHAR},
+		  SYSDATE,
+		  #{shopName, jdbcType=VARCHAR},
+		  #{shopNumber, jdbcType=VARCHAR},
+		  #{memo, jdbcType=VARCHAR}
         )
     </insert>
 	<select id="findUserAccountByUsernameAccNum" resultType="Long">
