@@ -1,0 +1,59 @@
+{
+  "segment": {
+    "SIDO": "서울",
+    "AGE": "20대",
+    "GENDER": "M",
+    "YEAR": 2020,
+    "MONTH": 10
+  },
+  "top_upjong": [
+    {
+      "upjong": "ss007",
+      "upjong_name": "자동차",
+      "score_norm": 1.0,
+      "score_raw": 0.126216,
+      "score_percent": 100
+    },
+    {
+      "upjong": "ss003",
+      "upjong_name": "스포츠/문화/레저",
+      "score_norm": 0.8368,
+      "score_raw": 0.109346,
+      "score_percent": 84
+    },
+    {
+      "upjong": "ss002",
+      "upjong_name": "유통",
+      "score_norm": 0.3132,
+      "score_raw": 0.055207,
+      "score_percent": 31
+    },
+    {
+      "upjong": "ss004",
+      "upjong_name": "가정생활/서비스",
+      "score_norm": 0.3111,
+      "score_raw": 0.054996,
+      "score_percent": 31
+    },
+    {
+      "upjong": "ss005",
+      "upjong_name": "교육/학원",
+      "score_norm": 0.1786,
+      "score_raw": 0.041295,
+      "score_percent": 18
+    }
+  ],
+  "charts": {
+    "top_raw_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\top10_서울_M_20대_raw.png",
+    "top_norm_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\top10_서울_M_20대_norm.png",
+    "time_profile_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\time_profile_서울_M_20대.png",
+    "region_compare_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\region_compare_ss007.png",
+    "top_raw_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_raw.json",
+    "top_norm_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_norm.json",
+    "top_both_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_both.json",
+    "time_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_time_profile.json",
+    "region_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_region_compare.json"
+  },
+  "predictions_file": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\predictions_by_segment.csv",
+  "model_metrics_file": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\model_metrics.json"
+}
