@@ -245,8 +245,12 @@ function logout() {
 /* =========================
    🔔 토큰 만료 자동 로그아웃 훅
    ========================= */
+let hasLoggedOut = false;
 // 만료되면 자동 로그아웃: 쿠키/로컬스토리지 정리 + 서버 로그아웃 + 이동
 window.onTokenExpired = async function() {
+	if (hasLoggedOut) return;
+	hasLoggedOut = true;
+	console.log("onTokenExpired 실행됨", new Error().stack);
 	try {
 		// 표시용 EXP 쿠키 제거
 		document.cookie = "ACCESS_TOKEN=; Path=/; Max-Age=0; SameSite=Lax";
