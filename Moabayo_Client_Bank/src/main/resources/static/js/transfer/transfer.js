@@ -152,6 +152,7 @@
         return;
       }
     }catch(e){
+      console.error(e);
       pwError.textContent = '인증 서버와 통신에 실패했습니다. 네트워크를 확인해 주세요.';
       pwError.hidden = false;
       btnPwOK.disabled = false;
@@ -257,22 +258,28 @@
    */
   async function verifyPassword(password){
     // CSRF 토큰 사용(있을 경우)
-    const headers = { 'Content-Type': 'application/json' };
     const csrf = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
     if (csrf && csrfHeader) headers[csrfHeader] = csrf;
 
+	console.log("입력한 패스워드: ", password);
+	const fd1 = new FormData();
+	fd1.append('password', password);
+	
     // 실제 API로 교체하세요.
-    // const res = await fetch('/api/auth/verify-password', {
-    //   method:'POST', headers, body: JSON.stringify({ password })
-    // });
-    // if(!res.ok) throw new Error('verify failed');
-    // const data = await res.json();
-    // return !!data.ok;
+    const res = await fetch('/bank/pwcheck', {
+       method:'POST', 
+	   credentials: 'include',
+	   body: fd1
+    });
+	console.log("fetch 완료 결과 res: ", res);
+    if(!res.ok) throw new Error('verify failed');
+    const data = await res.json();
+    return !!data.ok;
 
     // 데모: "moa1234!"만 성공
-    await new Promise(r => setTimeout(r, 250));
-    return password === 'moa1234!';
+    // await new Promise(r => setTimeout(r, 250));
+    // return password === 'moa1234!';
   }
 })();
 
