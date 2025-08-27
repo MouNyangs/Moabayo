@@ -6,14 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-
 // Eureka 에 등록된 서버 이름.
 @FeignClient(name = "JWT")
 public interface JwtFeignClient {
-
-    // 토큰 인증 요청
-    @GetMapping("/secure/verify")
-    ResponseEntity<String> verifyToken(@RequestHeader("Authorization") String token);
+	@GetMapping("/jwt/verify")
+	ResponseEntity<String> verifyToken(@RequestHeader("Authorization") String token);
 }
-
-
