@@ -1,3 +1,101 @@
+// 페이지가 로드되면 헤더, 푸터 로드 및 초기화
+window.addEventListener("DOMContentLoaded", () => {
+	// HEADER 로드
+	fetch("http://localhost:8810/fragments/header.html")
+		.then((res) => res.text())
+		.then((data) => {
+			const header = document.getElementById("header");
+			if (!header) return; // header 요소 없으면 중단
+
+			header.innerHTML = data;
+
+			updateDropdownMenu(); // 로그인 상태에 따라 드롭다운 메뉴 업데이트
+
+			// 토큰 타이머 시작 시도 (token-exp-display.js가 제공)
+			if (window.startTokenTimer) {
+				try {
+					window.startTokenTimer();
+				} catch (e) {
+					console.warn("[JWT] startTokenTimer 실행 중 오류:", e);
+				}
+			} else {
+				console.warn("[JWT] startTokenTimer를 찾지 못했습니다. token-exp-display.js 로드 순서 확인 필요");
+			}
+
+			// 로그인 상태에 맞는 메뉴 생성
+			const userName = localStorage.getItem("userName");
+			const authSection = document.getElementById("authSection");
+			const token = getCookie("token");
+
+			if (authSection) {
+				if (userName) {
+					// 로그인 상태일 때 메뉴 표시
+					authSection.innerHTML = `
+            <span class="welcome-message">${userName} 님</span>
+            ${createRotatingMenu([
+						{ icon: "fa-sign-out-alt", label: "로그아웃", href: "#", id: "logoutBtn" },
+						{ icon: "fa-user-circle", label: "마이페이지", href: "http://localhost:8812/mypage" },
+					])}
+          `;
+
+					// 로그아웃 버튼 클릭 시 이벤트 처리
+					const logoutBtn = document.getElementById("logoutBtn");
+					if (logoutBtn) {
+						logoutBtn.addEventListener("click", (e) => {
+							e.preventDefault();
+							logout();
+						});
+					}
+				} else {
+					// 비로그인 상태일 때 메뉴 표시
+					authSection.innerHTML = createRotatingMenu([
+						{ icon: "fa-user-plus", label: "회원가입", href: "http://localhost:8812/registerpage" },
+						{ icon: "fa-sign-in-alt", label: "로그인", href: "http://localhost:8812/loginpage" },
+					]);
+				}
+			}
+		});
+
+	// FOOTER 로드
+	fetch("http://localhost:8810/fragments/footer.html")
+		.then((res) => res.text())
+		.then((data) => {
+			const footer = document.getElementById("footer");
+			if (!footer) {
+				console.warn("⚠️ footer 요소가 없어서 스킵합니다.");
+				return;
+			}
+			footer.innerHTML = data;
+		});
+
+	// 드롭다운 닫기 (외부 클릭 시)
+	document.addEventListener("click", (event) => {
+		const profile = document.querySelector(".profile-dropdown");
+		if (profile && !profile.contains(event.target)) {
+			const dropdown = document.getElementById("dropdownMenu");
+			if (dropdown) dropdown.style.display = "none";
+		}
+	});
+});
+
+// 다른 탭에서 로그인/로그아웃 시 토큰 타이머 갱신 (선택)
+window.addEventListener("storage", (e) => {
+	if (e.key === "token" && window.startTokenTimer) {
+		window.startTokenTimer();
+	}
+});
+
+// 전역 네비게이션 이동 함수
+const goTo = (url) => {
+	window.location.href = url;
+};
+window.goToMainService = () => goTo("http://localhost:8812/mainpage");
+window.goToBankService = () => goTo("/bank");
+window.goToCardService = () => goTo("/cards");
+window.goToTransactions = () => goTo("/accounts");
+window.goAdmin = () => goTo("/support");
+window.goToTransactions = () => goTo("http://localhost:8812/transactions");
+
 // 로그인 여부만 확인하는 API (현재는 안 쓰면 지워도 됨)
 async function checkLogin() {
 	try {
@@ -132,11 +230,8 @@ function logout() {
 	document.cookie = "USER_NAME=; Path=/; Max-Age=0; SameSite=Lax";
 	document.cookie = "LOGGED_IN=; Path=/; Max-Age=0; SameSite=Lax";
 	document.cookie = "PROFILE_IMG=; Path=/; Max-Age=0; SameSite=Lax";
+	document.cookie = "EXP=; Path=/; Max-Age=0; SameSite=Lax";
 
-	// 2) 로컬스토리지 정리
-	localStorage.clear();
-
-	// 3) 서버 로그아웃 요청
 	fetch("http://localhost:8812/user/logout", {
 		method: "POST",
 		credentials: "include",
@@ -154,9 +249,12 @@ function logout() {
 window.onTokenExpired = async function() {
 	try {
 		// 표시용 EXP 쿠키 제거
+		document.cookie = "ACCESS_TOKEN=; Path=/; Max-Age=0; SameSite=Lax";
+		document.cookie = "REFRESH_TOKEN=; Path=/; Max-Age=0; SameSite=Lax";
+		document.cookie = "USER_NAME=; Path=/; Max-Age=0; SameSite=Lax";
+		document.cookie = "LOGGED_IN=; Path=/; Max-Age=0; SameSite=Lax";
+		document.cookie = "PROFILE_IMG=; Path=/; Max-Age=0; SameSite=Lax";
 		document.cookie = "EXP=; Path=/; Max-Age=0; SameSite=Lax";
-		// 로컬 스토리지 정리
-		localStorage.clear();
 		// 서버 세션 정리 (있는 경우)
 		await fetch("http://localhost:8812/user/logout", {
 			method: "POST",
@@ -197,101 +295,3 @@ function createRotatingMenu(items) {
     </div>
   `;
 }
-
-// 페이지가 로드되면 헤더, 푸터 로드 및 초기화
-window.addEventListener("DOMContentLoaded", () => {
-	// HEADER 로드
-	fetch("http://localhost:8810/fragments/header.html")
-		.then((res) => res.text())
-		.then((data) => {
-			const header = document.getElementById("header");
-			if (!header) return; // header 요소 없으면 중단
-
-			header.innerHTML = data;
-
-			updateDropdownMenu(); // 로그인 상태에 따라 드롭다운 메뉴 업데이트
-
-			// 토큰 타이머 시작 시도 (token-exp-display.js가 제공)
-			if (window.startTokenTimer) {
-				try {
-					window.startTokenTimer();
-				} catch (e) {
-					console.warn("[JWT] startTokenTimer 실행 중 오류:", e);
-				}
-			} else {
-				console.warn("[JWT] startTokenTimer를 찾지 못했습니다. token-exp-display.js 로드 순서 확인 필요");
-			}
-
-			// 로그인 상태에 맞는 메뉴 생성
-			const userName = localStorage.getItem("userName");
-			const authSection = document.getElementById("authSection");
-			const token = getCookie("token");
-
-			if (authSection) {
-				if (userName) {
-					// 로그인 상태일 때 메뉴 표시
-					authSection.innerHTML = `
-            <span class="welcome-message">${userName} 님</span>
-            ${createRotatingMenu([
-						{ icon: "fa-sign-out-alt", label: "로그아웃", href: "#", id: "logoutBtn" },
-						{ icon: "fa-user-circle", label: "마이페이지", href: "http://localhost:8812/mypage" },
-					])}
-          `;
-
-					// 로그아웃 버튼 클릭 시 이벤트 처리
-					const logoutBtn = document.getElementById("logoutBtn");
-					if (logoutBtn) {
-						logoutBtn.addEventListener("click", (e) => {
-							e.preventDefault();
-							logout();
-						});
-					}
-				} else {
-					// 비로그인 상태일 때 메뉴 표시
-					authSection.innerHTML = createRotatingMenu([
-						{ icon: "fa-user-plus", label: "회원가입", href: "http://localhost:8812/registerpage" },
-						{ icon: "fa-sign-in-alt", label: "로그인", href: "http://localhost:8812/loginpage" },
-					]);
-				}
-			}
-		});
-
-	// FOOTER 로드
-	fetch("http://localhost:8810/fragments/footer.html")
-		.then((res) => res.text())
-		.then((data) => {
-			const footer = document.getElementById("footer");
-			if (!footer) {
-				console.warn("⚠️ footer 요소가 없어서 스킵합니다.");
-				return;
-			}
-			footer.innerHTML = data;
-		});
-
-	// 드롭다운 닫기 (외부 클릭 시)
-	document.addEventListener("click", (event) => {
-		const profile = document.querySelector(".profile-dropdown");
-		if (profile && !profile.contains(event.target)) {
-			const dropdown = document.getElementById("dropdownMenu");
-			if (dropdown) dropdown.style.display = "none";
-		}
-	});
-});
-
-// 다른 탭에서 로그인/로그아웃 시 토큰 타이머 갱신 (선택)
-window.addEventListener("storage", (e) => {
-	if (e.key === "token" && window.startTokenTimer) {
-		window.startTokenTimer();
-	}
-});
-
-// 전역 네비게이션 이동 함수
-const goTo = (url) => {
-	window.location.href = url;
-};
-window.goToMainService = () => goTo("http://localhost:8812/mainpage");
-window.goToBankService = () => goTo("/bank");
-window.goToCardService = () => goTo("/cards");
-window.goToTransactions = () => goTo("/accounts");
-window.goAdmin = () => goTo("/support");
-window.goToTransactions = () => goTo("http://localhost:8812/transactions");
