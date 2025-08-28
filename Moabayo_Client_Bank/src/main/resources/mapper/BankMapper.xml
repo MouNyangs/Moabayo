@@ -97,32 +97,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <!-- 거래 로그 추가 -->
-    <insert id="insertTransaction">
-        INSERT INTO ACCOUNT_TRANSACTION (
-            ACCOUNT_TRANSACTION_ID,
-            USER_ACCOUNT_ID,
-            APPROVED_AMOUNT,
-            APPROVED_NUM,
-            ACCOUNT_TYPE,
-            CATEGORY,
-            DATE_TIME,
-            SHOP_NAME,
-            SHOP_NUMBER,
-            MEMO
-        )
-        VALUES (
-		  acc_trns_seq.NEXTVAL,
-		  #{userAccountId, jdbcType=NUMERIC},
-		  #{approvedAmount, jdbcType=NUMERIC},
-		  #{approvedNum, jdbcType=VARCHAR},
-		  #{accountType, jdbcType=VARCHAR, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
-		  #{category, jdbcType=VARCHAR},
-		  SYSDATE,
-		  #{shopName, jdbcType=VARCHAR},
-		  #{shopNumber, jdbcType=VARCHAR},
-		  #{memo, jdbcType=VARCHAR}
-        )
-    </insert>
+<insert id="insertTransaction" parameterType="com.sboot.moabayo.vo.AccountTransactionVO">
+  INSERT INTO ACCOUNT_TRANSACTION (
+    ACCOUNT_TRANSACTION_ID,
+    USER_ACCOUNT_ID,
+    APPROVED_AMOUNT,
+    APPROVED_NUM,
+    ACCOUNT_TYPE,
+    CATEGORY,
+    DATE_TIME,
+    SHOP_NAME,
+    SHOP_NUMBER,
+    MEMO
+  ) VALUES (
+    acc_trns_seq.NEXTVAL,
+    #{userAccountId, jdbcType=NUMERIC},
+    #{approvedAmount, jdbcType=NUMERIC},
+    #{approvedNum,   jdbcType=VARCHAR},
+    #{accountType,   jdbcType=VARCHAR},
+    #{category,      jdbcType=VARCHAR},
+    SYSDATE,
+    #{shopName,      jdbcType=VARCHAR},
+    #{shopNumber,    jdbcType=VARCHAR},
+    #{memo,          jdbcType=VARCHAR}
+  )
+</insert>
 	<select id="findUserAccountByUsernameAccNum" resultType="Long">
 		SELECT ua.user_account_id
 		FROM users u
