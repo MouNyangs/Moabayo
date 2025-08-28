@@ -37,4 +37,24 @@ public class BankRegisterController {
 
         return "bpdetail";
     }
+    
+    @GetMapping("/apply")
+    public String startApply(@RequestParam("productId") Integer productId,
+			/*
+			 * @RequestParam(required=false) Long amount,
+			 * 
+			 * @RequestParam(required=false) Integer termMonths,
+			 * 
+			 * @RequestParam(required=false) BigDecimal taxRate,
+			 */
+                             Model model) {
+    	
+    	model.addAttribute("productId", productId);
+        // productId로 bank_product 조회 → 모델 세팅
+        // amount/termMonths/taxRate 있으면 초기값으로 바인딩
+    	
+        return "bpregister"; // 가입 위저드 뷰
+    }
+    
+    
 }

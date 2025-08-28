@@ -208,9 +208,9 @@ elRange.value  = state.amount;
 calc();
 
 // ─────────────────────────────────────────
-// 5) 비슷한 상품
+// 5) 비슷한 상품 (현재 작동 안함)
 // ─────────────────────────────────────────
-const SIMILAR = PRODUCTS
+/*const SIMILAR = PRODUCTS
   .filter(p => p.account_id !== product.account_id &&
                (p.type === product.type || p.category.split('/')[0] === product.category.split('/')[0]))
   .slice(0,6);
@@ -227,17 +227,25 @@ $('#similarWrap').innerHTML = SIMILAR.map(p=>`
     </div>
   </article>
 `).join('');
+*/
+// 가입 CTA
+// 가입 CTA
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('applyBtn');
+  if (!btn) return;
 
-// 가입 CTA
-// 가입 CTA
-document.getElementById('applyBtn').addEventListener('click', () => {
-  const params = new URLSearchParams({
-    productId: String(product.account_id),   // 서버가 기대하는 파라미터명
-    // 필요하면 시뮬레이터 값도 같이 넘길 수 있어요 (초기값 채움용)
-	/*아래는 필요하면 쓰세요*/
-/*    amount: String(state.amount),
-    termMonths: String(state.term),
-    taxRate: String(state.tax),*/
+  btn.addEventListener('click', (e) => {
+    const params = new URLSearchParams({
+		productId: String(product.account_id)
+	});
+
+    // 1) #bpDetail data-id → 2) window.product → 3) ?id= 쿼리스트링
+
+
+    // 서버가 /register/apply/{productId} 를 받는 경우
+    location.href = `/register/apply?${params.toString()}`;
+
+    // 만약 쿼리스트링으로 받는 컨트롤러라면 위 한 줄 대신 ↓ 사용
+    // location.href = `/register/apply?productId=${encodeURIComponent(id)}`;
   });
-  location.href = `/bank/apply?${params.toString()}`;
 });

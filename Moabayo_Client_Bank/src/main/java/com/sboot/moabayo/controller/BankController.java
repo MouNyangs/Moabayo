@@ -1,6 +1,5 @@
 package com.sboot.moabayo.controller;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -429,16 +428,7 @@ public class BankController {
     }
 
     
-    @GetMapping("/apply")
-    public String startApply(@RequestParam Long productId,
-                             @RequestParam(required=false) Long amount,
-                             @RequestParam(required=false) Integer termMonths,
-                             @RequestParam(required=false) BigDecimal taxRate,
-                             Model model) {
-        // productId로 bank_product 조회 → 모델 세팅
-        // amount/termMonths/taxRate 있으면 초기값으로 바인딩
-        return "bpregister"; // 가입 위저드 뷰
-    }
+
     
     // feign client
     private final UserDataFeignClient udFeignClient;
