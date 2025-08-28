@@ -256,7 +256,7 @@ public class BankController {
         		100L,
         		amount,
         		"approvedNum",
-        		"입출금",
+        		"DEPOSIT",
         		"예금",
         		"모으냥즈",
         		"111-111-111",

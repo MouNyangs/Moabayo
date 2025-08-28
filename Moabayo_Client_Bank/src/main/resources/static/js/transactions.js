@@ -56,23 +56,53 @@ const mockTx = (() => {
 
   // 서버 → 프론트 구조 어댑트 (너의 모의 구조에 맞춤)
   const adapt = (it) => {
-    // ts = "YYYY-MM-DD HH:MM" 분리
-    const ts = (it.ts || '').trim();
-    const sp = ts.indexOf(' ');
-    const date = sp > 0 ? ts.slice(0, sp) : '';
-    const time = sp > 0 ? ts.slice(sp + 1) : '';
+	// ts = "YYYY-MM-DD HH:MM" 분리
+	const ts = (it.ts || '').trim();
+	const sp = ts.indexOf(' ');
+	const date = sp > 0 ? ts.slice(0, sp) : '';
+	const time = sp > 0 ? ts.slice(sp + 1) : '';
 
-    return {
-      id: String(it.id),
-      date, time,
-      amount: Number(it.amount || 0),     // 수입 + / 지출 -
-      merchant: it.merchant || '',
-      category: it.category || '기타',
-      method: (it.method || 'transfer').toLowerCase(),
-      tags: [],                           // 필요하면 서버에서 내려도 됨
-      memo: '',                           // 필요시 컬럼 추가
-      meta: { approvalNo: it.approvedNum || '' }
-    };
+	// 1) 원시 금액
+	const rawAmt =
+	  Number(it.amount ?? it.approvedAmount ?? it.approved_amount ?? 0);
+
+	// 2) 거래 방향(DEPOSIT/WITHDRAW) 추출
+	const accountType = String(
+	  it.accountType ?? it.account_type ?? it.type ?? ''
+	).toUpperCase();
+
+	// 3) 메서드(환불/수수료 등) 추출
+	const method = String(it.method ?? 'transfer').toLowerCase();
+
+	// 4) 부호 표준화 로직
+	//    - 원칙: 입금/수입은 +, 출금/지출은 −
+	//    - 서버가 부호를 이상하게 줘도 여기서 강제로 정리
+	let amt = rawAmt;
+
+	if (accountType === 'DEPOSIT') {
+	  amt = Math.abs(rawAmt);        // 무조건 +
+	} else if (accountType === 'WITHDRAW') {
+	  amt = -Math.abs(rawAmt);       // 무조건 −
+	} else {
+	  // 방향 정보가 없으면: 서버가 이미 부호를 줬다고 보고 그대로 사용
+	  // (필요시 여기서 추가 규칙 더해도 됨)
+	}
+
+	// 5) 환불/수수료 보정 (도메인 규칙에 맞게)
+	if (method === 'refund') amt = Math.abs(amt);     // 환불은 +
+	if (method === 'fee')    amt = -Math.abs(amt);    // 수수료는 −
+
+	return {
+	  id: String(it.id),
+	  date, time,
+	  amount: amt,                  // ✅ 표준화된 부호
+	  merchant: it.merchant || '',
+	  category: it.category || '기타',
+	  method,
+	  tags: [],
+	  memo: '',
+	  meta: { approvalNo: it.approvedNum || '' }
+	};
   };
 
   const rows = init.map(adapt);
@@ -256,7 +286,7 @@ function rowHtml(tx){
         <div class="merchant">${tx.merchant}</div>
         <div class="meta">${tx.category} · ${tx.method.toUpperCase()} · ${tx.time} ${tx.tags.map(t=>`<span class="badge">${t}</span>`).join(" ")}</div>
       </div>
-      <div class="amount ${signCls}">${tx.amount<0? "-" : "+"} ${fmtWon(Math.abs(tx.amount))}</div>
+      <div class="amount ${signCls}">${tx.amount<"WITHDRAW"? "-" : "+"} ${fmtWon(Math.abs(tx.amount))}</div>
     </div>
     <div class="detail">
       <div class="detail-grid">
@@ -340,3 +370,5 @@ function exportCSV(){
   a.href = url; a.download = "transactions.csv"; a.click();
   URL.revokeObjectURL(url);
 }
+
+
