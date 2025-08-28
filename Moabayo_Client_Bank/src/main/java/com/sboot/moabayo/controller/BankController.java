@@ -41,7 +41,6 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 //import com.sboot.moabayo.service.ProductService;
@@ -176,8 +175,7 @@ public class BankController {
 	@GetMapping("/product/list")
 	public String bankProduct(Model model) {
 		model.addAttribute("products", bankProductService.findAll());
-//	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
-//	    model.addAttribute("cardList", cardList);
+
 	    return "/bankProductList"; // cardList.html 렌더링
 	}
 	
@@ -429,11 +427,7 @@ public class BankController {
                     .body(Map.of("message", "시스템 오류가 발생했습니다."));
         }
     }
-    @GetMapping("/product")
-    public String productDetail(@RequestParam long id, Model model) {
-        // id로 조회…
-        return "bpdetail";
-    }
+
     
     @GetMapping("/apply")
     public String startApply(@RequestParam Long productId,
