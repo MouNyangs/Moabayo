@@ -2,6 +2,7 @@ package com.sboot.moabayo.service;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +13,9 @@ import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.UserVO;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
@@ -24,6 +27,7 @@ public class BankServiceImpl implements BankService {
     }
     
     public AccountVO getNyangcoinAccount(Long userId) {
+    	
         return bankMapper.findNyangcoinAccountByUserId(userId);
     }
 
@@ -33,7 +37,7 @@ public class BankServiceImpl implements BankService {
                                             String approvedNum, String accountType, String category,
                                             String shopName, String shopNumber, String memo) {
         Long userAccountId = bankMapper.findUserAccountId(userId, accountId);
-
+        log.info("userId={}, class={}", userId, (userId==null? null : userId.getClass().getName()));
         if (userAccountId == null) {
             throw new IllegalArgumentException("계좌를 찾을 수 없습니다.");
         }

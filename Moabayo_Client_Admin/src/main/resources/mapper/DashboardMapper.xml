@@ -34,39 +34,43 @@
 
   <!-- 리스크 알림 -->
   <select id="riskAlerts" resultType="map">
-    SELECT *
-    FROM (
-      -- 금액 큰 결제
-      SELECT
-        'HIGH_CARD_AMOUNT' AS type,
-        ct.card_transaction_id AS ref_id,
-        ct.user_id,
-        ct.approved_amount,
-        ct.date_time,
-        ct.shop_name,
-        NULL AS cnt
-      FROM card_transaction ct
-      WHERE ct.approved_amount &gt;= #{highAmount}
-        AND TRUNC(ct.date_time) = TRUNC(SYSDATE)
+SELECT *
+FROM (
+  -- 금액 큰 결제
+  SELECT
+    'HIGH_CARD_AMOUNT' AS type,
+    ct.card_transaction_id AS ref_id,
+    uc.user_id,
+    ct.approved_amount,
+    ct.date_time,
+    ct.shop_name,
+    NULL AS cnt
+  FROM card_transaction ct
+  JOIN user_card uc
+    ON uc.user_card_id = ct.user_card_id
+  WHERE ct.approved_amount >= #{highAmount, jdbcType=NUMERIC}
+    AND TRUNC(ct.date_time) = TRUNC(SYSDATE)
 
-      UNION ALL
+  UNION ALL
 
-      -- 짧은 시간 다건 결제
-      SELECT
-        'MANY_TXN_SHORT' AS type,
-        NULL AS ref_id,
-        ct.user_id,
-        NULL AS approved_amount,
-        MAX(ct.date_time) AS date_time,
-        NULL AS shop_name,
-        COUNT(*) AS cnt
-      FROM card_transaction ct
-      WHERE ct.date_time &gt;= SYSTIMESTAMP - NUMTODSINTERVAL(10, 'MINUTE')
-      GROUP BY ct.user_id
-      HAVING COUNT(*) &gt;= #{burstCount}
-    ) t
-    ORDER BY t.date_time DESC
-    FETCH FIRST 20 ROWS ONLY
+  -- 짧은 시간 다건 결제
+  SELECT
+    'MANY_TXN_SHORT' AS type,
+    NULL AS ref_id,
+    uc.user_id,
+    NULL AS approved_amount,
+    MAX(ct.date_time) AS date_time,
+    NULL AS shop_name,
+    COUNT(*) AS cnt
+  FROM card_transaction ct
+  JOIN user_card uc
+    ON uc.user_card_id = ct.user_card_id
+  WHERE ct.date_time >= SYSDATE - (10/1440)
+  GROUP BY uc.user_id
+  HAVING COUNT(*) >= #{burstCount, jdbcType=NUMERIC}
+) t
+ORDER BY t.date_time DESC
+FETCH FIRST 20 ROWS ONLY
   </select>
 
 </mapper>
