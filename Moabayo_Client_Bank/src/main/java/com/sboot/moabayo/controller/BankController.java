@@ -1,5 +1,6 @@
 package com.sboot.moabayo.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 //import com.sboot.moabayo.service.ProductService;
@@ -174,7 +176,8 @@ public class BankController {
 	@GetMapping("/product/list")
 	public String bankProduct(Model model) {
 		model.addAttribute("products", bankProductService.findAll());
-
+//	    List<CardProductVO> cardList = service.getRecommendCards(); // 카드 리스트 조회
+//	    model.addAttribute("cardList", cardList);
 	    return "/bankProductList"; // cardList.html 렌더링
 	}
 	
@@ -426,9 +429,22 @@ public class BankController {
                     .body(Map.of("message", "시스템 오류가 발생했습니다."));
         }
     }
-
+    @GetMapping("/product")
+    public String productDetail(@RequestParam long id, Model model) {
+        // id로 조회…
+        return "bpdetail";
+    }
     
-
+    @GetMapping("/apply")
+    public String startApply(@RequestParam Long productId,
+                             @RequestParam(required=false) Long amount,
+                             @RequestParam(required=false) Integer termMonths,
+                             @RequestParam(required=false) BigDecimal taxRate,
+                             Model model) {
+        // productId로 bank_product 조회 → 모델 세팅
+        // amount/termMonths/taxRate 있으면 초기값으로 바인딩
+        return "bpregister"; // 가입 위저드 뷰
+    }
     
     // feign client
     private final UserDataFeignClient udFeignClient;
