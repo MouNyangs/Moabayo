@@ -91,7 +91,8 @@
 
 					<div class="body">
 						<div class="top">
-							<span class="pill" th:text="${p.type}">Savings</span> <span class="rate" th:text="${#numbers.formatDecimal(p.interest,1,'POINT',2,'NONE')} + '%'">1.20%</span>
+							<span class="pill" th:text="${p.type}">Savings</span>
+							<span class="rate" th:text="${T(java.lang.String).format('%.2f%%', p.interest)}">1.20%</span>
 						</div>
 						<h3 class="name" th:text="${p.name}">Standard Savings</h3>
 						<div class="cat" th:text="${p.category}">Savings</div>
