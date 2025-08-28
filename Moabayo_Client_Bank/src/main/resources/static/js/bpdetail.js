@@ -7,19 +7,21 @@ const asPct   = (n, dp=2)=> (Number(n).toFixed(dp) + '%');
 const fmtMoney= n => n.toLocaleString('ko-KR');
 const clamp   = (n,a,b)=> Math.max(a, Math.min(b,n));
 
-// ─────────────────────────────────────────
-// 1) 더미 데이터 (bank_product 매핑 예시)
-// ─────────────────────────────────────────
-const PRODUCTS = [
-  { account_id:101, name:'냥코인 입출금통장', img:'', description:'수수료 면제 & 간편 이체가 강점인 자유입출금',
-    category:'입출금/면제', benefits:'타행이체 수수료면제,ATM 수수료면제,앱 로그인', interest:0.25, type:'입출금' },
-  { account_id:201, name:'정기예금', img:'', description:'고정금리 예금 상품', category:'예금/고정금리',
-    benefits:'급여이체,자동이체,카드실적', interest:3.10, type:'예금' },
-  { account_id:202, name:'청년 적금', img:'', description:'청년 전용 적금, 우대조건 쉬움', category:'적금/청년',
-    benefits:'급여이체,앱 로그인,자동이체', interest:3.70, type:'적금' },
-  { account_id:203, name:'어린이 적금', img:'', description:'아이들을 위한 저축', category:'적금/가족',
-    benefits:'자동이체,앱 로그인', interest:2.70, type:'적금' },
-];
+// 1) 서버가 준 bpDetail을 dataset에서 읽기
+function loadProductFromDataset(){
+  const el = document.getElementById('bpDetail');
+  if (!el) { throw new Error('#bpDetail not found'); }
+  return {
+    account_id: Number(el.dataset.id),
+    name: el.dataset.name || '',
+    img: el.dataset.img || '',
+    description: el.dataset.desc || '',
+    category: el.dataset.category || '',
+    benefits: el.dataset.benefits || '',
+    interest: Number(el.dataset.rate || 0),
+    type: el.dataset.type || ''
+  };
+}
 
 // 우대 조건 → 가산 금리(%p) 매핑(예시)
 const BONUS_MAP = new Map([
@@ -31,8 +33,11 @@ const BONUS_MAP = new Map([
 // 2) 현재 상품 로드
 // ─────────────────────────────────────────
 const qs = new URLSearchParams(location.search);
-const currentId = Number(qs.get('id')) || 201;
-const product   = PRODUCTS.find(p => p.account_id === currentId) || PRODUCTS[0];
+/*const currentId = Number(new URLSearchParams(location.search).get('id'));
+if (currentId && currentId !== product.account_id) {
+  console.warn('URL id와 서버 주입 id가 다릅니다:', currentId, product.account_id);
+}*/
+const product = loadProductFromDataset();
 
 // 금리(연) – 스키마에 baseRate가 없어서 임시로 최고금리-0.5%p를 기본으로 추정
 const maxRatePct = product.interest; // 예: 0.25 또는 3.10
