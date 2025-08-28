@@ -61,6 +61,9 @@ public class JwtController {
             }
             String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8);
             JsonNode payload = om.readTree(payloadJson);
+            
+            String loginId = PickId(payload);
+            System.out.println(loginId);
             long expSec = payload.path("exp").asLong(0);
             long nowSec = System.currentTimeMillis() / 1000;
             long remainSec = Math.max(0, expSec - nowSec);
@@ -95,4 +98,9 @@ public class JwtController {
             return ResponseEntity.status(403).body("인증 실패: " + e.getMessage());
         }
     }
+
+	private String PickId(JsonNode payload) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
