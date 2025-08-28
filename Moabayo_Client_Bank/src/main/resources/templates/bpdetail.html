@@ -28,6 +28,18 @@
 
   <!-- 페이지 전용 JS (마지막에 defer로) -->
   <script defer src="/js/bpdetail.js"></script>
+  
+  <style>
+html, body { height: 100%; }
+body {
+min-height: 100dvh;
+display: flex;
+flex-direction: column;
+}
+main { flex: 1 0 auto; }         /* 본문이 남는 높이를 채움 */
+#footer { margin-top: auto; }     /* 푸터가 바닥으로 밀착 */
+</style>
+  
 </head>
 
 <body>
@@ -72,7 +84,7 @@
                 <div class="value" id="baseRate">-</div>
               </div>
               <div class="stat">
-                <div class="label">최고 금리</div>
+               <div class="label">최고 금리</div>
                 <div class="value" id="maxRate">-</div>
               </div>
               <div class="stat">
@@ -144,7 +156,7 @@
             <div class="bp-cta">
               <div class="row">
                 <div>
-                  <div class="muted">최고 금리</div>
+                 <div class="muted">최고 금리</div> 
                   <div class="rate" id="ctaMax">-</div>
                 </div>
                 <div>
