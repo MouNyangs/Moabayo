@@ -58,8 +58,8 @@ public class BankRegisterController {
         // productId로 bank_product 조회 → 모델 세팅
         // amount/termMonths/taxRate 있으면 초기값으로 바인딩
 
-    	long loginId = (long) Session.getAttribute("loginId");
-    	model.addAttribute("account", accountService.getAccountsByUserId(loginId));
+    	String loginId = (String) Session.getAttribute("loginId");
+    	model.addAttribute("account", bankService.getUser(loginId));
     	model.addAttribute("bpDetail", bankProductService.getById(productId));
     	model.addAttribute("loginId", loginId);
         return "bpregister"; // 가입 위저드 뷰
