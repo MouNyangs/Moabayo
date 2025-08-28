@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -46,7 +46,15 @@ main {
 </head>
 <body>
 	<div id="header"></div>
-	<div class="wrap">
+	<div class="wrap" id="bpDetail" th:object="${bpDetail}" 
+				th:attr="data-id=*{accountId},
+                data-name=*{name},
+                data-type=*{type},
+                data-category=*{category},
+                data-rate=*{interest},
+                data-img=*{img},
+                data-benefits=*{benefits},
+                data-desc=*{description}">
 		<!-- 좌: 가입 요약(스티키) -->
 		<aside class="card summary sticky">
 			<div class="hd">상품 요약</div>
