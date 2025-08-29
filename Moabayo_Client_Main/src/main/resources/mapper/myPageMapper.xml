@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sboot.moabayo.dao.MyPageMapper">
+
+    <!-- 사용자 등록 -->
+
+    <select id="selectSumBalance" parameterType="int" resultType="int">
+SELECT NVL(SUM(ua.balance), 0) AS asset
+FROM user_account ua
+WHERE ua.user_id = :#{userId};
+    </select>
+
+<select id="selectAccountCount" parameterType="int" resultType="int">
+SELECT COUNT(*) AS account_count
+FROM user_account
+WHERE user_id = #{userId};
+</select>
+
+<select id="selectCardCount" parameterType="int" resultType="int">
+SELECT COUNT(*) AS card_count
+FROM user_card
+WHERE user_id = #{userId};
+</select>
+</mapper>
