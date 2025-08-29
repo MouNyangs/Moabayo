@@ -10,13 +10,13 @@ public interface MyPageMapper {
 
 	int selectSumBalance(@Param("userId") String userId);
 
-	int selectAccountCount(String userId);
+	int selectAccountCount(@Param("userId") String userId);
 
-	int selectCardCount(String userId);
+	int selectCardCount(@Param("userId") String userId);
 
-	UserVO selectProfile(Long userId);
+	UserVO selectProfile(@Param("userId") Long userId);
 
-	void updateProfile(Long userId, UserVO req);
+	void updateProfile(@Param("userId") Long userId, @Param("p") UserVO req);
 
-	void updatePassword(Long userId, String enc);
+	void updatePassword(@Param("userId") Long userId, @Param("enc") String enc);
 }
