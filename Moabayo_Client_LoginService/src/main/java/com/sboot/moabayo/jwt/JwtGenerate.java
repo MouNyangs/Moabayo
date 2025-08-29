@@ -1,10 +1,10 @@
 package com.sboot.moabayo.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-
 import java.security.Key;
 import java.util.Date;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 public class JwtGenerate {
 	private static final String SECRET = "ThisIsASecretKeyThatMustBeOver32Characters!";
@@ -14,6 +14,7 @@ public class JwtGenerate {
 	private static final long REFRESH_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7; // 7일
 
 	public static String createToken(Long userId, String loginId) {
+		System.out.println(userId);
 		return Jwts.builder().setSubject(loginId).claim("userId", userId).setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME)).signWith(key).compact();
 	}

@@ -46,11 +46,6 @@
   "charts": {
     "top_raw_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\top10_서울_M_20대_raw.png",
     "top_norm_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\top10_서울_M_20대_norm.png",
-    "time_profile_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\time_profile_서울_M_20대.png",
-    "region_compare_png": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\region_compare_ss007.png",
-    "top_raw_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_raw.json",
-    "top_norm_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_norm.json",
-    "top_both_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_top_upjong_both.json",
     "time_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_time_profile.json",
     "region_chartjs": "E:\\Momo\\Moabayo_Client_API\\src\\main\\resources\\static\\csv\\ml_out\\chart_region_compare.json"
   },
