@@ -14,9 +14,9 @@ document.addEventListener('click', (e) => {
 // ===== KPI & 알림 (더미; 실제 API로 교체 가능) =====
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    // const res = await fetch('/api/mypage/summary');
-    // const data = await res.json();
-    const data = { asset: 12500450, accounts: 3, cards: 2 };
+    const res = await fetch('/mypagesummary');
+    const data = await res.json();
+    /*const data = { asset: 12500450, accounts: 3, cards: 2 };//테스트용 더미데이터 */ 
 
     const elAsset = document.getElementById('kpi-asset');
     const elAcc   = document.getElementById('kpi-accounts');
