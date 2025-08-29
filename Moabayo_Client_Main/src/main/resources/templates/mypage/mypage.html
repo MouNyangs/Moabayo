@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/css/mypage-sections.css?v=20250813">
 <!-- ⬅️ 추가 -->
 <script src="/js/theme.js?v=1"></script>
+<script src="/js/mypage-profile.js?v=1"></script>
 <script type="module" src="/js/mypagesections/index.js?v=20250813"></script>
 
 </head>
@@ -178,26 +179,46 @@
 
 					<!-- 버튼으로 전환되는 '뷰' 컨테이너 -->
 					<div class="rt-views">
-						<!-- 정보수정 -->
-						<div class="rt-view active" data-view="profile">
-							<form id="formProfile" class="rt-form">
-								<div class="grid-2">
-									<label>이름<input type="text" name="name" placeholder="홍길동" autocomplete="name"></label> <label>연락처<input type="tel" name="phone" placeholder="010-1234-5678" autocomplete="tel"></label>
-								</div>
-								<div class="grid-2">
-									<label>이메일<input type="email" name="email" placeholder="user@example.com" autocomplete="email"></label> <label>주소<input type="text" name="addr" placeholder="서울시 ..." autocomplete="street-address"></label>
-								</div>
-								<div class="grid-2">
-									<label>간편비밀번호 변경<input type="password" name="pin" placeholder="••••"></label>
-									<div class="form-actions">
-										<button type="submit" class="btn primary">
-											<i class='bx bx-save'></i> 저장
-										</button>
-										<button type="reset" class="btn ghost">초기화</button>
-									</div>
-								</div>
-							</form>
-						</div>
+  <!-- 정보수정 -->
+  <div class="rt-view active" data-view="profile">
+    <form id="formProfile" class="rt-form" autocomplete="on">
+      <div class="grid-2">
+        <label>이름
+          <input type="text" name="name" id="pf-name" placeholder="홍길동" autocomplete="name">
+        </label>
+        <label>연락처
+          <input type="tel" name="phone" id="pf-phone" placeholder="010-1234-5678" autocomplete="tel">
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <label>이메일
+          <input type="email" name="email" id="pf-email" placeholder="user@example.com" autocomplete="email">
+        </label>
+        <label>주소
+          <input type="text" name="addr" id="pf-addr" placeholder="서울시 ..." autocomplete="street-address">
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <!-- 비밀번호 변경: 새 비밀번호 + 확인 -->
+        <label>새 비밀번호
+          <input type="password" name="newPw" id="pf-newPw" placeholder="••••" minlength="8">
+        </label>
+        <label>비밀번호 확인
+          <input type="password" name="newPwConfirm" id="pf-newPwConfirm" placeholder="••••" minlength="8">
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">
+          <i class='bx bx-save'></i> 저장
+        </button>
+        <button type="reset" class="btn ghost">초기화</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 						<!-- 계좌조회 -->
 						<div class="rt-view" data-view="accounts">

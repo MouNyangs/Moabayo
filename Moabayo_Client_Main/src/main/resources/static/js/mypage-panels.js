@@ -109,13 +109,13 @@ window.addEventListener('DOMContentLoaded', () => {
   cardRefresh?.addEventListener('click', () => { if (cardSearch) cardSearch.value = ''; renderCards(dummyCards); });
 
   // 정보수정 저장(목업)
-  const form = document.getElementById('formProfile');
+/*  const form = document.getElementById('formProfile');
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const payload = Object.fromEntries(new FormData(form).entries());
     console.log('Profile Save (dummy):', payload);
     alert('저장되었습니다.');
-  });
+  });*/
 });
 
 /* ====== 빠른 실행 → 실시간 뷰 매핑 (6개 전부) ====== */
