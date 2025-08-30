@@ -15,6 +15,7 @@ import com.sboot.moabayo.feign.LoginFeignClient;
 import com.sboot.moabayo.vo.LoginFormVO;
 import com.sboot.moabayo.vo.UserInfoVO;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -53,17 +54,41 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
-        ResponseCookie access = ResponseCookie.from("ACCESS_TOKEN", "")
-                .httpOnly(true).secure(false).sameSite("Lax").path("/")
-                .maxAge(0) // 즉시 만료
-                .build();
-        ResponseCookie exp = ResponseCookie.from("EXP", "")
-                .httpOnly(false).secure(false).sameSite("Lax").path("/")
-                .maxAge(0)
-                .build();
-        response.addHeader("Set-Cookie", access.toString());
-        response.addHeader("Set-Cookie", exp.toString());
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 1) 서버 세션 무효화
+        var session = request.getSession(false);
+        if (session != null) session.invalidate();
+
+        boolean secure = request.isSecure(); // https면 true
+        // 과거에 쿠키를 만든 가능성 있는 경로들을 모두 시도
+        String[] paths = { "/", "/mypage", "/api" };
+
+        for (String p : paths) {
+            // USER_ID도 반드시 만료!
+            response.addHeader("Set-Cookie",
+                ResponseCookie.from("USER_ID", "")
+                    .path(p).httpOnly(false).secure(secure).sameSite("Lax")
+                    .maxAge(0).build().toString());
+
+            response.addHeader("Set-Cookie",
+                ResponseCookie.from("ACCESS_TOKEN", "")
+                    .path(p).httpOnly(true).secure(secure).sameSite("Lax")
+                    .maxAge(0).build().toString());
+
+            response.addHeader("Set-Cookie",
+                ResponseCookie.from("EXP", "")
+                    .path(p).httpOnly(false).secure(secure).sameSite("Lax")
+                    .maxAge(0).build().toString());
+
+            // 세션 쿠키도 정리 (세션 안 써도 무해)
+            response.addHeader("Set-Cookie",
+                ResponseCookie.from("JSESSIONID", "")
+                    .path(p).maxAge(0).build().toString());
+        }
+
+        // ⚠️ 도메인을 명시해 설정했었다면, 동일 도메인으로 한 번 더 삭제 호출 필요
+        // 예: .domain("example.com") 추가 (localhost에서는 domain 설정하지 마세요)
+
         return ResponseEntity.noContent().build();
     }
 
