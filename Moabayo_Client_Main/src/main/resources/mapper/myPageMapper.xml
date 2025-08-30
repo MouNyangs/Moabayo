@@ -39,6 +39,8 @@
 		<result property="phone" column="phone" />
 		<result property="email" column="email" />
 		<result property="address" column="address" />
+		<result property="addressDetail"  column="address_detail"/>  <!-- ★ -->
+		<result property="zipcode" column="zipcode" />
 	</resultMap>
 
 	<!-- 프로필 조회 -->
@@ -51,14 +53,18 @@
 	</select>
 
 	<!-- 프로필 업데이트 -->
-	<update id="updateProfile">
-		UPDATE users
-		SET name = #{p.name},
-		phone = #{p.phone},
-		email = #{p.email},
-		address = #{p.addr}
-		WHERE user_id = #{userId}
-	</update>
+  <update id="updateProfile" parameterType="map">
+    UPDATE users
+    <set>
+      <if test="p.name           != null">name           = #{p.name},</if>
+      <if test="p.phone          != null">phone          = #{p.phone},</if>
+      <if test="p.email          != null">email          = #{p.email},</if>
+      <if test="p.address        != null">address        = #{p.address},</if>
+      <if test="p.addressDetail  != null">address_detail = #{p.addressDetail},</if>
+      <if test="p.zipCode           != null">zipCode            = #{p.zipCode},</if>
+    </set>
+    WHERE user_id = #{userId}
+  </update>
 
 	<!-- 비밀번호 업데이트 -->
 	<update id="updatePassword">

@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 import com.sboot.moabayo.dao.MyPageMapper;
 import com.sboot.moabayo.vo.UserVO;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class MypageService {
 
 	@Autowired
-	private MyPageMapper mypagemapper;
-	private PasswordEncoder passwordEncoder; // BCryptPasswordEncoder 빈 등록
+	private final MyPageMapper mypagemapper;
+	private final PasswordEncoder passwordEncoder; // BCryptPasswordEncoder 빈 등록
 	
 	public int getSumBalance(String userId) {
 			

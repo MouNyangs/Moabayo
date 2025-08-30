@@ -1,5 +1,39 @@
 // /js/mypage-profile.js
 
+// --- 주소 검색(카카오/다음 우편번호) ---
+function openPostcode() {
+  new daum.Postcode({
+    oncomplete: function(data) {
+      // 1) 우편번호
+      const zonecode = data.zonecode; // 5자리
+      // 2) 기본 주소(도로명 우선, 없으면 지번)
+      const addr = data.roadAddress && data.roadAddress.trim().length > 0
+        ? data.roadAddress
+        : data.jibunAddress;
+
+      // 3) 법정동/건물명 보조 정보(선택)
+      // const bname = data.bname;         // 법정동/법정리
+      // const buildingName = data.buildingName; // 건물명
+
+      document.getElementById('pf-zip').value = zonecode || '';
+      document.getElementById('pf-addr').value = addr || '';
+
+      // 상세주소로 포커스 이동
+      const detail = document.getElementById('pf-addrDetail');
+      if (detail) detail.focus();
+    },
+    // 사용성 옵션(선택): 도로명/지번 탭 Default 등
+    // theme: { searchBgColor: "#f3f4f6" } // 색상 커스텀 가능
+  }).open();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btnAddrSearch');
+  if (btn) btn.addEventListener('click', openPostcode);
+});
+
+
+
 // 1) 프로필 불러와서 value/placeholder 채우기
 window.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -15,13 +49,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     $('#pf-phone').value = p.phone ?? '';
     $('#pf-email').value = p.email ?? '';
     $('#pf-addr').value  = p.addr  ?? '';
+	$('#pf-zip').value   = p.zipcode ?? '';  
 
     // 요청하신 대로 placeholder에도 동일 값 노출을 원하시면 아래 주석 해제
     // $('#pf-name').placeholder  = p.name  ?? $('#pf-name').placeholder;
     // $('#pf-phone').placeholder = p.phone ?? $('#pf-phone').placeholder;
     // $('#pf-email').placeholder = p.email ?? $('#pf-email').placeholder;
     // $('#pf-addr').placeholder  = p.addr  ?? $('#pf-addr').placeholder;
-
+	const baseAddr   = document.getElementById('pf-addr').value.trim();
+	const detailAddr = document.getElementById('pf-addrDetail').value.trim();
+	const zip        = document.getElementById('pf-zip').value.trim();
+	const mergedAddr = zip ? `[${zip}] ${baseAddr}${detailAddr ? ' ' + detailAddr : ''}`
+	                       : `${baseAddr}${detailAddr ? ' ' + detailAddr : ''}`;
   } catch (e) {
     console.error(e);
   }
@@ -31,30 +70,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 document.getElementById('formProfile').addEventListener('submit', async (e) => {
   e.preventDefault();
   const $ = sel => document.querySelector(sel);
+
+
   const body = {
     name:  $('#pf-name').value.trim(),
     phone: $('#pf-phone').value.trim(),
     email: $('#pf-email').value.trim(),
-    address:  $('#pf-addr').value.trim(),
+	address:        $('#pf-addr').value.trim(),
+	addressDetail:  $('#pf-addrDetail').value.trim(),  // ★ 분리
+	zipcode:            $('#pf-zip').value.trim(),         // ★ 분리
     newPw: $('#pf-newPw').value,
     newPwConfirm: $('#pf-newPwConfirm').value
   };
-
-  // 비밀번호 검증: 둘 다 비어있으면 변경 안 함, 하나만 입력은 에러
-  if (body.newPw || body.newPwConfirm) {
-    if (body.newPw.length < 8) {
-      alert('비밀번호는 8자 이상으로 입력해주세요.');
-      return;
-    }
-    if (body.newPw !== body.newPwConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-  } else {
-    // 서버로 보낼 때 명시적으로 제거(변경 의사 없음)
-    delete body.newPw;
-    delete body.newPwConfirm;
-  }
 
   try {
     const res = await fetch('/profile', {
@@ -63,15 +90,21 @@ document.getElementById('formProfile').addEventListener('submit', async (e) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-        // CSRF 사용 중이면 여기서 토큰 헤더 추가
       },
       body: JSON.stringify(body)
     });
-    if (!res.ok) throw new Error(`save failed: ${res.status}`);
+
+    if (!res.ok) {
+      // 서버 에러 메시지 있으면 표시
+      let msg = `save failed: ${res.status}`;
+      try { const err = await res.json(); if (err?.message) msg = err.message; } catch {}
+      alert(msg);
+      return;
+    }
+
     const ok = await res.json(); // {success:true}
     if (ok.success) {
       alert('저장되었습니다.');
-      // 비번 입력 지우기
       $('#pf-newPw').value = '';
       $('#pf-newPwConfirm').value = '';
     } else {
@@ -82,3 +115,5 @@ document.getElementById('formProfile').addEventListener('submit', async (e) => {
     alert('네트워크 오류가 발생했습니다.');
   }
 });
+
+

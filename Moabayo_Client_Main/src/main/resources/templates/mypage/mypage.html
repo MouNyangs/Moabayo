@@ -14,9 +14,10 @@
 <link rel="stylesheet" href="/css/mypage-realtime.css?v=20250813">
 <link rel="stylesheet" href="/css/mypage-sections.css?v=20250813">
 <!-- ⬅️ 추가 -->
-<script src="/js/theme.js?v=1"></script>
-<script src="/js/mypage-profile.js?v=1"></script>
+<script defer src="/js/theme.js?v=1"></script>
+<script defer src="/js/mypage-profile.js?v=1"></script>
 <script type="module" src="/js/mypagesections/index.js?v=20250813"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 </head>
 <body>
@@ -195,10 +196,26 @@
         <label>이메일
           <input type="email" name="email" id="pf-email" placeholder="user@example.com" autocomplete="email">
         </label>
-        <label>주소
-          <input type="text" name="addr" id="pf-addr" placeholder="서울시 ..." autocomplete="street-address">
-        </label>
       </div>
+	  
+	  <!-- 주소 -->
+	  <div class="grid-2">
+	    <label>우편번호
+	      <div style="display:flex; gap:.5rem;">
+	        <input type="text" id="pf-zip" placeholder="우편번호" autocomplete="postal-code" style="flex:1" readonly>
+	        <button type="button" class="btn ghost" id="btnAddrSearch" aria-label="주소 검색">주소검색</button>
+	      </div>
+	    </label>
+
+	    <label>주소
+	      <input type="text" name="addr" id="pf-addr" placeholder="도로명/지번 주소" autocomplete="street-address" readonly>
+	    </label>
+	  </div>
+
+	  <label>상세 주소
+	    <input type="text" id="pf-addrDetail" placeholder="상세 주소(동/호 등)" autocomplete="address-line2">
+	  </label>
+
 
       <div class="grid-2">
         <!-- 비밀번호 변경: 새 비밀번호 + 확인 -->

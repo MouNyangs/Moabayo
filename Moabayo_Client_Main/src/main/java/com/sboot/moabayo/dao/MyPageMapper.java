@@ -1,22 +1,21 @@
 package com.sboot.moabayo.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.sboot.moabayo.vo.UserVO;
 
 @Mapper
 public interface MyPageMapper {
+  int selectSumBalance(String userId);
+  int selectAccountCount(String userId);
+  int selectCardCount(String userId);
 
-	int selectSumBalance(@Param("userId") String userId);
+  UserVO selectProfile(Long userId);
 
-	int selectAccountCount(@Param("userId") String userId);
+  // ★ @Param으로 이름을 명시!
+  int updateProfile(@org.apache.ibatis.annotations.Param("userId") Long userId,
+                    @org.apache.ibatis.annotations.Param("p") UserVO p);
 
-	int selectCardCount(@Param("userId") String userId);
-
-	UserVO selectProfile(@Param("userId") Long userId);
-
-	void updateProfile(@Param("userId") Long userId, @Param("p") UserVO req);
-
-	void updatePassword(@Param("userId") Long userId, @Param("enc") String enc);
+  int updatePassword(@org.apache.ibatis.annotations.Param("userId") Long userId,
+                     @org.apache.ibatis.annotations.Param("enc") String enc);
 }
