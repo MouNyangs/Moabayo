@@ -46,6 +46,7 @@ public class MyPageController {
 	@PostMapping("/profile")
 	public Map<String, Object> saveProfile(@CookieValue(name = "USER_ID", required = false) Long userId,
 			@RequestBody UserVO req) {
+		System.out.println(userId);
 		if (userId == null)
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 

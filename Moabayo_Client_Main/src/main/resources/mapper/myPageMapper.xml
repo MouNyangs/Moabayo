@@ -38,7 +38,7 @@
 		<result property="name" column="name" />
 		<result property="phone" column="phone" />
 		<result property="email" column="email" />
-		<result property="addr" column="address" />
+		<result property="address" column="address" />
 	</resultMap>
 
 	<!-- 프로필 조회 -->
