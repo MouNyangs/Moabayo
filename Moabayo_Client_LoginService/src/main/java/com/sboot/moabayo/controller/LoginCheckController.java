@@ -40,7 +40,7 @@ public class LoginCheckController {
 
 		if (user != null && passwordEncoder.matches(form.getPw(), user.getPassword())) {
 			String token = JwtGenerate.createToken(user.getUserId(), user.getLoginId());
-			String refreshToken = JwtGenerate.createRefreshToken(user.getLoginId());
+			String refreshToken = JwtGenerate.createRefreshToken(user.getUserId(), user.getLoginId());
 
 			// JWT 토큰에서 만료 시간 추출 (만료시간은 UNIX timestamp 초 단위)
 			Claims claims = Jwts.parserBuilder().setSigningKey(JwtGenerate.getKey()) // 비밀키 필요
@@ -67,6 +67,11 @@ public class LoginCheckController {
 			userNameCookie.setHttpOnly(false);
 			userNameCookie.setPath("/");
 			userNameCookie.setMaxAge(600);
+			
+			Cookie userIdCookie = new Cookie("USER_ID", String.valueOf(user.getUserId()));
+			userIdCookie.setHttpOnly(false);
+			userIdCookie.setPath("/");
+			userIdCookie.setMaxAge(600);
 
 			Cookie loginStatusCookie = new Cookie("LOGGED_IN", "true");
 			loginStatusCookie.setHttpOnly(false);
@@ -79,6 +84,7 @@ public class LoginCheckController {
 			expCookie.setPath("/");
 			expCookie.setMaxAge((int) ((expiration.getTime() - System.currentTimeMillis()) / 1000)); // 남은 시간 초 단위로 설정
 
+			response.addCookie(userIdCookie);
 			response.addCookie(accessCookie);
 			response.addCookie(refreshCookie);
 			response.addCookie(userNameCookie);
@@ -91,7 +97,7 @@ public class LoginCheckController {
 			headers.add("Refresh-Token", refreshToken);
 
 			// ===== 사용자 정보 응답 바디 생성 =====
-			UserInfoVO info = new UserInfoVO(user.getLoginId(), user.getName(), user.getIsAdmin());
+			UserInfoVO info = new UserInfoVO(user.getUserId(), user.getLoginId(), user.getName(), user.getIsAdmin());
 
 			return ResponseEntity.ok().headers(headers).body(info);
 		}

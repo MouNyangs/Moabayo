@@ -6,13 +6,15 @@ import lombok.Data;
 public class UserInfoVO {
 
 	private String id;
+	private Long userId;
 	private String name;
 	private String role;
 
-	public UserInfoVO(String id, String name, String role) {
+	public UserInfoVO(Long userId, String id, String name, String role) {
 		this.id = id;
 		this.name = name;
 		this.role = role;
+		this.userId = userId;
 	}
 
 	public UserInfoVO() {

@@ -23,4 +23,8 @@ public class UserVO {
 	private String isAdmin;
 	private String gender;
 	private String birthDate;
+	
+	//mypage용
+	private String newPw;
+	private String newPwConfirm;
 }
