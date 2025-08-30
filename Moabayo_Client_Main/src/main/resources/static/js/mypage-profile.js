@@ -3,7 +3,7 @@
 // 1) 프로필 불러와서 value/placeholder 채우기
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    const res = await fetch('/api/mypage/profile', {
+    const res = await fetch('/profile', {
       credentials: 'include',
       headers: { 'Accept': 'application/json' }
     });
@@ -57,7 +57,7 @@ document.getElementById('formProfile').addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch('/api/mypage/profile', {
+    const res = await fetch('/profile', {
       method: 'POST',
       credentials: 'include',
       headers: {
