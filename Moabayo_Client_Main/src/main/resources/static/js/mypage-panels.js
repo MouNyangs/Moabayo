@@ -15,7 +15,7 @@ function showView(name, { scroll = true, label } = {}) {
   // 레이블 업데이트
   const mapLabel = {
     profile:'정보 수정', accounts:'계좌조회', cards:'카드조회',
-    pin:'간편비밀번호', leave:'회원탈퇴', logout:'로그아웃'
+    pin:'비밀번호', leave:'회원탈퇴', logout:'로그아웃'
   };
   const el = document.getElementById('rt-label');
   if (el) el.textContent = label || mapLabel[name] || '';
