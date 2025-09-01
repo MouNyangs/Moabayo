@@ -1,201 +1,87 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>회원가입 완료 | 모아봐요 모으냥즈</title>
-  <!-- Favicon -->
-  <link rel="icon" href="http://localhost:8810/images/cat.ico" />
-  <!-- Bootstrap 5.3.x -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-  <style>
-    :root {
-      --mnz-bg: #fff9eb;         /* 베이지/옐로우 톤 */
-      --mnz-primary: #f4c430;    /* 골든 옐로우 */
-      --mnz-primary-600: #e2b228;
-      --mnz-accent: #6c4b1f;     /* 브라운 */
-      --mnz-text: #2b2b2b;
-      --mnz-card: #ffffff;
-    }
 
-    body {
-      background: radial-gradient(1200px 600px at 10% -10%, #fff2c6 0%, transparent 60%),
-                  radial-gradient(1000px 600px at 110% 10%, #ffeec0 0%, transparent 60%),
-                  var(--mnz-bg);
-      color: var(--mnz-text);
-    }
+	<link rel="stylesheet" href="/css/mainpage2.css" />
+	<link rel="stylesheet" href="/css/welcome.css" />
+	
+	<!-- headr footer가 달리는 모든 페이지에 갖다 붙일것 -->
+	<link rel="icon" href="http://localhost:8810/images/cat.ico" type="image/x-icon" />
+	<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="http://localhost:8810/css/header-footer.css" />
+	<script defer src="http://localhost:8810/js/token-exp-display.js"></script>
+	<script defer src="http://localhost:8810/js/common.js"></script>
+	<script defer src="http://localhost:8810/js/mainpage2.js"></script>
+	<script defer src="http://localhost:8810/js/adminservice.js"></script>
+	<script defer src="http://localhost:8810/js/bankservice.js"></script>
+	<script defer src="http://localhost:8810/js/cardservice.js"></script>
+	<script defer src="http://localhost:8810/js/transactionservice.js"></script>
+	<!-- 이것도 같이 붙여야함 toggle switch 만들기 -->
+	<link rel="stylesheet" href="http://localhost:8810/css/theme.css">
+	<link rel="stylesheet" href="http://localhost:8810/css/toggle.css">
+	<script defer src="http://localhost:8810/js/theme.js"></script>
 
-    .success-card {
-      max-width: 720px;
-      border: 0;
-      background: var(--mnz-card);
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-      border-radius: 1.25rem;
-      overflow: hidden;
-    }
-
-    .ribbon {
-      background: linear-gradient(135deg, var(--mnz-primary), #ffe38b);
-      position: relative;
-      height: 140px;
-    }
-
-    .ribbon::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle at 20% 40%, rgba(255,255,255,.35) 0 30%, transparent 30%),
-                        radial-gradient(circle at 80% 60%, rgba(255,255,255,.35) 0 28%, transparent 28%);
-      opacity: .7;
-    }
-
-    /* 체크 아이콘 배지 */
-    .check-badge {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: #fff9eb;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 10px 20px rgba(0,0,0,.08);
-      position: absolute;
-      left: 50%;
-      bottom: -48px;
-      transform: translateX(-50%);
-      animation: pop .7s cubic-bezier(.2, .8, .2, 1) both .2s;
-    }
-
-    @keyframes pop { from { transform: translateX(-50%) scale(.6); opacity: 0 } to { transform: translateX(-50%) scale(1); opacity: 1 } }
-
-    .check-badge .bi-check2 {
-      font-size: 2.5rem;
-      color: var(--mnz-primary-600);
-      filter: drop-shadow(0 6px 10px rgba(244,196,48,.35));
-    }
-
-    .content-area {
-      padding: 80px 28px 28px 28px;
-    }
-
-    .display-name {
-      color: var(--mnz-accent);
-      font-weight: 700;
-    }
-
-    .next-steps li i {
-      margin-right: .5rem;
-      opacity: .9;
-    }
-
-    /* 살짝 귀여운 발자국 배경 */
-    .paw-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(10px 10px at 12% 18%, rgba(0,0,0,.035) 45%, transparent 46%),
-        radial-gradient(10px 10px at 16% 24%, rgba(0,0,0,.035) 45%, transparent 46%),
-        radial-gradient(10px 10px at 20% 18%, rgba(0,0,0,.035) 45%, transparent 46%),
-        radial-gradient(14px 16px at 18% 28%, rgba(0,0,0,.05) 45%, transparent 46%);
-      background-repeat: no-repeat;
-      background-size: 240px 160px;
-      opacity: .25;
-      pointer-events: none;
-      mix-blend-mode: multiply;
-    }
-
-    /* 버튼 스타일 보정 */
-    .btn-mnz {
-      --bs-btn-bg: var(--mnz-primary);
-      --bs-btn-border-color: var(--mnz-primary);
-      --bs-btn-hover-bg: var(--mnz-primary-600);
-      --bs-btn-hover-border-color: var(--mnz-primary-600);
-      --bs-btn-color: #2b2b2b;
-      --bs-btn-hover-color: #2b2b2b;
-      font-weight: 600;
-      border-radius: 999px;
-      padding: .75rem 1.25rem;
-    }
-  </style>
 </head>
-<body>
-  <main class="container py-5 min-vh-100 d-flex align-items-center justify-content-center">
-    <section class="card success-card position-relative w-100">
-      <div class="ribbon">
+<body class="site-layout">
+  <!-- ✅ Header: common.js가 주입 -->
+  <div id="header"></div>
+
+  <main class="wrap">
+    <section class="success">
+      <div class="success__ribbon">
         <div class="paw-bg"></div>
-        <div class="check-badge" aria-hidden="true">
-          <i class="bi bi-check2"></i>
+        <div class="success__badge" aria-hidden="true">
+          <i class='bx bx-check'></i>
         </div>
       </div>
-
-      <div class="content-area text-center">
-        <h1 class="fw-bold mb-2">가입이 완료됐어요! 🎉</h1>
-        <p class="text-muted mb-4">
-          <span class="display-name" id="displayName">모으냥</span> 님, 모아봐요 <strong>모으냥즈</strong>에 오신 걸 환영해요.
+      <div class="success__body">
+        <h1 class="success__title">가입이 완료됐어요! 🎉</h1>
+        <p class="success__desc">
+          <span class="success__name" id="displayName">모으냥</span> 님, <b>모아봐요 모으냥즈</b>에 오신 걸 환영해요.
         </p>
 
-        <!-- 다음 단계 안내 -->
-        <div class="row g-3 justify-content-center">
-          <div class="col-12 col-md-10 col-lg-9">
-            <div class="p-3 p-md-4 rounded-4 border bg-light-subtle">
-              <ul class="list-unstyled next-steps text-start small mb-0">
-<!--                 <li class="mb-2"><i class="bi bi-shield-check"></i>이메일 인증을 완료해 주세요. (보내드린 메일함 확인)</li> -->
-                <li class="mb-2"><i class="bi bi-credit-card"></i>자주 쓰는 <strong>계좌/카드</strong>를 연결해 보세요.</li>
-                <li class="mb-2"><i class="bi bi-stars"></i>소비습관 맞춤 <strong>예·적금 추천</strong>을 받아 보세요.</li>
-<!--                 <li><i class="bi bi-person-badge"></i>프로필에서 알림·보안 설정을 마치면 더 안전해요.</li> -->
-              </ul>
-            </div>
-          </div>
+        <!-- 다음 단계 -->
+        <div class="panel">
+          <ul class="next-steps small">
+            <!-- 운영에서 단계가 바뀔 수 있으니 텍스트는 단순 저장 -->
+            <li><i class='bx bx-link-alt'></i>자주 쓰는 <b>계좌/카드</b>를 연결해 보세요.</li>
+            <li><i class='bx bx-sun'></i>소비습관 기반 <b>예·적금 추천</b>을 받아 보세요.</li>
+            <!-- 필요시 이메일 인증/보안 설정 항목 추가 가능 -->
+          </ul>
         </div>
 
-        <!-- 액션 버튼 -->
-        <div class="d-flex flex-wrap gap-2 gap-md-3 justify-content-center mt-4">
-          <a href="/mainpage" class="btn btn-mnz px-4"><i class="bi bi-house-door me-1"></i>메인으로</a>
-          <a href="/accounts/link" class="btn btn-outline-dark rounded-pill px-4"><i class="bi bi-link-45deg me-1"></i>계좌 연결하기</a>
-          <a href="/onboarding" class="btn btn-outline-secondary rounded-pill px-4"><i class="bi bi-rocket-takeoff me-1"></i>바로 시작</a>
+        <!-- CTA -->
+        <div class="actions">
+          <button class="btn pill" onclick="goTo('http://localhost:8812/mainpage')"><i class='bx bx-home-alt-2'></i>&nbsp;메인으로</button>
+          <button class="btn pill primary" onclick="goTo('/accounts/link')"><i class='bx bx-link'></i>&nbsp;계좌 연결하기</button>
+          <button class="btn pill" onclick="goTo('/onboarding')"><i class='bx bx-rocket'></i>&nbsp;바로 시작</button>
         </div>
 
         <!-- 서브 링크 -->
-        <div class="mt-4 small text-muted">
-          혹시 문제가 있나요? <a href="/support" class="link-dark fw-semibold">고객센터</a>로 문의하세요.
+        <div class="small" style="margin-top:12px; color:var(--sub);">
+          문제가 있나요? <a href="/support" style="text-decoration:none;">고객센터</a>로 문의하세요.
         </div>
       </div>
     </section>
   </main>
 
-  <!-- (선택) 축하 토스트 -->
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
-    <div id="welcomeToast" class="toast align-items-center text-bg-light border-0 shadow" role="status" aria-live="polite" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body">
-          가입을 축하합니다! 즐거운 금융 생활을 시작해 볼까요? 🐾
-        </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    </div>
-  </div>
+  <!-- ✅ Footer: common.js가 주입 -->
+  <div id="footer"></div>
 
   <script>
-    // URL 쿼리 or localStorage 에서 사용자 이름을 가져와 표시
+    // URL ?name=... 또는 localStorage('userName') → 표시 (기존 페이지와 동일 컨벤션) 
+    // (welcome.html의 이름 주입 로직을 페이지에 맞게 경량화)  :contentReference[oaicite:5]{index=5}
     (function() {
       const params = new URLSearchParams(window.location.search);
       const nameFromQuery = params.get('name');
       const nameFromStorage = localStorage.getItem('userName');
-      const displayName = document.getElementById('displayName');
-      const finalName = nameFromQuery || nameFromStorage || '모으냥';
-      displayName.textContent = finalName;
+      document.getElementById('displayName').textContent = nameFromQuery || nameFromStorage || '모으냥';
     })();
 
-    // 페이지 진입 시 축하 토스트 노출 (사용자가 처음 1회만 보게 하고 싶다면 localStorage 플래그 사용)
-    document.addEventListener('DOMContentLoaded', function() {
-      const toastEl = document.getElementById('welcomeToast');
-      if (!toastEl) return;
-      const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
-      toast.show();
-    });
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
