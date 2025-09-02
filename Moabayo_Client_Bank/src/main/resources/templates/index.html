@@ -62,9 +62,13 @@
 						<div class="sub" th:if="${hasNyang}" th:text="'코인 ID: ' + ${nyang.number}">코인 ID: -</div>
 					</div>
 
-					<div class="actions">
+					<div class="actions" th:if="${hasNyang}">
 						<a href="/bank/charge" class="btn btn-dark">충전하기</a>
 						<a href="/bank/transfer" class="btn btn-outline">송금하기</a>
+					</div>
+					<div class="actions" th:if="${!hasNyang}">
+						<a href="/register/product?id=100" class="btn btn-dark">모으냥즈 계좌 개설</a>
+						<a href="/bank/product/list" class="btn btn-outline">은행 상품 목록 보기</a>
 					</div>
 				</article>
 
