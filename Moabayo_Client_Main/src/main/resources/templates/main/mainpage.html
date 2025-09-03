@@ -39,39 +39,113 @@
 			</h1>
 			<p>고양이 캐릭터와 함께 목표를 세우고, 소비 습관을 분석해 똑똑하게 모아봐요.</p>
 			<div class="hero-cta">
-				<button class="btn primary">지금 시작하기</button>
-				<button class="btn">가이드 보기</button>
+<!-- 				<button class="btn primary">지금 시작하기</button>
+				<button class="btn">가이드 보기</button> -->
 			</div>
 		</div>
-		<div class="hero-card">
-			<div class="hero-grid">
-				<div class="mcard">
-					<h4>오늘의 목표</h4>
-					<strong>₩ 20,000 적립</strong> <span class="sub">냥초(초보) 미션</span>
-				</div>
-				<div class="mcard">
-					<h4>저축 진행률</h4>
-					<strong>68%</strong> <span class="sub">Saving Orbit</span>
-				</div>
-				<div class="mcard">
-					<h4>리워드</h4>
-					<strong>배지 2개</strong> <span class="sub">냥코인 +120</span>
-				</div>
-				<div class="mcard">
-					<h4>소비 인사이트</h4>
-					<strong>카페 지출 ↑</strong> <span class="sub">주 3회 → 1회</span>
-				</div>
-				<div class="mcard">
-					<h4>추천 플랜</h4>
-					<strong>냥청년 적금</strong> <span class="sub">청년 전용 금리</span>
-				</div>
-				<div class="mcard">
-					<h4>알림</h4>
-					<strong>3건</strong> <span class="sub">오늘 할 일 확인</span>
-				</div>
-			</div>
-		</div>
+
 	</section>
+
+<!-- ===== Quick Cards (with SVG Waves) ===== -->
+<section class="mnz-quick section">
+  <div class="mnz-quick__grid">
+
+    <!-- BANKING (Lilac Wave) -->
+    <a class="qcard qcard--lilac" href="javascript:void(0);" onclick="goToBankService()">
+      <div class="qcard__bg">
+        <svg viewBox="0 0 300 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="gradL1" x1="0%" y1="0%" x2="100%" y2="100%" class="grad-lilac-1">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+            <linearGradient id="gradL2" x1="0%" y1="0%" x2="100%" y2="0%" class="grad-lilac-2">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+            <linearGradient id="gradL3" x1="0%" y1="0%" x2="100%" y2="0%" class="grad-lilac-2">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+          </defs>
+          <!-- 배경 -->
+          <rect width="300" height="180" fill="url(#gradL1)"/>
+
+          <!-- 파도 3겹 (g 이동 애니메이션) -->
+          <g class="wave-move-slow">
+            <path d="M0,130 C40,120 80,140 120,130 C160,120 200,140 240,130 C270,125 285,128 300,124 V180 H0 Z"
+                  fill="url(#gradL2)" opacity="0.55"/>
+          </g>
+          <g class="wave-move-mid">
+            <path d="M0,145 C50,135 100,155 150,145 C200,135 250,155 300,145 V180 H0 Z"
+                  fill="url(#gradL3)" opacity="0.65"/>
+          </g>
+          <g class="wave-move-fast">
+            <path d="M0,160 C60,152 120,168 180,160 C220,154 260,168 300,160 V180 H0 Z"
+                  fill="#ffffff22" opacity=".9"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="qcard__head">
+        
+        <i class="bx bx-server"></i>
+      </div>
+      <h3 class="qcard__title">BANKING</h3>
+      <p class="qcard__desc">입출금, 이체, 코인 충전 등 핵심 은행 기능으로 이동.</p>
+      <div class="qcard__cta">바로가기 →</div>
+    </a>
+
+    <!-- CARDS (Blue Wave) -->
+    <a class="qcard qcard--blue" href="javascript:void(0);" onclick="goToCardService()">
+      <div class="qcard__bg">
+        <svg viewBox="0 0 300 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="gradB1" x1="0%" y1="0%" x2="100%" y2="100%" class="grad-blue-1">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+            <linearGradient id="gradB2" x1="0%" y1="0%" x2="100%" y2="0%" class="grad-blue-2">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+            <linearGradient id="gradB3" x1="0%" y1="0%" x2="100%" y2="0%" class="grad-blue-2">
+              <stop offset="0%"/><stop offset="100%"/>
+            </linearGradient>
+          </defs>
+          <rect width="300" height="180" fill="url(#gradB1)"/>
+          <g class="wave-move-slow">
+            <path d="M0,130 C40,120 80,140 120,130 C160,120 200,140 240,130 C270,125 285,128 300,124 V180 H0 Z"
+                  fill="url(#gradB2)" opacity="0.55"/>
+          </g>
+          <g class="wave-move-mid">
+            <path d="M0,145 C50,135 100,155 150,145 C200,135 250,155 300,145 V180 H0 Z"
+                  fill="url(#gradB3)" opacity="0.65"/>
+          </g>
+          <g class="wave-move-fast">
+            <path d="M0,160 C60,152 120,168 180,160 C220,154 260,168 300,160 V180 H0 Z"
+                  fill="#ffffff22" opacity=".9"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="qcard__head">
+        
+        <i class="bx bx-credit-card"></i>
+      </div>
+      <h3 class="qcard__title">CARDS</h3>
+      <p class="qcard__desc">보유 카드 정리 · 혜택 비교 · 신규 신청.</p>
+      <div class="qcard__cta">바로가기 →</div>
+    </a>
+
+    <!-- SURVEY (라인 카드) -->
+    <a class="qcard qcard--line" href="/survey">
+      <div class="qcard__head">
+        <span class="qcard__tag">INSIGHT</span>
+        <i class="bx bx-bulb"></i>
+      </div>
+      <h3 class="qcard__title">SURVEY</h3>
+      <p class="qcard__desc">간단한 설문으로 맞춤 추천 품질 업.</p>
+      <div class="qcard__cta">참여하기 →</div>
+    </a>
+  </div>
+</section>
+
 
 	<!-- ===== Featured ===== -->
 	<section class="section" id="features">
