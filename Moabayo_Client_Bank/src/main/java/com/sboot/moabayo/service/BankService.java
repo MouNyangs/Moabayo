@@ -20,7 +20,7 @@ public interface BankService {
      * 계좌 거래 로그 추가
      * @param userId 유저 ID
      * @param accountId 계좌 ID
-     * @param approvedAmount 승인 금액
+     * @param amount 승인 금액
      * @param approvedNum 승인 번호 (결제사 TID 등)
      * @param accountType 계좌 타입 (예: "SAVING")
      * @param category 거래 카테고리
@@ -29,7 +29,7 @@ public interface BankService {
      */
     void insertAccountTransactionLog(Long userId,
                                      Long accountId,
-                                     Integer approvedAmount,
+                                     Long amount,
                                      String approvedNum,
                                      String accountType,
                                      String category,
@@ -43,7 +43,7 @@ public interface BankService {
 
     // ✅ 새로 추가: 전체 이체 트랜잭션
 	void transfer(Long senderUserId, String senderAccountNum, Long receiverUserId, String receiverAccountNum,
-			Integer amount, String approvedNum, String memo);
+			Long amount, String approvedNum, String memo);
 
 	
 	

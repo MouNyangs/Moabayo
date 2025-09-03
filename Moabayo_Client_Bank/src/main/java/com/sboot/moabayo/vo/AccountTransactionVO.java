@@ -2,7 +2,12 @@ package com.sboot.moabayo.vo;
 
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * account_transaction 테이블 VO
@@ -18,10 +23,14 @@ import lombok.Data;
  * */
 
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AccountTransactionVO {
 	private Integer accTrnsId;
-	private Integer userAccId;
+	private Long userAccId;
 	private Integer apprAmount;
 	private String 	apprNum;
 	private String	accType;
