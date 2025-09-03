@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 				// ✅ URL별 권한 설정
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/css/**", "/js/**", "/images/**", "/", "/error").permitAll()
+						auth -> auth.requestMatchers("/css/**", "/js/**", "/img/**", "/", "/error").permitAll()
 								.requestMatchers(HttpMethod.POST, "/user/login").permitAll().anyRequest().permitAll());
 
 		return http.build();
