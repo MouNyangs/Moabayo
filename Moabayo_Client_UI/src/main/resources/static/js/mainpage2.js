@@ -106,3 +106,47 @@
 		init();
 	}
 })();
+
+
+
+/* MNZ Compare – hover follow (mouse) + drag (touch) */
+(function(){
+  const stages = document.querySelectorAll('[data-mnz-compare]');
+  if(!stages.length) return;
+
+  stages.forEach(stage=>{
+    const before = stage.querySelector('[data-mnz-before]');
+    const bar    = stage.querySelector('[data-mnz-bar]');
+
+    function setX(clientX){
+      const rect = stage.getBoundingClientRect();
+      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const ratio = x / rect.width * 100;
+      before.style.width = ratio + '%';
+      bar.style.left = ratio + '%';
+    }
+
+    // ✅ 호버만으로 실시간 반응
+    stage.addEventListener('mousemove', e => setX(e.clientX));
+    stage.addEventListener('mouseenter', e => {
+      // 진입 시 현재 포인터 위치 또는 중앙으로 세팅
+      setX(e.clientX ?? (stage.getBoundingClientRect().left + stage.getBoundingClientRect().width/2));
+    });
+
+    // ✅ 터치 드래그 (모바일)
+    stage.addEventListener('touchstart', e => setX(e.touches[0].clientX), {passive:true});
+    stage.addEventListener('touchmove',  e => setX(e.touches[0].clientX), {passive:true});
+
+    // 초기값: 중앙
+    requestAnimationFrame(()=>{
+      const r = stage.getBoundingClientRect();
+      setX(r.left + r.width/2);
+    });
+
+    // 리사이즈 시 중앙 유지
+    window.addEventListener('resize', ()=>{
+      const r = stage.getBoundingClientRect();
+      setX(r.left + r.width/2);
+    });
+  });
+})();
