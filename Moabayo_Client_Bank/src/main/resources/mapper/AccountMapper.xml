@@ -130,5 +130,34 @@
   WHERE ua.account_number = #{accNum, jdbcType=VARCHAR}
 </select>
 
+<!-- 사용자 계좌 목록(드롭다운) -->
+<select id="findSimpleAccountsByUserId" parameterType="long" resultType="map">
+  SELECT
+    ua.user_account_id AS user_account_id,
+    ua.account_name    AS account_name,
+    ua.account_number  AS account_number,
+    ua.balance         AS balance
+  FROM user_account ua
+  WHERE ua.user_id = #{userId}
+  ORDER BY ua.create_date DESC
+</select>
+
+<!-- 계좌번호 중복 체크 -->
+<select id="existsAccountNumber" parameterType="string" resultType="int">
+  SELECT COUNT(1) FROM user_account WHERE account_number = #{accountNumber}
+</select>
+
+<!-- 신규 계좌 INSERT (UserAccountVO를 쓰지 않고 map으로 안전하게) -->
+<insert id="insertUserAccount" parameterType="map">
+	<!-- Null 이 들어가는 이슈 때문에 -->
+  <selectKey keyProperty="user_account_id" resultType="long" order="BEFORE">
+    SELECT USER_ACCOUNT_ID_SEQ.NEXTVAL FROM dual
+  </selectKey>
+  INSERT INTO user_account (
+    user_account_id, user_id, account_id, account_number, account_name, create_date, balance
+  ) VALUES (
+    #{user_account_id}, #{user_id}, #{account_id}, #{account_number}, #{account_name}, SYSDATE, #{balance}
+  )
+</insert>
 
 </mapper>

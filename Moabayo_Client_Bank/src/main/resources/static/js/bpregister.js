@@ -147,22 +147,60 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ⑩ 제출(예시)
   $('#submitBtn')?.addEventListener('click', async()=>{
-    if(getAmount()<=0){ alert('금액을 확인해 주세요.'); return; }
-    const payload = {
-      product_id: product.account_id,
-      product_type: product.type,
-      funding_user_account_id: +$('#funding').value,
-      open_new_account: $('#openNew').value==='yes',
-      amount: getAmount(),
-      term_months: +$('#term').value,
-      tax_rate: +$('#tax').value,
-      autopay_day: (product.type==='적금') ? $('#autopayDay').value : null,
-      maturity_option: $('#maturityOp').value || null,
-      selected_bonuses: [...document.querySelectorAll('#bonusWrap input:checked')]
-        .map(el=>({label:el.parentElement.textContent.trim(), bp:+el.dataset.bonus})),
-      consents: {terms:$('#consent1').checked, privacy:$('#consent2').checked, marketing:$('#consent3').checked}
-    };
-    console.log('POST /api/apply payload', payload);
+	const isSaving = (window.product?.type === '적금');
+	const payload = {
+	  product_id: window.product.account_id,
+	  product_type: window.product.type,
+	  funding_user_account_id: +$('#funding').value,
+	  open_new_account: $('#openNew').value, // "yes"|"no"
+	  amount: +$('#amount').value.replace(/[^\d]/g,''),
+	  term_months: +$('#term').value,
+	  tax_rate: +$('#tax').value,
+	  autopay_day: isSaving ? $('#autopayDay').value : null,
+	  maturity_option: $('#maturityOp').value || null,
+	  selected_bonuses: [...document.querySelectorAll('#bonusWrap input:checked')]
+	    .map((el,i)=>({ label: el.parentElement.textContent.trim(), bp:+el.dataset.bonus, idx:i })),
+	  consents: { terms:$('#consent1').checked, privacy:$('#consent2').checked, marketing:$('#consent3').checked }
+	};
+
+	const f = document.getElementById('applyForm');
+	f.innerHTML = '';  // reset
+
+	// 단일 필드
+	const put = (name,val)=>{ const i=document.createElement('input'); i.type='hidden'; i.name=name; i.value=(val??''); f.appendChild(i); };
+	put('product_id', payload.product_id);
+	put('product_type', payload.product_type);
+	// #funding 에서 NaN 이슈 있어서 아래와 같이 바꿈.
+	// 안전하게 값 읽기
+	const fundingEl = document.getElementById('funding');
+	const fundingVal = (fundingEl && /^\d+$/.test(fundingEl.value)) 
+	  ? Number(fundingEl.value) 
+	  : null;
+
+	// 히든 폼에 넣을 때도 "유효할 때만" 추가
+	if (Number.isFinite(fundingVal)) {
+	  put('funding_user_account_id', String(fundingVal));
+	}
+	// 유효하지 않으면 필드를 아예 추가하지 않으면 Spring이 null로 바인딩해요.
+	put('open_new_account', payload.open_new_account);
+	put('amount', payload.amount);
+	put('term_months', payload.term_months);
+	put('tax_rate', payload.tax_rate);
+	if (payload.autopay_day)    put('autopay_day', payload.autopay_day);
+	if (payload.maturity_option)put('maturity_option', payload.maturity_option);
+
+	// nested: selected_bonuses[i].label / .bp
+	payload.selected_bonuses.forEach(b=>{
+	  put(`selected_bonuses[${b.idx}].label`, b.label);
+	  put(`selected_bonuses[${b.idx}].bp`,    b.bp);
+	});
+
+	// nested: consents.terms / .privacy / .marketing
+	put('consents.terms',     payload.consents.terms);
+	put('consents.privacy',   payload.consents.privacy);
+	put('consents.marketing', payload.consents.marketing);
+
+	f.submit();
     // await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     alert('가입 신청이 접수되었습니다! (콘솔에서 payload 확인)');
   });

@@ -46,6 +46,9 @@ main {
 </head>
 <body>
 	<div id="header"></div>
+	<!-- bpregister.html 아무 곳(</body> 직전 추천)에 폼 하나만 추가 -->
+	<form id="applyForm" action="/register/api/apply" method="post" style="display:none"></form>
+	
 	<div class="wrap" id="bpDetail" th:object="${bpDetail}" 
 				th:attr="data-id=*{accountId},
                 data-name=*{name},

@@ -73,7 +73,7 @@ CREATE TABLE card_product (
 -- 4. 사용자 계좌 (user_account)
 ------------------------------------------------
 CREATE TABLE user_account (
-    user_account_id NUMBER(8,0) PRIMARY KEY,
+    user_account_id NUMBER(20,0) PRIMARY KEY,
     user_id NUMBER(20,0) NOT NULL,
     account_id NUMBER(8,0) NOT NULL,
     account_number VARCHAR2(30) UNIQUE NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE user_card (
 ------------------------------------------------
 CREATE TABLE account_transaction (
     account_transaction_id NUMBER(20,0) PRIMARY KEY,
-    user_account_id NUMBER(8,0) NOT NULL,
+    user_account_id NUMBER(20,0) NOT NULL,
     approved_amount NUMBER(20,2),
     approved_num VARCHAR2(255),
     account_type VARCHAR2(255),
@@ -277,7 +277,7 @@ NOCACHE;
 
 -- 신규 계좌 PK 시퀀스
 CREATE SEQUENCE user_account_id_seq
-START WITH 306 
+START WITH 307 
 INCREMENT BY 1 
 NOCACHE;
 
