@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.sboot.moabayo.vo.AccountTransactionVO;
 import com.sboot.moabayo.vo.AccountVO;
 import com.sboot.moabayo.vo.UserAccountVO;
 import com.sboot.moabayo.vo.UserVO;
@@ -48,17 +49,19 @@ public interface BankMapper {
 							Long accountId);
 
 	int updateBalancePlus(Long userAccountId, 
-							 Integer amount);
+			Long amount);
 	
 	int updateBalanceMinus(Long userAccountId, 
-			 				Integer amount);
+			Long amount);
 
 	void insertTransaction( @Param("userAccountId")  Long userAccountId, 
-							@Param("approvedAmount") Integer approvedAmount, 
+							@Param("approvedAmount") Long approvedAmount, 
 							@Param("approvedNum") 	 String approvedNum, 
 							@Param("accountType") 	 String accountType,
 							@Param("category") 		 String category, 
 							@Param("shopName") 		 String shopName, 
 							@Param("shopNumber") 	 String shopNumber,
 							@Param("memo") 			 String memo);
+
+	void insertTransaction(AccountTransactionVO accountTransactionVO);
 }

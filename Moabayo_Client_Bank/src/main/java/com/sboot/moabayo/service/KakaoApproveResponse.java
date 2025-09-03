@@ -18,9 +18,9 @@ public class KakaoApproveResponse {
     public void setApprovedAt(LocalDateTime t){ this.approvedAt = t; }
 
     public static class Amount{
-        private int total;
-        public int getTotal(){ return total; }
-        public void setTotal(int total){ this.total = total; }
+        private Long total;
+        public Long getTotal(){ return total; }
+        public void setTotal(Long total){ this.total = total; }
     }
     
 }

@@ -18,7 +18,7 @@ public class KakaoPayService {
     }
 
     /** Approve 호출 (스텁) */
-    public KakaoApproveResponse approve(int amount, String pgToken, String tidFromQuery) {
+    public KakaoApproveResponse approve(Long amount, String pgToken, String tidFromQuery) {
         KakaoApproveResponse a = new KakaoApproveResponse();
         a.setTid(tidFromQuery != null ? tidFromQuery : "TID-DEV-123");
         KakaoApproveResponse.Amount amt = new KakaoApproveResponse.Amount();

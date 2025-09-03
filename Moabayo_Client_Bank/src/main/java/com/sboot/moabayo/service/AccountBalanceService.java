@@ -27,7 +27,13 @@ public class AccountBalanceService {
 	// 4. AccountTxLoggedAspect의 writeTxLog() 실행. mark 에서 type 값을 뽑아올 수 있다.
     @Transactional
     @AccountTxLogged(type = "WITHDRAW")
-    public void updateBalancePlus(Long userAccountId, Integer amount) {
+    public void updateBalancePlus(
+    		Long userAccountId, 
+    		Long amount
+	/*
+	 * , String accType, // account type String category, // category String memo //
+	 * memo
+	 */    		) {
         // 잔액 증가
         int updated = bankMapper.updateBalancePlus(userAccountId, amount);
         if (updated == 0) {
@@ -37,12 +43,17 @@ public class AccountBalanceService {
 	
     @Transactional
     @AccountTxLogged(type = "DEPOSIT")
-    public void updateBalanceMinus(Long userAccountId, Integer amount) {
+    public void updateBalanceMinus(
+    		Long userAccountId, // from uaid
+    		Long amount
+	/*
+	 * , String accType, // account type String category, // category String memo //
+	 * memo
+	 */    		) {
         // 잔액 차감
         int updated = bankMapper.updateBalanceMinus(userAccountId, amount);
         if (updated == 0) {
             throw new IllegalStateException("계좌 잔액 업데이트 실패");
         }
     }
-    
 }

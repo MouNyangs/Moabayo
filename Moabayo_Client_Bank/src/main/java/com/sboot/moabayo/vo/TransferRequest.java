@@ -6,6 +6,6 @@ import lombok.Data;
 public class TransferRequest {
     private String toAccountNumber; // "111-111-111"
     private String fromAccountNumber;
-    private int SendAmount;         // 양수
+    private Long SendAmount;         // 양수
     private String memo;            // 선택
 }

@@ -236,7 +236,7 @@ public class BankController {
                                HttpServletRequest req) {
     	
     	
-    	Integer amount = (Integer) session.getAttribute("paid_amount");
+    	Long amount = (Long) session.getAttribute("paid_amount");
         KakaoApproveResponse approve = kakaoPayService.approve(amount, pgToken, tidFromQuery);
 
         // 승인 성공 → 완료 페이지로

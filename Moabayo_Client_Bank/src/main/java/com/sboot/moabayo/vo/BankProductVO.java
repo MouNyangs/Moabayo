@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @Data
 public class BankProductVO {
-    private Integer    accountId;   // ACCOUNT_ID
+    private Long    accountId;   // ACCOUNT_ID
     private String     name;        // NAME
     private String     img;         // IMG
     private String     description; // DESCRIPTION

@@ -33,7 +33,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     @Transactional
-    public void insertAccountTransactionLog(Long userId, Long accountId, Integer approvedAmount,
+    public void insertAccountTransactionLog(Long userId, Long accountId, Long approvedAmount,
                                             String approvedNum, String accountType, String category,
                                             String shopName, String shopNumber, String memo) {
         Long userAccountId = bankMapper.findUserAccountId(userId, accountId);
@@ -49,7 +49,7 @@ public class BankServiceImpl implements BankService {
     @Override
     @Transactional
     public void transfer(Long senderUserId, String senderAccountNum, Long receiverUserId, String receiverAccountNum,
-			Integer amount, String approvedNum, String memo)  {
+    		Long amount, String approvedNum, String memo)  {
 
 
     	long senderAccId = bankMapper.findUserAccountByUsernameAccNum(senderUserId, senderAccountNum);
