@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>매출 차트</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    body{font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding:24px;}
+    .card{max-width:800px; margin:auto; padding:16px; border:1px solid #eee; border-radius:16px;}
+    canvas{width:100%; height:360px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>월별 매출</h2>
+    <canvas id="salesChart"></canvas>
+  </div>
+
+  <script>
+    (async function(){
+      const res = await fetch('/charts/sales', { credentials:'include' });
+      const chartData = await res.json();
+
+      new Chart(document.getElementById('salesChart'), {
+        type: 'bar', // line/pie 등으로 변경 가능
+        data: chartData,
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true } },
+          plugins: { legend: { position: 'top' } }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
