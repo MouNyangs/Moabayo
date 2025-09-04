@@ -284,14 +284,20 @@ body {
 }
 
 /* CONTENT */
-#content {
+#content, #notifSection, #mainSections{
 	position: relative;
 	width: calc(100% - 220px);
 	left: 220px;
 	transition: .3s
 }
 
-#sidebar.hide ~ #content {
+#notifSection, #mainSections {
+	padding: 0 24px;
+}
+
+#sidebar.hide ~ #content, 
+#sidebar.hide ~ #notifSection, 
+#sidebar.hide ~ #mainSections {
 	width: calc(100% - 60px);
 	left: 60px
 }
