@@ -29,8 +29,8 @@ public class AccountTxLogAspect {
     	// 메타데이터 읽기(읽고 비움)
         AccountTxMeta meta = AccountTxMetaHolder.getAndClear();
 
-        Integer approvedAmount = (meta != null && meta.getApprovedAmount() != null)
-                ? meta.getApprovedAmount() : amount;
+        Long approvedAmount = (Long) ((meta != null && meta.getApprovedAmount() != null)
+                ? meta.getApprovedAmount() : amount);
         String approvedNum = (meta != null) ? meta.getApprovedNum() : null;
         String accountType = (meta != null && meta.getAccountType() != null)
                 ? meta.getAccountType() : mark.type();   // 기본은 어노테이션 type
